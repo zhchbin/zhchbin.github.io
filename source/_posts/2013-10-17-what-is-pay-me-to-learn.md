@@ -1,7 +1,6 @@
 ---
 layout: post
 title: "What is Pay Me to Learn"
-comments: true
 category: 
 tags: [OpenSource]
 ---
