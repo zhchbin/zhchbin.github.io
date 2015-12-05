@@ -71,11 +71,13 @@ deploy:
   type: git
   repo: git@github.com:zhchbin/zhchbin.github.io.git
 
-backup:
-  type: git
-  repository:
-    github: git@github.com:zhchbin/zhchbin.github.io.git,source
-
 avatar: /images/avatar.jpeg
 
 duoshuo_shortname: zhchbingithubblog
+
+jiathis: true
+
+social:
+  GitHub: https://github.com/zhchbin
+  Weibo: http://weibo.com/zhchbin
+  Wooyun: http://wooyun.org/whitehats/zhchbin
