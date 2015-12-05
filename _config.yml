@@ -7,7 +7,7 @@ title: zhchbin
 subtitle:
 description:
 author: Chaobin Zhang 
-language:
+language: zh-Hans
 timezone:
 
 # URL
@@ -28,7 +28,7 @@ i18n_dir: :lang
 skip_render:
 
 # Writing
-new_post_name: :year-:month-:day-:title.md
+new_post_name: :year/:month/:day/:title.md
  # File name of new posts
 default_layout: post
 titlecase: false # Transform title into titlecase
@@ -69,12 +69,13 @@ theme: next
 ## Docs: http://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://github.com/zhchbin/zhchbin.github.io.git
+  repo: git@github.com:zhchbin/zhchbin.github.io.git
 
 backup:
-  branch: source
-  repo: https://github.com/zhchbin/zhchbin.github.io.git
+  type: git
+  repository:
+    github: git@github.com:zhchbin/zhchbin.github.io.git,source
 
 avatar: /images/avatar.jpeg
 
-disqus_shortname: zhchbin
+duoshuo_shortname: zhchbingithubblog
