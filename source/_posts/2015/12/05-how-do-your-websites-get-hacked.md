@@ -3,6 +3,27 @@ date: 2015-12-05 21:22:09
 tags: [安全]
 ---
 
+<link rel="stylesheet" href="http://apps.bdimg.com/libs/alertify.js/0.3.11/alertify.core.css" />
+<link rel="stylesheet" href="http://apps.bdimg.com/libs/alertify.js/0.3.11/alertify.default.css" />
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.js"></script>
+<script src="http://apps.bdimg.com/libs/alertify.js/0.3.11/alertify.min.js"></script>
+<script>
+$(function() {
+  $.ajax({
+    url: 'http://game.weibo.com/home/indexv3/pajaxUserInfo',
+    jsonp: "callback",
+    dataType: "jsonp",
+    success: function(response) {
+      if (response.errorCode != 0)
+        return;
+
+      alertify.set({ delay: 10000 });
+      alertify.log(response.data['user_name'] + "，您好啊！");
+    }
+  });
+});
+</script>
+
 ## 前言
 
 这个标题的来源是@evilcos（余弦大大）在Github上分享的一个PPT，感兴趣的可以去他的[repo][evilcos_papers]下载。写这篇博客主要是想给自己最近业余时间学到的安全相关的知识做个总结，主要是关于网站常见漏洞的攻击和利用，不过由于我也是刚入门，写得肯定不怎么到位，不感兴趣就不要浪费时间了哈。
@@ -43,7 +64,7 @@ tags: [安全]
 * 任意文件下载，如果你的站点存在这种漏洞，也就是说你的服务上的所有东西都可以被下载，包括你的服务器配置信息！看例子吧：http://www.wooyun.org/bugs/wooyun-2010-0145972 标题：某省铁路建设投资公司网站系统漏洞导致任意文件下载并登录后台、任意文件修改并shell
 * 任意文件上传，你的站点没有检查用户上传上来的文件内容就直接保存了？还按照用户指定的后缀保存？还放到了可执行的目录下？那就等着被上传web shell吧。Github上有很多人分享的各种各样的webshell，上传到你的服务器之后，他就可以列出你的服务器上所有文件并下载，通过webshell在你的服务器上执行命令。乌云例子：http://www.wooyun.org/bugs/wooyun-2010-0151657
 * 逻辑漏洞，比如某个用户可以看到他本不应该看到的信息，常见的情景如用户信息页，只要使用其他用户ID就可以查看到相应的信息，常用的叫法是叫做越权，漏洞例子：http://wooyun.org/bugs/wooyun-2010-0156326 。再比如找回密码的逻辑漏洞，找回密码使用手机找回，验证码只有4位，且可以被无限次猜。那就不要怪他用神奇burpsuite的intruder模式，直接猜到验证码重置任意用户信息了。关于常见的找回密码漏洞可以看：http://drops.wooyun.org/web/5048 。再比如，把cookie当session使用，后台权限bypass等。
-* 可被暴力破解或撞库！比如没有限制用户密码尝试次数还没有带验证码，例子：http://wooyun.org/bugs/wooyun-2015-0124461 
+* 可被暴力破解或撞库！比如没有限制用户密码尝试次数还没有带验证码，例子：http://wooyun.org/bugs/wooyun-2015-0124461
 
 还有很多其他问题，因为学艺未精，暂时写到这里吧。
 
