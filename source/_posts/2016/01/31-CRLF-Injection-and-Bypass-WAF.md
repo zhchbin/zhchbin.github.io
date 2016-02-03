@@ -9,7 +9,7 @@ tags: [XSS, 安全]
 
 ## 关于HRS问题
 
-我们都知道，HTTP协议是依靠两个CRLF，即`\r\n`来分割HTTP头部及响应体。基于这个认知，可以推出，HRS问题是由于服务端程序没有过滤掉头部中的特殊字符`%0D%0A`，直接输出到了返回的数据中，导致错误的解析。而在日常开发中，最常见的莫过于有以下的两种功能（1）URL跳转（2）Cookie的设置中出现。接下来的小节里，将会以一个Cookie实例作来说明这个问题的危害。实例在：http://wooyun.org/bugs/wooyun-2016-0173904， 目前腾讯已经修复了。
+我们都知道，HTTP协议是依靠两个CRLF，即`\r\n`来分割HTTP头部及响应体。基于这个认知，可以推出，HRS问题是由于服务端程序没有过滤掉头部中的特殊字符`%0D%0A`，直接输出到了返回的数据中，导致错误的解析。而在日常开发中，最常见的莫过于有以下的两种功能（1）URL跳转（2）Cookie的设置中出现。接下来的小节里，将会以一个Cookie实例作来说明这个问题的危害。实例在：http://wooyun.org/bugs/wooyun-2016-0173904 ，目前腾讯已经修复了。
 
 ## 接口说明
 
@@ -64,6 +64,9 @@ Set-Cookie: pass_ticket=a
 
 <img src=1>; Domain=wx.tenpay.com; Path=/; Expires=Sun, 31-J
 ```
+
+
+![](https://raw.githubusercontent.com/zhchbin/zhchbin.github.io/source/source/images/56af0f2a143cfa3753b39a38XV1CJIiq.png)
 
 #### 0x01 尝试执行脚本
 
