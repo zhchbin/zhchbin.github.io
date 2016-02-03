@@ -107,7 +107,7 @@ exportkey=&pass_ticket=a%0D%0AContent-Length:120%0D%0AContent-Type:text/html;%20
 
 ## 最后说几句
 
-在这个过程中，你学到了什么呢？反思这个过程，我觉得是信息量好大。对于我们做开发的，我认为最重要的一点是，用户的输入都是不可信的（这句话已经被无数人说过无数次了应该）。另外我读了一下Python Web框架里的一些代码，发现有些框架已经帮我们处理掉部分问题，例如在Flask中调用设置Cookie的相关接口中，`werkzeug`会使用白名单的机制检查每个byte，如果发现恶意字符，则将输入的值中用双引号包围起来，同时还有转义一部分字符，具体代码在这里：https://github.com/mitsuhiko/werkzeug/blob/master/werkzeug/_internal.py#L222。
+在这个过程中，你学到了什么呢？反思这个过程，我觉得是信息量好大。对于我们做开发的，我认为最重要的一点是，用户的输入都是不可信的（这句话已经被无数人说过无数次了应该）。另外我读了一下Python Web框架里的一些代码，发现有些框架已经帮我们处理掉部分问题，例如在Flask中调用设置Cookie的相关接口中，`werkzeug`会使用白名单的机制检查每个byte，如果发现恶意字符，则将输入的值中用双引号包围起来，同时还有转义一部分字符，具体代码在这里：https://github.com/mitsuhiko/werkzeug/blob/master/werkzeug/_internal.py#L222 。
 
 放几个参考链接：
 
