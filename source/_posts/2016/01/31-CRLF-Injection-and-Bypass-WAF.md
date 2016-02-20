@@ -78,7 +78,7 @@ exportkey=&pass_ticket=a%0d%0aContent-Length:60%0d%0a%0d%0a%3Cimg%20src=1%20oner
 
 #### 0x02 Bypass WAF
 
-有WAF，就得考虑如何绕过，然而在确认了自己的认知范围里并没有绕过的方法后，我去请教了某大牛。以下是他提供的思路及Bypass WAF的例子：
+有WAF，就得考虑如何绕过，然而在确认了自己的认知范围里并没有绕过的方法后，我去请教了[@mramydnei](http://www.wooyun.org/whitehats/mramydnei)。以下是他提供的思路及Bypass WAF的例子：
 
 
 大概原理就是： 
