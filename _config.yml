@@ -12,7 +12,7 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
+url: http://888888888888888888888888888888888888888888888888888888.com
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -83,3 +83,6 @@ social:
   Wooyun: http://wooyun.org/whitehats/zhchbin
 
 baidu_analytics: 7c9353bfaa5510a38b4349ec413d2d18
+
+plugins:
+  - hexo-generator-cname
