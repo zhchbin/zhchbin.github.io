@@ -9,7 +9,7 @@ zhchbin(Chaobin Zhang)
 
 近几年的事
 -------------
-* 目前在猪厂搬砖
+* 某公司开发，业余研究Web安全，乌云ID：[zhchbin][wooyun_zhchbin]
 * Contributor of [Google Chromium][ChromiumCodeReview], [nwjs][nwcommit] and [wxWidgets][wxWidgets_code].
 * Google Summer of Code student, 2013 & 2014.
 * Intern at Intel Open Source Technology Center from 2012-07 to 2012-11.
@@ -18,8 +18,10 @@ zhchbin(Chaobin Zhang)
 -------------
 * 清华挖石油的博士 http://conghui.github.io/
 * 网红羡辙 http://zhangwenli.com/
+* 小土刀 http://wdxtub.com/
 
 [github]: https://github.com/zhchbin
 [nwcommit]: https://github.com/nwjs/nw.js/commits?author=zhchbin
 [ChromiumCodeReview]: https://codereview.chromium.org/search?closed=1&owner=zhchbin%40gmail.com&format=html&limit=200
 [wxWidgets_code]: https://github.com/wxWidgets/wxWidgets/blob/master/src/msw/taskbarbutton.cpp
+[wooyun_zhchbin]: www.wooyun.org/whitehats/zhchbin
