@@ -24,4 +24,4 @@ zhchbin(Chaobin Zhang)
 [nwcommit]: https://github.com/nwjs/nw.js/commits?author=zhchbin
 [ChromiumCodeReview]: https://codereview.chromium.org/search?closed=1&owner=zhchbin%40gmail.com&format=html&limit=200
 [wxWidgets_code]: https://github.com/wxWidgets/wxWidgets/blob/master/src/msw/taskbarbutton.cpp
-[wooyun_zhchbin]: www.wooyun.org/whitehats/zhchbin
+[wooyun_zhchbin]: http://wooyun.org/whitehats/zhchbin
