@@ -1,6 +1,7 @@
 title: "感受孤独"
 date: 2016-06-25 22:54:03
 tags: "Life"
+description: 孤独只是人生的必修课之一
 ---
 
 ## 感受孤独
