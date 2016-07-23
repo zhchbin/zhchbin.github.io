@@ -60,6 +60,17 @@ time_format: HH:mm:ss
 per_page: 5
 pagination_dir: page
 
+index_generator:
+  per_page: 2
+
+archive_generator:
+  per_page: 30
+  yearly: true
+  monthly: true
+
+tag_generator:
+  per_page: 20
+
 # Extensions
 ## Plugins: https://github.com/hexojs/hexo/wiki/Plugins
 ## Themes: https://github.com/hexojs/hexo/wiki/Themes
