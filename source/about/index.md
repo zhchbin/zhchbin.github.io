@@ -20,6 +20,10 @@ zhchbin(Chaobin Zhang)
 * 网红羡辙 http://zhangwenli.com/
 * 小土刀 http://wdxtub.com/
 
+免责声明
+-------------
+本博客提供的部分文章思路可能带有攻击性，仅供安全研究与教学之用，风险自负!
+
 [github]: https://github.com/zhchbin
 [nwcommit]: https://github.com/nwjs/nw.js/commits?author=zhchbin
 [ChromiumCodeReview]: https://codereview.chromium.org/search?closed=1&owner=zhchbin%40gmail.com&format=html&limit=200
