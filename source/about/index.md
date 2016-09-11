@@ -9,7 +9,8 @@ zhchbin(Chaobin Zhang)
 
 近几年的事
 -------------
-* 某公司开发，业余研究Web安全，乌云ID：[zhchbin][wooyun_zhchbin]
+* 某公司开发
+* 业余研究Web安全，乌云ID：[zhchbin][wooyun_zhchbin]
 * Contributor of [Google Chromium][ChromiumCodeReview], [nwjs][nwcommit] and [wxWidgets][wxWidgets_code].
 * Google Summer of Code student, 2013 & 2014.
 * Intern at Intel Open Source Technology Center from 2012-07 to 2012-11.
