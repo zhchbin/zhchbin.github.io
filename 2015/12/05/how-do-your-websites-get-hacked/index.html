@@ -1,0 +1,754 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next muse">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="安全," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="zhchbin" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="$(function() {
+  $.ajax({
+    url: &apos;http://game.weibo.com/home/indexv3/pajaxUserInfo&apos;,
+    jsonp: &quot;callback&quot;,
+    dataType: &quot;jsonp&quot;,
+    success: function(response) {
+      if (response.errorCode != 0">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你的网站是怎么被黑的">
+<meta property="og:url" content="http://zhchbin.github.io/2015/12/05/how-do-your-websites-get-hacked/index.html">
+<meta property="og:site_name" content="zhchbin">
+<meta property="og:description" content="$(function() {
+  $.ajax({
+    url: &apos;http://game.weibo.com/home/indexv3/pajaxUserInfo&apos;,
+    jsonp: &quot;callback&quot;,
+    dataType: &quot;jsonp&quot;,
+    success: function(response) {
+      if (response.errorCode != 0">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="你的网站是怎么被黑的">
+<meta name="twitter:description" content="$(function() {
+  $.ajax({
+    url: &apos;http://game.weibo.com/home/indexv3/pajaxUserInfo&apos;,
+    jsonp: &quot;callback&quot;,
+    dataType: &quot;jsonp&quot;,
+    success: function(response) {
+      if (response.errorCode != 0">
+
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://zhchbin.github.io/2015/12/05/how-do-your-websites-get-hacked/"/>
+
+  <title> 你的网站是怎么被黑的 | zhchbin </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?7c9353bfaa5510a38b4349ec413d2d18";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">zhchbin</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                你的网站是怎么被黑的
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-12-05T21:22:09+08:00" content="2015-12-05">
+              2015-12-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/12/05/how-do-your-websites-get-hacked/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/05/how-do-your-websites-get-hacked/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><link rel="stylesheet" href="http://apps.bdimg.com/libs/alertify.js/0.3.11/alertify.core.css"></p>
+<p><link rel="stylesheet" href="http://apps.bdimg.com/libs/alertify.js/0.3.11/alertify.default.css"></p>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.js"></script>
+<script src="http://apps.bdimg.com/libs/alertify.js/0.3.11/alertify.min.js"></script>
+<script>
+$(function() {
+  $.ajax({
+    url: 'http://game.weibo.com/home/indexv3/pajaxUserInfo',
+    jsonp: "callback",
+    dataType: "jsonp",
+    success: function(response) {
+      if (response.errorCode != 0)
+        return;
+
+      alertify.set({ delay: 10000 });
+      alertify.log(response.data['user_name'] + "，您好啊！");
+    }
+  });
+});
+</script>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这个标题的来源是@evilcos（余弦大大）在Github上分享的一个PPT，感兴趣的可以去他的<a href="https://github.com/evilcos/papers/blob/9b16668d4f9733272082bb9b399acfb85ba8083c/%E7%A7%91%E6%99%AE_%E4%BD%A0%E7%9A%84%E7%BD%91%E7%AB%99%E6%98%AF%E6%80%8E%E4%B9%88%E8%A2%AB%E9%BB%91%E7%9A%84.pptx" target="_blank" rel="external">repo</a>下载。写这篇博客主要是想给自己最近业余时间学到的安全相关的知识做个总结，主要是关于网站常见漏洞的攻击和利用，不过由于我也是刚入门，写得肯定不怎么到位，不感兴趣就不要浪费时间了哈。</p>
+<p>很久之前在乌云上注册过一个账号，最近也刷了一波漏洞，终于升级变成了实习白帽子的级别。</p>
+<h2 id="未知攻焉知防"><a href="#未知攻焉知防" class="headerlink" title="未知攻焉知防"></a>未知攻焉知防</h2><p>这句话可谓安全圈里的金句（据说出自TK教主，我还没混入圈子，不敢确定）。如果给一个黑客一个网站，他们会怎么下手呢？这里的黑客当然是好人！业界称他们为白帽子。而攻击的过程也叫做渗透测试。</p>
+<h3 id="收集信息阶段"><a href="#收集信息阶段" class="headerlink" title="收集信息阶段"></a>收集信息阶段</h3><ul>
+<li>域名会给出什么信息呢？通过查询whois，就可以得到站长的信息（如邮箱，注册人，地址，电话等）</li>
+<li>域名对应IP地址，对该IP使用nmap扫描，可以知道该服务器的基本信息，如开启了什么端口，21是FTP，22是SSH，80/443是HTTP服务的端口，3306就是MYSQL的默认端口，服务器上使用的是什么系统。</li>
+<li>查看网站的robots.txt文件，开发者不希望被爬虫抓取的信息都在这里哦，所以可能有后台地址，有可能指向网站的配置文件（你也会好奇你怎么配置了这么奇怪的robots.txt吧）</li>
+<li>旁站攻击，通常会有意想不到的收获。旁站指的是跟你站点部署在相同一台服务器上的其他站点。虽然你本身站点做好了安全工作，但也难以保证其他站点不存在漏洞导致服务器被控制的。更新：今天刚好看到个例子，<a href="http://www.wooyun.org/bugs/wooyun-2015-0149244" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2015-0149244</a></li>
+<li>C端，顺便扫一下该服务器IP所在的C段</li>
+<li>上Github上搜索该域名对应的邮箱账号。很多公司都会有自己的邮箱系统，而开发人员有时候会很可爱地分享出他们的密码。搜索的关键词如：<code>smtp 某域名</code>，耐心翻的话可能有收获；有些开发还可能上传项目的代码呢！</li>
+<li>子域名，查询子域名还可以知道该站点存在哪些其他的系统，多了不少入口！</li>
+<li>Google收集信息，搜索语法如使用<code>site:域名</code>，<code>inurl:域名</code>等。</li>
+<li>常见网站的路径扫描，可能扫出后台地址，phpinfo等</li>
+</ul>
+<p>还有很多其他收集信息的方法，暂时能想到的就这些了。这里找到的信息有些足以令他们进行一次内网漫游了。</p>
+<h3 id="漏洞挖掘阶段"><a href="#漏洞挖掘阶段" class="headerlink" title="漏洞挖掘阶段"></a>漏洞挖掘阶段</h3><ul>
+<li>存在未授权的服务？比如mongodb，mysql，redis，memcached等服务配置错误，暴露在外网。这个足以利用来拿下服务器了。就拿前段时间比较火的redis未授权访问来举例吧，被挖到的话，他们就可以在运行redis的用户下插入<code>authorized_keys</code>，继而SSH到你的服务器上进行任何他想做的操作了。这个漏洞还可以利用来实现远程命令执行。乌云漏洞例子：<a href="http://wooyun.org/bugs/wooyun-2010-0154887" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2010-0154887</a></li>
+<li>后台登录没有验证码？或者验证码可以绕过，比如把验证码写在cookie里，比如一个验证码可以无限次使用？好吧，爆破不用商量。你是想象不到他们手上的字典是有多厉害！他们可以利用前面信息收集阶段的内容，有针对性地fuzz出一份成功率相当高的字典。如果你不幸使用了弱密码，比如：<code>admin, 123456</code>等等，那就更不用担心你的服务器不会被入侵了。例子太多，不举例。</li>
+<li>服务器上所使用的软件存在漏洞？著名的心脏出血漏洞就是这类漏洞的典型代表。而最近比较热门的是Java的反序列化的问题，乌云漏洞例子：<a href="http://wooyun.org/bugs/wooyun-2010-0156418" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2010-0156418</a></li>
+<li>站点相关的邮箱密码泄露了！他会在你的邮箱里找vpn连接，找各种密码，找任何有用的信息！放个例子：<a href="http://www.wooyun.org/bugs/wooyun-2010-0145407" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-0145407</a></li>
+<li>还有一个神器叫做metaspolit，目前我还不是很熟悉，暂时先留空。</li>
+</ul>
+<p>接下来要说的是关于应用层上的一些漏洞了。</p>
+<ul>
+<li>首先是XSS漏洞，分反射型和存储型等。XSS盗用户Cookie是挺常见的，利用XSS甚至可以打到后台：比如通过网站的私信功能呢发送给网站的管理员，管理员点开就完蛋了。例子：<a href="http://www.wooyun.org/bugs/wooyun-2010-0145738" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-0145738</a> 分享一个XSS实例教程：<a href="http://www.wooyun.org/whitehats/%E5%BF%83%E4%BC%A4%E7%9A%84%E7%98%A6%E5%AD%90" target="_blank" rel="external">link</a> 全部都是腾讯的案例！</li>
+<li>CSRF跨站伪造请求漏洞，危害的是网站的用户。如果管理员的某些操作，比如修改用户的密码存在这个漏洞，那么他就会写一个页面，然后社工管理员去点开。如果此时浏览器里管理员登陆，那么用户的密码就会被重置。这种漏洞在微博这种社交应用里危害更大，可直接导致蠕虫攻击。最近看到的例子：<a href="http://linux.im/2015/11/23/SinaWeibo-Worm.html" target="_blank" rel="external">http://linux.im/2015/11/23/SinaWeibo-Worm.html</a></li>
+<li>SQL注入，在乌云上挺常见的。他可以使用神奇SQLMap测试是否存在注入点。如果你的接口存在该漏洞，哪怕是只有一处，那也是致命的。如果运行数据库的用户权限够，利用来拿下你的服务器应该可以说是分分钟的事情，利用某些注入点sqlmap可以连接到服务器的shell上。另外，SQL注入漏洞也会泄露用户信息，造成脱裤。泄露管理员的账号和密码，直接导致后台沦陷。在乌云上也是能找到一大堆，不举例了。</li>
+<li>任意文件下载，如果你的站点存在这种漏洞，也就是说你的服务上的所有东西都可以被下载，包括你的服务器配置信息！看例子吧：<a href="http://www.wooyun.org/bugs/wooyun-2010-0145972" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-0145972</a> 标题：某省铁路建设投资公司网站系统漏洞导致任意文件下载并登录后台、任意文件修改并shell</li>
+<li>任意文件上传，你的站点没有检查用户上传上来的文件内容就直接保存了？还按照用户指定的后缀保存？还放到了可执行的目录下？那就等着被上传web shell吧。Github上有很多人分享的各种各样的webshell，上传到你的服务器之后，他就可以列出你的服务器上所有文件并下载，通过webshell在你的服务器上执行命令。乌云例子：<a href="http://www.wooyun.org/bugs/wooyun-2010-0151657" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-0151657</a></li>
+<li>逻辑漏洞，比如某个用户可以看到他本不应该看到的信息，常见的情景如用户信息页，只要使用其他用户ID就可以查看到相应的信息，常用的叫法是叫做越权，漏洞例子：<a href="http://wooyun.org/bugs/wooyun-2010-0156326" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2010-0156326</a> 。再比如找回密码的逻辑漏洞，找回密码使用手机找回，验证码只有4位，且可以被无限次猜。那就不要怪他用神奇burpsuite的intruder模式，直接猜到验证码重置任意用户信息了。关于常见的找回密码漏洞可以看：<a href="http://drops.wooyun.org/web/5048" target="_blank" rel="external">http://drops.wooyun.org/web/5048</a> 。再比如，把cookie当session使用，后台权限bypass等。</li>
+<li>可被暴力破解或撞库！比如没有限制用户密码尝试次数还没有带验证码，例子：<a href="http://wooyun.org/bugs/wooyun-2015-0124461" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2015-0124461</a></li>
+</ul>
+<p>还有很多其他问题，因为学艺未精，暂时写到这里吧。</p>
+<h3 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><p>当然是上报到安全平台刷rank，报告给厂商后，说不定厂商好心还可以拿个礼物！！！</p>
+<h2 id="吐槽"><a href="#吐槽" class="headerlink" title="吐槽"></a>吐槽</h2><ul>
+<li>好久没写博客了。（意思是写得不好都是我的错）</li>
+<li>这篇文章提到的东西我都不懂，我只是做个名词解释，目前还处于入门阶段！希望自己以后能深入研究各种思路。</li>
+<li>请不要利用文章中提到的知识干坏事！！！</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/安全/" rel="tag">#安全</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/12/08/contribute-to-open-source-project/" rel="next" title="如何加入开源项目">
+                <i class="fa fa-chevron-left"></i> 如何加入开源项目
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/12/26/2015-summary/" rel="prev" title="2015的无聊总结">
+                2015的无聊总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/12/05/how-do-your-websites-get-hacked/"
+           data-title="你的网站是怎么被黑的" data-url="http://zhchbin.github.io/2015/12/05/how-do-your-websites-get-hacked/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="Chaobin Zhang" />
+          <p class="site-author-name" itemprop="name">Chaobin Zhang</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">16</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhchbin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/zhchbin" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://wooyun.org/whitehats/zhchbin" target="_blank" title="Wooyun">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Wooyun
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#未知攻焉知防"><span class="nav-number">2.</span> <span class="nav-text">未知攻焉知防</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#收集信息阶段"><span class="nav-number">2.1.</span> <span class="nav-text">收集信息阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#漏洞挖掘阶段"><span class="nav-number">2.2.</span> <span class="nav-text">漏洞挖掘阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#漏洞利用"><span class="nav-number">2.3.</span> <span class="nav-text">漏洞利用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#吐槽"><span class="nav-number">3.</span> <span class="nav-text">吐槽</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chaobin Zhang</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhchbingithubblog"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

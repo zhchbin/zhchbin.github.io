@@ -1,0 +1,755 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next muse">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="OpenSource," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="zhchbin" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="I will record my status every week within GSoC 2013.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Record Of My GSoC 2013">
+<meta property="og:url" content="http://zhchbin.github.io/2013/05/30/recordofmygsoc2013/index.html">
+<meta property="og:site_name" content="zhchbin">
+<meta property="og:description" content="I will record my status every week within GSoC 2013.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Record Of My GSoC 2013">
+<meta name="twitter:description" content="I will record my status every week within GSoC 2013.">
+
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://zhchbin.github.io/2013/05/30/recordofmygsoc2013/"/>
+
+  <title> Record Of My GSoC 2013 | zhchbin </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?7c9353bfaa5510a38b4349ec413d2d18";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">zhchbin</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Record Of My GSoC 2013
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2013-05-30T00:00:00+08:00" content="2013-05-30">
+              2013-05-30
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2013/05/30/recordofmygsoc2013/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2013/05/30/recordofmygsoc2013/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="About"><a href="#About" class="headerlink" title="About"></a>About</h4><p>This is used to record my status and updates while fighting for GSoC 2013 weekly. Being the lucky dog that can take part in GSoC is the most wonderful moment in my life recently. The open source project I applied to is chromium, which is a monolithic application. <strong>Cause my English is poor, there will be many stupid grammar mistakes in this post. Sorry for it.</strong></p>
+<h4 id="Week-00"><a href="#Week-00" class="headerlink" title="Week 00"></a>Week 00</h4><ol>
+<li>Successfully be admitted. I was very thrilled when I got the congratulation email at about 03:00 am.</li>
+<li>Finish the ToDo list: Enrollment Form and Tax Form.</li>
+<li>Prepare for the implementation of my <a href="http://www.google-melange.com/gsoc/project/google/gsoc2013/zhchbin/6001" target="_blank" rel="external">proposal</a>, such as reading the code about chrome.command, which will be a good example for me.</li>
+</ol>
+<h4 id="Week-01"><a href="#Week-01" class="headerlink" title="Week 01"></a>Week 01</h4><ol>
+<li>Commit a fix for content shell on windows: Enable visual styles via adding shell.exe.manifest. <a href="https://chromiumcodereview.appspot.com/15649020" target="_blank" rel="external">Review URL</a>. This help me understand how to commit to the source tree successfully.</li>
+<li>Writing New API Proposal as my mentor recommend.</li>
+<li>Worry about my project because I didn’t hear anything from my mentor after I was selected even though I email him twice.</li>
+</ol>
+<h4 id="Week-02-03"><a href="#Week-02-03" class="headerlink" title="Week 02~03"></a>Week 02~03</h4><ol>
+<li>The Dragon Boat Festival, at home. Looking into several issues and try to fix them for warm-up.</li>
+<li>Working for the patch which can help the app window fit on screen when the screen layout changed. <a href="https://codereview.chromium.org/17378003/" target="_blank" rel="external">Code Review Url 17378003</a></li>
+</ol>
+<h4 id="Week-04"><a href="#Week-04" class="headerlink" title="Week 04"></a>Week 04</h4><ol>
+<li>Update my proposal and send it to be reviewed.</li>
+<li>Fix several trivial bugs. The previous patch 17378003 landed with the help of scheib. <a href="https://chromiumcodereview.appspot.com/17564005/" target="_blank" rel="external">Code Review Url 17564005</a></li>
+</ol>
+<h4 id="Week-05-07"><a href="#Week-05-07" class="headerlink" title="Week 05~07"></a>Week 05~07</h4><ol>
+<li>Investigate workarounds for missing minimize event in Ubuntu’s unity window manager. <a href="https://codereview.chromium.org/18741006/" target="_blank" rel="external">Code Review URL 18741006</a>. In the unity window manager in ubuntu, when you minimize a window it doesn’t let the application know via the normal GTK API’s. In this patch, it will use XEvent to catch the PropertyNotify event and check <code>_NET_WM_STATE</code> of the window to determine whether the state of the window is minimized.</li>
+<li>Fix a memory link within the patch for “Links in platform apps should open in the system default browser”. I find out when adding a test case for <code>ShellWindowLinkDelegate::OpenURLFromTab</code>. My patch used <code>scoped_ptr</code> to manage the ShellWindowLinkDelegate. <a href="https://codereview.chromium.org/18051015/" target="_blank" rel="external">Code Review URL 18051015</a>.</li>
+<li>Try to add a test case for <code>ShellWindowLinkDelegate::OpenURLFromTab</code>. However, the codereview is pending and waiting for reply. While developing this patch, I learn something about ASAN of chromium and find out the root cause of <a href="https://chromiumcodereview.appspot.com/10915047#msg27" target="_blank" rel="external">ASAN use-after-free errors</a>. You can find it within my comments: <a href="https://codereview.chromium.org/18192003/" target="_blank" rel="external">Code Review URL 18192003</a>.</li>
+<li>Add code to clear existing alarms when uninstalling extension. I fixed it after one hour the bug was reported. <a href="https://codereview.chromium.org/18713004/" target="_blank" rel="external">Code Review URL 18713004</a>.</li>
+<li>Help to fix a Pri-1 issue: <a href="https://code.google.com/p/chromium/issues/detail?id=257273" target="_blank" rel="external">Apps on NTP cannot be dragged</a>. My revision “209944” is suspected to cause this issue. However, the revision will only influence code in the windows platform and shouldn’t be relevant to. In order to prove it, I did some detective work to find out which revision introduced this bug. My work was praised in the <a href="https://code.google.com/p/chromium/issues/detail?id=257273#c10" target="_blank" rel="external">comment#10</a>.</li>
+<li>Help to narrow down cause of issue: ‘App APIs REPL’ app crashes. The crash is caused by incomplete API removal of managedModePrivate. <a href="https://code.google.com/p/chromium/issues/detail?id=256981#c2" target="_blank" rel="external">My Comment</a>.</li>
+<li>There are also several trivial commits that I have landed. For example, dragging the icon of the app out of the app launcher when its downloading is in process would crash Chrome. <a href="https://chromiumcodereview.appspot.com/18153015" target="_blank" rel="external">Review URL</a> fix this problem.</li>
+<li>Report some bugs that I have found: (1) <a href="http://crbug.com/257750" target="_blank" rel="external">Issue 257750</a>, Continue Reload of chrome://extensions will break it. (2) <a href="http://crbug.com/252663" target="_blank" rel="external">Issue 252663</a>, Using the Apps Developer Tool, restart the disabled unpacked platform app will crash chrome. I fixed it also. </li>
+</ol>
+<h4 id="Week-08"><a href="#Week-08" class="headerlink" title="Week 08"></a>Week 08</h4><ol>
+<li>Begin to work on media keys support via extending chrome.commands. My proposal is adding an attribution <code>enable_media_keys</code> and some build-in commands into chrome.commands. For more detail, please refer to the <a href="https://code.google.com/p/chromium/issues/detail?id=131612#c14" target="_blank" rel="external">comment</a> I post on the <a href="http://crbug.com/131612" target="_blank" rel="external">http://crbug.com/131612</a>. And I also wrote down the <a href="https://docs.google.com/document/d/1t1s7RD3Nh_5TX6r7bwf-_QGkGTNXb3-IoGmDbDsmqsQ/edit?usp=sharing" target="_blank" rel="external">problem</a> that I have met.</li>
+<li>Finish issue 18741006: [GTK] Report isMinimized and correctly restore app windows. I ignored to check <code>_NET_SUPPORTED</code> first of all to determine whether the absence of <code>_NET_WM_STATE_HIDDEN</code> infers that the window is not iconified. Thanks for the help from all the reviewers. <a href="https://codereview.chromium.org/18741006" target="_blank" rel="external">Code Review URL 18741006</a>.</li>
+</ol>
+<h4 id="Week-09"><a href="#Week-09" class="headerlink" title="Week 09"></a>Week 09</h4><ol>
+<li><a href="https://code.google.com/p/chromium/issues/detail?id=263968" target="_blank" rel="external">Issue 263968</a>: Packing extension with bad private key causes crash. It is caused by the code ignored a sign zip error. <a href="https://codereview.chromium.org/20142007/" target="_blank" rel="external">Code Review URL 20142007</a>. However, it got an not lgtm because Daniel Nishi has another patch out.</li>
+<li><a href="https://code.google.com/p/chromium/issues/detail?id=264645" target="_blank" rel="external">Issue 264645</a>: Icons for the apps are flickering while launching. Because when launching the apps, the unpacked icon url will be changed due to <a href="https://src.chromium.org/viewvc/chrome?revision=209895&amp;view=revision" target="_blank" rel="external">r209895</a>. The revision is to fix a bug where extension’s icon was not updated on reload. So it used an Date.now() to prevent the cache of image. My <a href="https://codereview.chromium.org/20728002/" target="_blank" rel="external">Code Review URL 20728002</a> is on the way.</li>
+<li><a href="https://code.google.com/p/chromium/issues/detail?id=264624" target="_blank" rel="external">Issue 264624</a>: App APIs REPL app Crashes while launching. This is a regression issue. The root cause is an incomplete API removal: pageLauncher in the <code>_api_features.json</code>. <a href="https://codereview.chromium.org/21028005/" target="_blank" rel="external">Code Review URL 21028005</a> remove remaining code related to pageLauncher, and add a test case to prevent future incomplete API removals in the <code>_api_features.json</code>. Still on the way. </li>
+<li><a href="https://code.google.com/p/chromium/issues/detail?id=261996" target="_blank" rel="external">Issue 261996</a>: Chevron icon (&gt;&gt;) appears in the browser action area for one extension. In the function BrowserActionsContainer::BrowserActionAdded of <code>chrome/browser/ui/views/browser_actions_container.cc</code>, if the extension is marked as upgrading, it will stop enlarge the container if it was already at maximum size. The upgrading extension didn’t remove the browser action, so it works correctly. However, when a extension is crashed (The browser action will be removed if it has) and reloaded (will add the browser action icon back if it has), it shouldn’t be marked as upgrading. The bug is introduced by <a href="http://src.chromium.org/viewvc/chrome?revision=196634&amp;view=revision" target="_blank" rel="external">r196634</a>. <a href="https://codereview.chromium.org/20909002/" target="_blank" rel="external">Code Review URL 20909002</a> still being reviewed.</li>
+</ol>
+<h4 id="Week-10"><a href="#Week-10" class="headerlink" title="Week 10"></a>Week 10</h4><ol>
+<li>Finish the CLs I submitted last week as reviewers’ comments.</li>
+<li>Investigate and follow up <a href="https://code.google.com/p/chromium/issues/detail?id=265798" target="_blank" rel="external">Issue 265798</a>: Unable to add extension from webstore. It looks like a regression because after the <a href="http://src.chromium.org/viewvc/chrome?revision=213568&amp;view=revision" target="_blank" rel="external">r213568</a>, Chrome will load icon =&gt; “64” field, before it chrome only load: 16, 48, 128, and the field of “64” is ignored, so it works OK in the previous version.</li>
+<li>Report a weird <a href="https://code.google.com/p/chromium/issues/detail?id=266891" target="_blank" rel="external">issue</a>: Browser action container shrink and only chevron icon is shown when “ExtensionToolbarModel::OnExtensionToolbarPrefChange” is called. Spend my time on finding the way to reproduce the problem reliably. But it seems to happen only in my computer at last.</li>
+</ol>
+<h4 id="Week-11"><a href="#Week-11" class="headerlink" title="Week 11"></a>Week 11</h4><p>Last week I went back home to take a break, but I still keep my eyes on several issues.</p>
+<ol>
+<li><a href="https://code.google.com/p/chromium/issues/detail?id=267187" target="_blank" rel="external">Issue 267187</a>: Apps Developer Tool, Installation warnings are not shown properly. This is easy to fix because the Apps Developer Tool should keep consistence with the <code>chrome://extensions</code>, so I use the same appearance as the page. <a href="https://chromiumcodereview.appspot.com/22191003" target="_blank" rel="external">Code Review URL 22191003</a>.</li>
+<li><a href="https://code.google.com/p/chromium/issues/detail?id=257474" target="_blank" rel="external">Issue 257474</a>: Firefox bookmarks file with <code>&lt;HR&gt;</code> tags and folders doesn’t import correctly. This is a Hotlist-GoodFirstBug. Because the HTML file exported from Firefox will contain <code>&lt;HR&gt;</code> tags, which is the bookmark entries separator in Firefox that Chrome does not support. Note that there can be multiple <code>&lt;HR&gt;</code> tags at the beginning of a single line. My fix is simply skipping over the tags. And by the way, as the suggestion of @gab, I refactor the <code>bookmark_html_reader_unittest</code> to avoid repeating the initialization code that all of these tests have in common. <a href="https://chromiumcodereview.appspot.com/22408007" target="_blank" rel="external">Code Review URL 22408007</a>.</li>
+</ol>
+<h4 id="Week-12"><a href="#Week-12" class="headerlink" title="Week 12"></a>Week 12</h4><p>This week I have to check in and take a medical examination because our school started. It’s a waste of time and energy.</p>
+<ol>
+<li>The first issue I working on this week is <a href="https://code.google.com/p/chromium/issues/detail?id=269450" target="_blank" rel="external">Issue 269450</a>: Extensions page is scrolling down and up while scrolling on the “keyboard shotcuts” page. Thanks for the help from @xiyuan and @miket first of all. My first patch is using a css style “no-scroll” to remove the scrollability of page when showing the overlay. However, the page will change when the scrollbar disappears/shows. The problem is more apparent when the browser window is not wide enough. Finally, with @xiyuan’s instruction, we fixed it with following <a href="https://chromiumcodereview.appspot.com/22661007" target="_blank" rel="external">CL</a>. The pacth also expose a <a href="https://code.google.com/p/chromium/issues/detail?id=276043" target="_blank" rel="external">Blink bug</a> luckily.</li>
+<li>Pick up <a href="https://code.google.com/p/chromium/issues/detail?id=131612" target="_blank" rel="external">Issue 131612</a>: Multimedia keys API support. And ask for @finnur and @mek for suggestion. Now I have known how to continue my proposal clearly.</li>
+</ol>
+<h4 id="Week-13"><a href="#Week-13" class="headerlink" title="Week 13"></a>Week 13</h4><ol>
+<li><a href="https://code.google.com/p/chromium/issues/detail?id=270844" target="_blank" rel="external">Issue 270844</a>: GTalk pinned to Taskbar: Chrome window opens instead of GTalk window. When panel widnow is pinned to the taskbar, the relaunch behavior is weird to the user. Panel windows are created and used by the extensions. When they are pinned to the taskbar, the icon will change to Chrome instead of the original icon. What’s more, the relaunch behavior (Close all panel windows and then click the pinned icon will open a chrome new window) will confuse the user. Why we can’t implement the support to pin the panel window on the taskbar? It is because launching chrome executable with extension id (in this case, hangout id), will launch chrome browser with Hangout options page, instead of the chat window. The <a href="https://codereview.chromium.org/23146009/" target="_blank" rel="external">Code Review URL 23146009</a>: Remove “Pin this program to taskbar” of panel window. Use <code>SHGetPropertyStoreForWindow</code> to remove it.</li>
+<li><a href="https://codereview.chromium.org/22859067/" target="_blank" rel="external">Code Review URL 22859067</a>: Revert r217952 to make behavior of horizontal scroll bar in page <code>chrome://extensions</code> keep consistence with <code>chrome://settings</code>. My <code>r217952</code> has side effect, <a href="https://code.google.com/p/chromium/issues/detail?id=277974" target="_blank" rel="external">Issue 277974</a>: Horizontal scroll bar issue for <code>chrome://extensions/</code> page. So I revert it and use my original patch to deal with the <a href="https://code.google.com/p/chromium/issues/detail?id=269450" target="_blank" rel="external">http://crbug.com/269450</a>.</li>
+<li><a href="https://codereview.chromium.org/22801019/" target="_blank" rel="external">Code Review URL 22801019</a>: Provide i18n support for descriptions in commands API.</li>
+<li><a href="https://codereview.chromium.org/23290007/" target="_blank" rel="external">Code Review URL 23290007</a>: Fix nit of chrome.commands doc: invalid json format. </li>
+</ol>
+<h4 id="Week-14"><a href="#Week-14" class="headerlink" title="Week 14"></a>Week 14</h4><ol>
+<li><a href="https://code.google.com/p/chromium/issues/detail?id=131612" target="_blank" rel="external">Issue 131612</a>: Multimedia keys API support. I focused on this issue this week. My CL has committed. It will allow the user to use the media keys: MediaNextTrack’, ‘MediaPrevTrack’, ‘MediaStop’, ‘MediaPlayPause’ with named command. <a href="https://codereview.chromium.org/23445013/" target="_blank" rel="external">Code Review URL 23445013</a>: Parse media keys for named command in the manifest.</li>
+<li><a href="https://codereview.chromium.org/23486008/" target="_blank" rel="external">Code Review URL 23486008</a>: Fix wrong description of chrome.commands example.</li>
+</ol>
+<h4 id="Week-15"><a href="#Week-15" class="headerlink" title="Week 15"></a>Week 15</h4><p>I’m almost crazy this week due to heavy homework. I worked on serveral issues but got nothing. Sorry for it.</p>
+<ol>
+<li><a href="https://code.google.com/p/chromium/issues/detail?id=242790" target="_blank" rel="external">Issue 242790</a>: App windows with ids should remember fullscreen state. It can be fixed easilly on windows and linux platform just adding trivial change to the <code>native_app_window_views.cc</code> etc. Sadly, it’s reverted. The reason for revert: Causes PlatformAppBrowserTest.ShellWindowRestoreState to fail on Mac OS X 10.6. But I didn’t have OS X 10.6 for testing. Note: it can pass try job: <code>mac_rel</code>. Though the issue didn’t being fixed successfully, I also found a bug: <a href="https://code.google.com/p/chromium/issues/detail?id=287596" target="_blank" rel="external">Issue 287596</a>: App Window return false of isFullscreen when initially created with {state: “fullscreen”}.</li>
+<li><a href="https://code.google.com/p/chromium/issues/detail?id=259040" target="_blank" rel="external">Issue 259040</a>: Extensions with very long names push dialog off screen. I proposal to show the whole name with adding a line of code on <code>views</code> platform. Also looking into how it can be done on <code>gtk</code>. But I didn’t have enough time to finish it.</li>
+<li>Help triage <a href="https://code.google.com/p/chromium/issues/detail?id=288625#c3" target="_blank" rel="external">Issue 288625</a> to the right person.</li>
+</ol>
+<h4 id="From-16th-Week…"><a href="#From-16th-Week…" class="headerlink" title="From 16th Week…"></a>From 16th Week…</h4><p>In this period I was working with @Finnur to implement first part of supporting global extension commands. As my proposal, chrome will read an optional “global” flag from the manifest and register the shortcuts as global if it is set to true. Now the <a href="https://codereview.chromium.org/23812010/" target="_blank" rel="external">CL</a> had got <code>LGTMs</code> from the reviewers and waiting for committing to the source tree. And I will continue to do a followup CL after @Finnur’s stuff in.</p>
+<p>In the meantime, I passed the final evaluation successfully. I owe great thanks to my mentor Marijn, the excellent software engineers from Google, especially the reviewers (@kalman, @finnur, @scheib, @Daniel Nishi, @miket etc) who had taught me a lot that I will not learn in school. Finnally, great thanks to Google.</p>
+<h4 id="The-End"><a href="#The-End" class="headerlink" title="The End"></a>The End</h4><p>From Google Open Source Blog, <a href="http://google-opensource.blogspot.com/2013/10/9th-year-of-google-summer-of-code-draws.html" target="_blank" rel="external">9th Year of Google Summer of Code draws to a close</a></p>
+<p>The end of summer in the Northern Hemisphere also signals the end of the 2013 Google Summer of Code, our program designed to introduce university students from around the world to open source development.</p>
+<p>In June, 1,192 university students from 69 countries began writing code for 177 open source organizations with the help of 2,218 mentors from 71 countries – quite the team effort! We are excited to announce that 88.6%* (1056) of the students passed their final evaluations. If you would like to read about more numbers on the Google Summer of Code program you can view a variety of statistics on the previous eight years of the program.</p>
+<p>Stay tuned to this blog each Friday until the end of the year for wrap up posts from many of this year’s Mentoring organizations.</p>
+<p>Now that the program has concluded, the students are busy preparing their code samples for all eyes to see. Soon you will be able to go to the program site where organizations will have links to the student’s code repositories.</p>
+<p>Thank you to all of the students, mentors and organization administrators that have helped to make this 9th year of the Google Summer of Code a great success!</p>
+<p>By Carol Smith, Open Source Programs</p>
+<h4 id="It’s-not-the-End"><a href="#It’s-not-the-End" class="headerlink" title="It’s not the End."></a>It’s not the End.</h4>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OpenSource/" rel="tag">#OpenSource</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/04/25/first-attempt-to-fix-a-bug-of-chromium/" rel="next" title="First attempt to fix a bug of chromium">
+                <i class="fa fa-chevron-left"></i> First attempt to fix a bug of chromium
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/10/17/what-is-pay-me-to-learn/" rel="prev" title="What is Pay Me to Learn">
+                What is Pay Me to Learn <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2013/05/30/recordofmygsoc2013/"
+           data-title="Record Of My GSoC 2013" data-url="http://zhchbin.github.io/2013/05/30/recordofmygsoc2013/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="Chaobin Zhang" />
+          <p class="site-author-name" itemprop="name">Chaobin Zhang</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">16</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhchbin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/zhchbin" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://wooyun.org/whitehats/zhchbin" target="_blank" title="Wooyun">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Wooyun
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#About"><span class="nav-number">1.</span> <span class="nav-text">About</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Week-00"><span class="nav-number">2.</span> <span class="nav-text">Week 00</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Week-01"><span class="nav-number">3.</span> <span class="nav-text">Week 01</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Week-02-03"><span class="nav-number">4.</span> <span class="nav-text">Week 02~03</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Week-04"><span class="nav-number">5.</span> <span class="nav-text">Week 04</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Week-05-07"><span class="nav-number">6.</span> <span class="nav-text">Week 05~07</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Week-08"><span class="nav-number">7.</span> <span class="nav-text">Week 08</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Week-09"><span class="nav-number">8.</span> <span class="nav-text">Week 09</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Week-10"><span class="nav-number">9.</span> <span class="nav-text">Week 10</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Week-11"><span class="nav-number">10.</span> <span class="nav-text">Week 11</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Week-12"><span class="nav-number">11.</span> <span class="nav-text">Week 12</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Week-13"><span class="nav-number">12.</span> <span class="nav-text">Week 13</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Week-14"><span class="nav-number">13.</span> <span class="nav-text">Week 14</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Week-15"><span class="nav-number">14.</span> <span class="nav-text">Week 15</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#From-16th-Week…"><span class="nav-number">15.</span> <span class="nav-text">From 16th Week…</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#The-End"><span class="nav-number">16.</span> <span class="nav-text">The End</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#It’s-not-the-End"><span class="nav-number">17.</span> <span class="nav-text">It’s not the End.</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chaobin Zhang</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhchbingithubblog"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

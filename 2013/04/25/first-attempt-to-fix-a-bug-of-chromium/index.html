@@ -1,0 +1,724 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next muse">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="C++,OpenSource," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="zhchbin" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="Share my first failed experience about code contribution to chromium.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="First attempt to fix a bug of chromium">
+<meta property="og:url" content="http://zhchbin.github.io/2013/04/25/first-attempt-to-fix-a-bug-of-chromium/index.html">
+<meta property="og:site_name" content="zhchbin">
+<meta property="og:description" content="Share my first failed experience about code contribution to chromium.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="First attempt to fix a bug of chromium">
+<meta name="twitter:description" content="Share my first failed experience about code contribution to chromium.">
+
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://zhchbin.github.io/2013/04/25/first-attempt-to-fix-a-bug-of-chromium/"/>
+
+  <title> First attempt to fix a bug of chromium | zhchbin </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?7c9353bfaa5510a38b4349ec413d2d18";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">zhchbin</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                First attempt to fix a bug of chromium
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2013-04-25T00:00:00+08:00" content="2013-04-25">
+              2013-04-25
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Coding/" itemprop="url" rel="index">
+                    <span itemprop="name">Coding</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2013/04/25/first-attempt-to-fix-a-bug-of-chromium/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2013/04/25/first-attempt-to-fix-a-bug-of-chromium/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><p>Recently I spent most of my time in fixing a tricky <a href="http://crbug.com/148463" target="_blank" rel="external">bug</a> of chromium. By now, my patch is still in my local repo though it seems to solve the problem. This post is to record what I have learned from my failed attempt.</p>
+<h3 id="Detail"><a href="#Detail" class="headerlink" title="Detail"></a>Detail</h3><p>Issue title: Report an error when chrome.app.window.create is called with a URL that does not exist.</p>
+<p>In the background js of chrome packaged app, the app developer can pass a url to the api of creating a window. Currently this api will try to load the url in spite of the existence of the file. So the purpose of this issue is to add some code which can check the existence of the url, if it can’t be loaded, report an error. For example, in the following javascript code, the <code>aoeuaoeu.html</code> doesn’t exist, an error should be reported.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chrome.app.runtime.onLaunched.addListener(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> chrome.app.window.create(<span class="string">'aoeuaoeu.html'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>OK……It can to be done easily just adding serveral lines of code before the window is shown at my first sight. So after one afternoon, I finish it with the following patch.</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">diff --git a/chrome/browser/extensions/api/app_window/app_window_api.cc b/chrome/browser/extensions/api/app_window/app_window_api.cc</span><br><span class="line">index 1f726db..b838cb8 100644</span><br><span class="line"><span class="header">--- a/chrome/browser/extensions/api/app_window/app_window_api.cc</span></span><br><span class="line"><span class="header">+++ b/chrome/browser/extensions/api/app_window/app_window_api.cc</span></span><br><span class="line"><span class="chunk">@@ -5,6 +5,8 @@</span></span><br><span class="line"> #include "chrome/browser/extensions/api/app_window/app_window_api.h"</span><br><span class="line"> </span><br><span class="line"> #include "base/command_line.h"</span><br><span class="line"><span class="addition">+#include "base/file_util.h"</span></span><br><span class="line"><span class="addition">+#include "base/stringprintf.h"</span></span><br><span class="line"> #include "base/time.h"</span><br><span class="line"> #include "base/values.h"</span><br><span class="line"> #include "chrome/browser/app_mode/app_mode_utils.h"</span><br><span class="line">@@ -32,6 +34,8 @@ namespace extensions &#123;</span><br><span class="line"> namespace app_window_constants &#123;</span><br><span class="line"> const char kInvalidWindowId[] =</span><br><span class="line">     "The window id can not be more than 256 characters long.";</span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+const char kInvalidURL[] = "Could not load invalid url '%s'.";</span></span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> const char kNoneFrameOption[] = "none";</span><br><span class="line">@@ -86,12 +90,27 @@ bool AppWindowCreateFunction::RunImpl() &#123;</span><br><span class="line">   EXTENSION_FUNCTION_VALIDATE(params.get());</span><br><span class="line"> </span><br><span class="line">   GURL url = GetExtension()-&gt;GetResourceURL(params-&gt;url);</span><br><span class="line"><span class="addition">+  bool is_component_app_and_has_scheme = false;</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line">   // Allow absolute URLs for component apps, otherwise prepend the extension</span><br><span class="line">   // path.</span><br><span class="line">   if (GetExtension()-&gt;location() == extensions::Manifest::COMPONENT) &#123;</span><br><span class="line">     GURL absolute = GURL(params-&gt;url);</span><br><span class="line"><span class="deletion">-    if (absolute.has_scheme())</span></span><br><span class="line"><span class="addition">+    if (absolute.has_scheme()) &#123;</span></span><br><span class="line">       url = absolute;</span><br><span class="line"><span class="addition">+      is_component_app_and_has_scheme = true;</span></span><br><span class="line"><span class="addition">+    &#125;</span></span><br><span class="line"><span class="addition">+  &#125;</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+  // Do not check the absolute URLs for component apps.</span></span><br><span class="line"><span class="addition">+  if (!is_component_app_and_has_scheme) &#123;</span></span><br><span class="line"><span class="addition">+    base::ThreadRestrictions::ScopedAllowIO allow_io;</span></span><br><span class="line"><span class="addition">+    if (!file_util::PathExists(</span></span><br><span class="line"><span class="addition">+            GetExtension()-&gt;GetResource(params-&gt;url).GetFilePath())) &#123;</span></span><br><span class="line"><span class="addition">+      error_ = base::StringPrintf(app_window_constants::kInvalidURL,</span></span><br><span class="line"><span class="addition">+                                  url.spec().c_str());</span></span><br><span class="line"><span class="addition">+      return false;</span></span><br><span class="line"><span class="addition">+    &#125;</span></span><br><span class="line">   &#125;</span><br><span class="line"> </span><br><span class="line">   bool inject_html_titlebar = false;</span><br><span class="line"><span class="deletion">--</span></span><br></pre></td></tr></table></figure>
+<p>All of my change is only located in <code>app_window_api.cc</code>, the implementation of <code>chrome.app.window.create</code>. This api is working in the UI thread, so IO should be allowed in order to check the file existence using <code>file_util::PathExists</code>. I was very happy when I finished this patch. Everything seems to work well, once the file doesn’t exist, an error message will report in the console. Then I just begin to upload this to review. But I couldn’t do that because my code didn’t pass presubmit check. What? The reason I can get is</p>
+<blockquote>
+<p>New code should not use ScopedAllowIO. Post a task to the blocking pool or the FILE thread insead.</p>
+</blockquote>
+<p>Suddenlly I didn’t know how to solve this problem, though the message give me a direction. Then I email one of the engineers of the chromium who is the owner of this issue that <code>git cl upload</code> suggested. My mail contont is</p>
+<blockquote>
+<p>Sorry for disturb first. I am a student who want to contribute code to chromium. The first issue I choose is the <a href="http://crbug.com/148463" target="_blank" rel="external">http://crbug.com/148463</a>. In the patch I need to check whether a FilePath exists sync? This will not block the UI thread as far as I can see(Maybe I am wrong? I’m just an newbie), so I use ScopedAllowIO here. In the attach files is my stupid patch, any suggestion?</p>
+</blockquote>
+<p>He is a very nice man and give me kindly reply.</p>
+<blockquote>
+<p>Checking whether a FilePath exists is definitely a blocking I/O operation, and must not be done on the UI thread. For example, if that part of the file system is not cached in RAM, it might be the case that the disk will have to:</p>
+<p>(1) spin up from standing, if it wasn’t already spinning,</p>
+<p>(2) seek to one or more file system tables on the disk, and</p>
+<p>(3) read them out.</p>
+<p>That could actually take a really long time (up to several hundred milliseconds), during which time no other code would be able to run on the UI thread! That’s totally unacceptable :)</p>
+<p>In addition, your patch has a couple other issues:</p>
+<p>(1) there’s a race condition – it’s possible that, between when you check for the existence of the file and when it is loaded in the web view, the file is removed, and</p>
+<p>(2) the mere existence of a path is insufficient to determine whether it can successfully be loaded: it could be non-readable by the user, or it could be a broken symlink, or it could be a folder.</p>
+<p>Good luck! You picked a slightly tricky bug :)</p>
+</blockquote>
+<p>This does really teach me a lot!! Things become more interesting for me now!</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag">#C++</a>
+          
+            <a href="/tags/OpenSource/" rel="tag">#OpenSource</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/01/24/node-webkit/" rel="next" title="node-webkit系列（00）：什么是node-webkit？">
+                <i class="fa fa-chevron-left"></i> node-webkit系列（00）：什么是node-webkit？
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/05/30/recordofmygsoc2013/" rel="prev" title="Record Of My GSoC 2013">
+                Record Of My GSoC 2013 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2013/04/25/first-attempt-to-fix-a-bug-of-chromium/"
+           data-title="First attempt to fix a bug of chromium" data-url="http://zhchbin.github.io/2013/04/25/first-attempt-to-fix-a-bug-of-chromium/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="Chaobin Zhang" />
+          <p class="site-author-name" itemprop="name">Chaobin Zhang</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">16</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhchbin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/zhchbin" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://wooyun.org/whitehats/zhchbin" target="_blank" title="Wooyun">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Wooyun
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background"><span class="nav-number">1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Detail"><span class="nav-number">2.</span> <span class="nav-text">Detail</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chaobin Zhang</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhchbingithubblog"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

