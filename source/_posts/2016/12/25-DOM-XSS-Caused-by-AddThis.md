@@ -93,4 +93,4 @@ c && u(window, "message", function(e) {
 < true
 ```
 
-<script src="https://raw.githubusercontent.com/zhchbin/zhchbin.github.io/source/js/addthis_widget.js"></script>
+<script type="text/javascript" src="https://cdn.rawgit.com/zhchbin/zhchbin.github.io/source/js/addthis_widget.js"></script>
