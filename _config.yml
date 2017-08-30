@@ -84,7 +84,7 @@ deploy:
 
 avatar: /images/avatar.jpeg
 
-duoshuo_shortname: zhchbingithubblog
+disqus_shortname: zhchbin
 
 jiathis: true
 
