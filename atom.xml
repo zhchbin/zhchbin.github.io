@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://zhchbin.github.io/"/>
-  <updated>2017-08-30T15:20:09.000Z</updated>
+  <updated>2017-09-09T14:22:27.000Z</updated>
   <id>http://zhchbin.github.io/</id>
   
   <author>
@@ -20,9 +20,9 @@
     <link href="http://zhchbin.github.io/2017/08/30/Uber-XSS-via-Cookie/"/>
     <id>http://zhchbin.github.io/2017/08/30/Uber-XSS-via-Cookie/</id>
     <published>2017-08-30T11:36:20.000Z</published>
-    <updated>2017-08-30T15:20:09.000Z</updated>
+    <updated>2017-09-09T14:22:27.000Z</updated>
     
-    <content type="html"><![CDATA[<p>This write up is about part of my last XSS report to Uber@hackerone. Sorry for my poor English first of all, I will try my best to explain this XSS problem throughly.</p>
+    <content type="html"><![CDATA[<p>This write up is about part of my latest XSS report to Uber@hackerone. Sorry for my poor English first of all, I will try my best to explain this XSS problem throughly.</p>
 <h2 id="JSONP-Request"><a href="#JSONP-Request" class="headerlink" title="JSONP Request"></a>JSONP Request</h2><p>Several months ago, when enjoying my Spring Festival Holiday at home, I decided to do something interesting, so I started hunting for a bug. I like searching in the chrome dev tools. This time my lucky word was <code>jsonp</code>, and my target domain was <code>https://get.uber.com</code>. Let’s look at what I had found at that time.</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">idrCall: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a, b;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.idrCallPending ? <span class="keyword">void</span> <span class="number">0</span> : (<span class="keyword">this</span>.log(<span class="string">"making idr call"</span>),</span><br><span class="line">    a = <span class="keyword">this</span>.rfiServer ? <span class="keyword">this</span>.rfiServer : <span class="string">"a.rfihub.com"</span>,</span><br><span class="line">    b = <span class="keyword">this</span>.getProtocol() + <span class="string">"//"</span> + a + <span class="string">"/idr.js"</span>,</span><br><span class="line">    <span class="keyword">this</span>.jsonpGet(b, &#123;&#125;, <span class="keyword">this</span>.idrCallback, <span class="string">"cmZpSWRJbkNhY2hl"</span>),</span><br><span class="line">    <span class="keyword">this</span>.idrCallPending = !<span class="number">0</span>)</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
 <p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fj2030d1ocj21d00r0gsw.jpg" alt=""></p>
@@ -59,7 +59,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;This write up is about part of my last XSS report to Uber@hackerone. Sorry for my poor English first of all, I will try my best to explai
+      &lt;p&gt;This write up is about part of my latest XSS report to Uber@hackerone. Sorry for my poor English first of all, I will try my best to expl
     
     </summary>
     
