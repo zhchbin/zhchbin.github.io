@@ -84,16 +84,13 @@
 
 
 
-<meta name="description">
 <meta property="og:type" content="website">
 <meta property="og:title" content="zhchbin">
 <meta property="og:url" content="http://zhchbin.github.io/page/7/index.html">
 <meta property="og:site_name" content="zhchbin">
-<meta property="og:description">
+<meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="zhchbin">
-<meta name="twitter:description">
-
 
 
 
@@ -331,14 +328,14 @@ $(function() {
 });
 </script>
 
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这个标题的来源是@evilcos（余弦大大）在Github上分享的一个PPT，感兴趣的可以去他的<a href="https://github.com/evilcos/papers/blob/9b16668d4f9733272082bb9b399acfb85ba8083c/%E7%A7%91%E6%99%AE_%E4%BD%A0%E7%9A%84%E7%BD%91%E7%AB%99%E6%98%AF%E6%80%8E%E4%B9%88%E8%A2%AB%E9%BB%91%E7%9A%84.pptx" target="_blank" rel="external">repo</a>下载。写这篇博客主要是想给自己最近业余时间学到的安全相关的知识做个总结，主要是关于网站常见漏洞的攻击和利用，不过由于我也是刚入门，写得肯定不怎么到位，不感兴趣就不要浪费时间了哈。</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这个标题的来源是@evilcos（余弦大大）在Github上分享的一个PPT，感兴趣的可以去他的<a href="https://github.com/evilcos/papers/blob/9b16668d4f9733272082bb9b399acfb85ba8083c/%E7%A7%91%E6%99%AE_%E4%BD%A0%E7%9A%84%E7%BD%91%E7%AB%99%E6%98%AF%E6%80%8E%E4%B9%88%E8%A2%AB%E9%BB%91%E7%9A%84.pptx" target="_blank" rel="noopener">repo</a>下载。写这篇博客主要是想给自己最近业余时间学到的安全相关的知识做个总结，主要是关于网站常见漏洞的攻击和利用，不过由于我也是刚入门，写得肯定不怎么到位，不感兴趣就不要浪费时间了哈。</p>
 <p>很久之前在乌云上注册过一个账号，最近也刷了一波漏洞，终于升级变成了实习白帽子的级别。</p>
 <h2 id="未知攻焉知防"><a href="#未知攻焉知防" class="headerlink" title="未知攻焉知防"></a>未知攻焉知防</h2><p>这句话可谓安全圈里的金句（据说出自TK教主，我还没混入圈子，不敢确定）。如果给一个黑客一个网站，他们会怎么下手呢？这里的黑客当然是好人！业界称他们为白帽子。而攻击的过程也叫做渗透测试。</p>
 <h3 id="收集信息阶段"><a href="#收集信息阶段" class="headerlink" title="收集信息阶段"></a>收集信息阶段</h3><ul>
 <li>域名会给出什么信息呢？通过查询whois，就可以得到站长的信息（如邮箱，注册人，地址，电话等）</li>
 <li>域名对应IP地址，对该IP使用nmap扫描，可以知道该服务器的基本信息，如开启了什么端口，21是FTP，22是SSH，80/443是HTTP服务的端口，3306就是MYSQL的默认端口，服务器上使用的是什么系统。</li>
 <li>查看网站的robots.txt文件，开发者不希望被爬虫抓取的信息都在这里哦，所以可能有后台地址，有可能指向网站的配置文件（你也会好奇你怎么配置了这么奇怪的robots.txt吧）</li>
-<li>旁站攻击，通常会有意想不到的收获。旁站指的是跟你站点部署在相同一台服务器上的其他站点。虽然你本身站点做好了安全工作，但也难以保证其他站点不存在漏洞导致服务器被控制的。更新：今天刚好看到个例子，<a href="http://www.wooyun.org/bugs/wooyun-2015-0149244" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2015-0149244</a></li>
+<li>旁站攻击，通常会有意想不到的收获。旁站指的是跟你站点部署在相同一台服务器上的其他站点。虽然你本身站点做好了安全工作，但也难以保证其他站点不存在漏洞导致服务器被控制的。更新：今天刚好看到个例子，<a href="http://www.wooyun.org/bugs/wooyun-2015-0149244" target="_blank" rel="noopener">http://www.wooyun.org/bugs/wooyun-2015-0149244</a></li>
 <li>C端，顺便扫一下该服务器IP所在的C段</li>
 <li>上Github上搜索该域名对应的邮箱账号。很多公司都会有自己的邮箱系统，而开发人员有时候会很可爱地分享出他们的密码。搜索的关键词如：<code>smtp 某域名</code>，耐心翻的话可能有收获；有些开发还可能上传项目的代码呢！</li>
 <li>子域名，查询子域名还可以知道该站点存在哪些其他的系统，多了不少入口！</li>
@@ -347,21 +344,21 @@ $(function() {
 </ul>
 <p>还有很多其他收集信息的方法，暂时能想到的就这些了。这里找到的信息有些足以令他们进行一次内网漫游了。</p>
 <h3 id="漏洞挖掘阶段"><a href="#漏洞挖掘阶段" class="headerlink" title="漏洞挖掘阶段"></a>漏洞挖掘阶段</h3><ul>
-<li>存在未授权的服务？比如mongodb，mysql，redis，memcached等服务配置错误，暴露在外网。这个足以利用来拿下服务器了。就拿前段时间比较火的redis未授权访问来举例吧，被挖到的话，他们就可以在运行redis的用户下插入<code>authorized_keys</code>，继而SSH到你的服务器上进行任何他想做的操作了。这个漏洞还可以利用来实现远程命令执行。乌云漏洞例子：<a href="http://wooyun.org/bugs/wooyun-2010-0154887" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2010-0154887</a></li>
+<li>存在未授权的服务？比如mongodb，mysql，redis，memcached等服务配置错误，暴露在外网。这个足以利用来拿下服务器了。就拿前段时间比较火的redis未授权访问来举例吧，被挖到的话，他们就可以在运行redis的用户下插入<code>authorized_keys</code>，继而SSH到你的服务器上进行任何他想做的操作了。这个漏洞还可以利用来实现远程命令执行。乌云漏洞例子：<a href="http://wooyun.org/bugs/wooyun-2010-0154887" target="_blank" rel="noopener">http://wooyun.org/bugs/wooyun-2010-0154887</a></li>
 <li>后台登录没有验证码？或者验证码可以绕过，比如把验证码写在cookie里，比如一个验证码可以无限次使用？好吧，爆破不用商量。你是想象不到他们手上的字典是有多厉害！他们可以利用前面信息收集阶段的内容，有针对性地fuzz出一份成功率相当高的字典。如果你不幸使用了弱密码，比如：<code>admin, 123456</code>等等，那就更不用担心你的服务器不会被入侵了。例子太多，不举例。</li>
-<li>服务器上所使用的软件存在漏洞？著名的心脏出血漏洞就是这类漏洞的典型代表。而最近比较热门的是Java的反序列化的问题，乌云漏洞例子：<a href="http://wooyun.org/bugs/wooyun-2010-0156418" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2010-0156418</a></li>
-<li>站点相关的邮箱密码泄露了！他会在你的邮箱里找vpn连接，找各种密码，找任何有用的信息！放个例子：<a href="http://www.wooyun.org/bugs/wooyun-2010-0145407" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-0145407</a></li>
+<li>服务器上所使用的软件存在漏洞？著名的心脏出血漏洞就是这类漏洞的典型代表。而最近比较热门的是Java的反序列化的问题，乌云漏洞例子：<a href="http://wooyun.org/bugs/wooyun-2010-0156418" target="_blank" rel="noopener">http://wooyun.org/bugs/wooyun-2010-0156418</a></li>
+<li>站点相关的邮箱密码泄露了！他会在你的邮箱里找vpn连接，找各种密码，找任何有用的信息！放个例子：<a href="http://www.wooyun.org/bugs/wooyun-2010-0145407" target="_blank" rel="noopener">http://www.wooyun.org/bugs/wooyun-2010-0145407</a></li>
 <li>还有一个神器叫做metaspolit，目前我还不是很熟悉，暂时先留空。</li>
 </ul>
 <p>接下来要说的是关于应用层上的一些漏洞了。</p>
 <ul>
-<li>首先是XSS漏洞，分反射型和存储型等。XSS盗用户Cookie是挺常见的，利用XSS甚至可以打到后台：比如通过网站的私信功能呢发送给网站的管理员，管理员点开就完蛋了。例子：<a href="http://www.wooyun.org/bugs/wooyun-2010-0145738" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-0145738</a> 分享一个XSS实例教程：<a href="http://www.wooyun.org/whitehats/%E5%BF%83%E4%BC%A4%E7%9A%84%E7%98%A6%E5%AD%90" target="_blank" rel="external">link</a> 全部都是腾讯的案例！</li>
-<li>CSRF跨站伪造请求漏洞，危害的是网站的用户。如果管理员的某些操作，比如修改用户的密码存在这个漏洞，那么他就会写一个页面，然后社工管理员去点开。如果此时浏览器里管理员登陆，那么用户的密码就会被重置。这种漏洞在微博这种社交应用里危害更大，可直接导致蠕虫攻击。最近看到的例子：<a href="http://linux.im/2015/11/23/SinaWeibo-Worm.html" target="_blank" rel="external">http://linux.im/2015/11/23/SinaWeibo-Worm.html</a></li>
+<li>首先是XSS漏洞，分反射型和存储型等。XSS盗用户Cookie是挺常见的，利用XSS甚至可以打到后台：比如通过网站的私信功能呢发送给网站的管理员，管理员点开就完蛋了。例子：<a href="http://www.wooyun.org/bugs/wooyun-2010-0145738" target="_blank" rel="noopener">http://www.wooyun.org/bugs/wooyun-2010-0145738</a> 分享一个XSS实例教程：<a href="http://www.wooyun.org/whitehats/%E5%BF%83%E4%BC%A4%E7%9A%84%E7%98%A6%E5%AD%90" target="_blank" rel="noopener">link</a> 全部都是腾讯的案例！</li>
+<li>CSRF跨站伪造请求漏洞，危害的是网站的用户。如果管理员的某些操作，比如修改用户的密码存在这个漏洞，那么他就会写一个页面，然后社工管理员去点开。如果此时浏览器里管理员登陆，那么用户的密码就会被重置。这种漏洞在微博这种社交应用里危害更大，可直接导致蠕虫攻击。最近看到的例子：<a href="http://linux.im/2015/11/23/SinaWeibo-Worm.html" target="_blank" rel="noopener">http://linux.im/2015/11/23/SinaWeibo-Worm.html</a></li>
 <li>SQL注入，在乌云上挺常见的。他可以使用神奇SQLMap测试是否存在注入点。如果你的接口存在该漏洞，哪怕是只有一处，那也是致命的。如果运行数据库的用户权限够，利用来拿下你的服务器应该可以说是分分钟的事情，利用某些注入点sqlmap可以连接到服务器的shell上。另外，SQL注入漏洞也会泄露用户信息，造成脱裤。泄露管理员的账号和密码，直接导致后台沦陷。在乌云上也是能找到一大堆，不举例了。</li>
-<li>任意文件下载，如果你的站点存在这种漏洞，也就是说你的服务上的所有东西都可以被下载，包括你的服务器配置信息！看例子吧：<a href="http://www.wooyun.org/bugs/wooyun-2010-0145972" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-0145972</a> 标题：某省铁路建设投资公司网站系统漏洞导致任意文件下载并登录后台、任意文件修改并shell</li>
-<li>任意文件上传，你的站点没有检查用户上传上来的文件内容就直接保存了？还按照用户指定的后缀保存？还放到了可执行的目录下？那就等着被上传web shell吧。Github上有很多人分享的各种各样的webshell，上传到你的服务器之后，他就可以列出你的服务器上所有文件并下载，通过webshell在你的服务器上执行命令。乌云例子：<a href="http://www.wooyun.org/bugs/wooyun-2010-0151657" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-0151657</a></li>
-<li>逻辑漏洞，比如某个用户可以看到他本不应该看到的信息，常见的情景如用户信息页，只要使用其他用户ID就可以查看到相应的信息，常用的叫法是叫做越权，漏洞例子：<a href="http://wooyun.org/bugs/wooyun-2010-0156326" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2010-0156326</a> 。再比如找回密码的逻辑漏洞，找回密码使用手机找回，验证码只有4位，且可以被无限次猜。那就不要怪他用神奇burpsuite的intruder模式，直接猜到验证码重置任意用户信息了。关于常见的找回密码漏洞可以看：<a href="http://drops.wooyun.org/web/5048" target="_blank" rel="external">http://drops.wooyun.org/web/5048</a> 。再比如，把cookie当session使用，后台权限bypass等。</li>
-<li>可被暴力破解或撞库！比如没有限制用户密码尝试次数还没有带验证码，例子：<a href="http://wooyun.org/bugs/wooyun-2015-0124461" target="_blank" rel="external">http://wooyun.org/bugs/wooyun-2015-0124461</a></li>
+<li>任意文件下载，如果你的站点存在这种漏洞，也就是说你的服务上的所有东西都可以被下载，包括你的服务器配置信息！看例子吧：<a href="http://www.wooyun.org/bugs/wooyun-2010-0145972" target="_blank" rel="noopener">http://www.wooyun.org/bugs/wooyun-2010-0145972</a> 标题：某省铁路建设投资公司网站系统漏洞导致任意文件下载并登录后台、任意文件修改并shell</li>
+<li>任意文件上传，你的站点没有检查用户上传上来的文件内容就直接保存了？还按照用户指定的后缀保存？还放到了可执行的目录下？那就等着被上传web shell吧。Github上有很多人分享的各种各样的webshell，上传到你的服务器之后，他就可以列出你的服务器上所有文件并下载，通过webshell在你的服务器上执行命令。乌云例子：<a href="http://www.wooyun.org/bugs/wooyun-2010-0151657" target="_blank" rel="noopener">http://www.wooyun.org/bugs/wooyun-2010-0151657</a></li>
+<li>逻辑漏洞，比如某个用户可以看到他本不应该看到的信息，常见的情景如用户信息页，只要使用其他用户ID就可以查看到相应的信息，常用的叫法是叫做越权，漏洞例子：<a href="http://wooyun.org/bugs/wooyun-2010-0156326" target="_blank" rel="noopener">http://wooyun.org/bugs/wooyun-2010-0156326</a> 。再比如找回密码的逻辑漏洞，找回密码使用手机找回，验证码只有4位，且可以被无限次猜。那就不要怪他用神奇burpsuite的intruder模式，直接猜到验证码重置任意用户信息了。关于常见的找回密码漏洞可以看：<a href="http://drops.wooyun.org/web/5048" target="_blank" rel="noopener">http://drops.wooyun.org/web/5048</a> 。再比如，把cookie当session使用，后台权限bypass等。</li>
+<li>可被暴力破解或撞库！比如没有限制用户密码尝试次数还没有带验证码，例子：<a href="http://wooyun.org/bugs/wooyun-2015-0124461" target="_blank" rel="noopener">http://wooyun.org/bugs/wooyun-2015-0124461</a></li>
 </ul>
 <p>还有很多其他问题，因为学艺未精，暂时写到这里吧。</p>
 <h3 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><p>当然是上报到安全平台刷rank，报告给厂商后，说不定厂商好心还可以拿个礼物！！！</p>
@@ -477,10 +474,10 @@ $(function() {
 <p>第三点：学到的总会比付出的翻倍。在做开源项目的过程中，每解决一个问题就会学习到该问题相关领域的知识，比如在这段时间内我接触到了Win32 API/GTK+/X11等。还可以体验到如何与其他人协同工作。Chromium上的Reviewer总能给我一些启发，他可以在代码的层次上直接教你正确的写代码方式以及如何写出其他人也看得懂的代码！在这段期间，我知道了测试代码的重要性，知道了代码风格的重要性。</p>
 <p>还有不少点，这里就先不废话了。</p>
 <p>我听过不少人想要为开源项目做贡献，却总是被开源项目的门槛吓跑了。的确，我觉得我真正弄懂node-webkit代码的时候是我决定转去Chromium社区的时候，那个时候我已经为node-webkit写了两个多月（IIRC）。而就算我有为node-webkit写过代码的经验，在进入Chromium社区的时候也是遇到了很大的困难。接下来，我就写一下，在我看来，应该怎么样子加入一个开源社区，以为Chromium贡献代码为例子。</p>
-<p>第一：感性地认识Chromium，了解源代码目录结构。应该知道Google Chrome浏览器就是依托Chromium这个开源项目的，在每个Chrome浏览器中你都能找到这么一句话：“Google Chrome is made possible by the Chromium open source project and other open source software.”。其实我这里想讲的是编译并运行。在大中华局域网中拉下几个G的代码是个煎熬的过程，而且随时都会断掉然后那个仓库的代码就只能重新下载了。在<a href="http://www.chromium.org/Home" target="_blank" rel="external">Chromium的网站中</a>就能够找到如何在各个平台下编译的指导。简单地说：就是安装必要的开发库，用gclient下载源码并且gyp产生相应的工程文件(gclient sync)，编译(推荐使用ninja)。</p>
-<p>第二：阅读相关文档，了解Chromium的整体架构。这里说的相关文档是比较坑爹的，文档那么多。其实要耐心，文档你肯定一开始是看不懂的，比如这篇入门必看文档之：<a href="http://www.chromium.org/developers/design-documents/multi-process-architecture" target="_blank" rel="external">Chrome的多进程架构</a>。</p>
-<p>第三：到Chromium的<a href="https://code.google.com/p/chromium/issues/list" target="_blank" rel="external">Issue List</a>上找一些问题看，在你本地编译出来的Chrome上重现该问题，尝试想想怎么解决，或者看人家怎么解决。上面的问题很多，我这里分享一个我自己看的Issue的标签：Cr-Platform-Apps Hotlist-GoodFirstBug Cr-Platform-Extensions Cr-Platform-Extensions-API Cr-Platform-Apps-AppLauncher Cr-Platform-Apps-Container 都是关于Chrome Extension/Packaged App的，用gmail登录后在 Subscriptions页面中填入这些个标签，在工作日每天你就能收到30+份邮件。这些标签是基于我之前做过一些浏览器的插件和应用，对这个东西还是知道点门路的情况的。因此我很多代码提交都是集中在Chrome Extension/Packaged App APIs上的。</p>
-<p>第四：代码搜索工具：<a href="https://code.google.com/p/chromium/codesearch，" target="_blank" rel="external">https://code.google.com/p/chromium/codesearch，</a> 这个工具太好用，也太重要了！当你在看人家的代码时，可以利用这个工具找到具体的代码实现，而且通常情况下要好好阅读相关代码的注释。</p>
+<p>第一：感性地认识Chromium，了解源代码目录结构。应该知道Google Chrome浏览器就是依托Chromium这个开源项目的，在每个Chrome浏览器中你都能找到这么一句话：“Google Chrome is made possible by the Chromium open source project and other open source software.”。其实我这里想讲的是编译并运行。在大中华局域网中拉下几个G的代码是个煎熬的过程，而且随时都会断掉然后那个仓库的代码就只能重新下载了。在<a href="http://www.chromium.org/Home" target="_blank" rel="noopener">Chromium的网站中</a>就能够找到如何在各个平台下编译的指导。简单地说：就是安装必要的开发库，用gclient下载源码并且gyp产生相应的工程文件(gclient sync)，编译(推荐使用ninja)。</p>
+<p>第二：阅读相关文档，了解Chromium的整体架构。这里说的相关文档是比较坑爹的，文档那么多。其实要耐心，文档你肯定一开始是看不懂的，比如这篇入门必看文档之：<a href="http://www.chromium.org/developers/design-documents/multi-process-architecture" target="_blank" rel="noopener">Chrome的多进程架构</a>。</p>
+<p>第三：到Chromium的<a href="https://code.google.com/p/chromium/issues/list" target="_blank" rel="noopener">Issue List</a>上找一些问题看，在你本地编译出来的Chrome上重现该问题，尝试想想怎么解决，或者看人家怎么解决。上面的问题很多，我这里分享一个我自己看的Issue的标签：Cr-Platform-Apps Hotlist-GoodFirstBug Cr-Platform-Extensions Cr-Platform-Extensions-API Cr-Platform-Apps-AppLauncher Cr-Platform-Apps-Container 都是关于Chrome Extension/Packaged App的，用gmail登录后在 Subscriptions页面中填入这些个标签，在工作日每天你就能收到30+份邮件。这些标签是基于我之前做过一些浏览器的插件和应用，对这个东西还是知道点门路的情况的。因此我很多代码提交都是集中在Chrome Extension/Packaged App APIs上的。</p>
+<p>第四：代码搜索工具：<a href="https://code.google.com/p/chromium/codesearch，" target="_blank" rel="noopener">https://code.google.com/p/chromium/codesearch，</a> 这个工具太好用，也太重要了！当你在看人家的代码时，可以利用这个工具找到具体的代码实现，而且通常情况下要好好阅读相关代码的注释。</p>
 <p>第五：分享一点我解决问题的思路，基于对代码的熟悉程度才能解决的问题这个我没法怎么分享经验。这里想说的其实是如何在如此庞大的项目中定位到需要修改的代码的地方。在遇到程序Crash的时候（经常是空指针的情况），我们其实可以利用gdb（在Linux上），VS2010中Attach to Process的功能（在Windows上）得到程序奔溃的时候的调用栈，然后利用上面的代码搜索工具就可以找到相应的代码了。接下来，就是认真读懂相关的代码，用你的聪明才智想出一个合理的解决方法。如果遇到的问题是chrome://settings/类似URL页面（这些页面都是采用HTML/CSS/JS实现的，webui）中的，那就可以用F12调出开发工具，找到页面元素的ID值，然后还是在上面的搜索工具中查找相关的代码。</p>
 <p>……</p>
 <p>第N：相信自己。上面讲的那些东西，无非是为了引出最后这个点。如果你真的感兴趣，相信自己，坚持，加油。</p>
@@ -649,7 +646,7 @@ $(function() {
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
