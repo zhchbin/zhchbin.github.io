@@ -1,7 +1,7 @@
 layout: post
 title: "到底你想要什么"
 comments: true
-category: 
+category:
 tags: [Life]
 ---
 
@@ -34,5 +34,3 @@ tags: [Life]
 最后，做个好人吧。
 
 好像少写了什么！
-
-如果可以回到过去，我希望能够回到大一的时候，因为那个时候有那么一个人。当然，也许是我自作多情。

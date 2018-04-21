@@ -92,9 +92,3 @@ c && u(window, "message", function(e) {
 > e.origin.indexOf(t) === "http:".length
 < true
 ```
-
-## PoC
-
-你现在在看的这个页面就加载了有漏洞的那个AddThis脚本，我部署了一个PoC，来XSS当前页面，可以实际感受一下: http://s7.addthis.com.poc.akrxd.net/addthis_poc/poc.html
-
-<script type="text/javascript" src="https://cdn.rawgit.com/zhchbin/zhchbin.github.io/source/js/addthis_widget.js"></script>
