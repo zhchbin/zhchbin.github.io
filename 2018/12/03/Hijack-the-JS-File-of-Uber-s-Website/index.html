@@ -84,19 +84,19 @@
 
 
 
-<meta name="description" content="Again, sorry for my poor English first of all, and I will try my best to describe this bug bounty report throughly. TLDR Almost all of Uber’s websites are loading JS file: https://tags.tiqcdn.com/utag">
+<meta name="description" content="TLDR Almost all of Uber’s websites are loading JS file: https://tags.tiqcdn.com/utag/uber/main/prod/utag.js  I found that the content of utag.js is updating from /data/utui/data/accounts/uber/template">
 <meta name="keywords" content="安全,BBP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[BBP系列三] Hijack the JS File of Uber&#39;s Website">
 <meta property="og:url" content="http://zhchbin.github.io/2018/12/03/Hijack-the-JS-File-of-Uber-s-Website/index.html">
 <meta property="og:site_name" content="zhchbin">
-<meta property="og:description" content="Again, sorry for my poor English first of all, and I will try my best to describe this bug bounty report throughly. TLDR Almost all of Uber’s websites are loading JS file: https://tags.tiqcdn.com/utag">
+<meta property="og:description" content="TLDR Almost all of Uber’s websites are loading JS file: https://tags.tiqcdn.com/utag/uber/main/prod/utag.js  I found that the content of utag.js is updating from /data/utui/data/accounts/uber/template">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/7184df6bgy1fxtifofrypj20gh0bq0tw.jpg">
-<meta property="og:updated_time" content="2018-12-03T05:59:57.221Z">
+<meta property="og:updated_time" content="2018-12-19T13:34:19.102Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[BBP系列三] Hijack the JS File of Uber&#39;s Website">
-<meta name="twitter:description" content="Again, sorry for my poor English first of all, and I will try my best to describe this bug bounty report throughly. TLDR Almost all of Uber’s websites are loading JS file: https://tags.tiqcdn.com/utag">
+<meta name="twitter:description" content="TLDR Almost all of Uber’s websites are loading JS file: https://tags.tiqcdn.com/utag/uber/main/prod/utag.js  I found that the content of utag.js is updating from /data/utui/data/accounts/uber/template">
 <meta name="twitter:image" content="https://ws1.sinaimg.cn/large/7184df6bgy1fxtifofrypj20gh0bq0tw.jpg">
 
 
@@ -312,8 +312,7 @@
       
 
       
-        <p>Again, sorry for my poor English first of all, and I will try my best to describe this bug bounty report throughly.</p>
-<h3 id="TLDR"><a href="#TLDR" class="headerlink" title="TLDR"></a>TLDR</h3><ol>
+        <h3 id="TLDR"><a href="#TLDR" class="headerlink" title="TLDR"></a>TLDR</h3><ol>
 <li>Almost all of Uber’s websites are loading JS file: <a href="https://tags.tiqcdn.com/utag/uber/main/prod/utag.js" target="_blank" rel="noopener">https://tags.tiqcdn.com/utag/uber/main/prod/utag.js</a> </li>
 <li>I found that the content of utag.js is updating from <code>/data/utui/data/accounts/uber/templates/main/utag.js</code> when deploying in my.tealiumiq.com. </li>
 <li>my.tealiumiq.com has a path traversal issue, which allow hacker to change <code>utag.js</code> of other account, including Uber’s.</li>

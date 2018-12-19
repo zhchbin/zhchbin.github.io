@@ -307,8 +307,7 @@
       
         
           
-            <p>Again, sorry for my poor English first of all, and I will try my best to describe this bug bounty report throughly.</p>
-<h3 id="TLDR"><a href="#TLDR" class="headerlink" title="TLDR"></a>TLDR</h3><ol>
+            <h3 id="TLDR"><a href="#TLDR" class="headerlink" title="TLDR"></a>TLDR</h3><ol>
 <li>Almost all of Uber’s websites are loading JS file: <a href="https://tags.tiqcdn.com/utag/uber/main/prod/utag.js" target="_blank" rel="noopener">https://tags.tiqcdn.com/utag/uber/main/prod/utag.js</a> </li>
 <li>I found that the content of utag.js is updating from <code>/data/utui/data/accounts/uber/templates/main/utag.js</code> when deploying in my.tealiumiq.com. </li>
 <li>my.tealiumiq.com has a path traversal issue, which allow hacker to change <code>utag.js</code> of other account, including Uber’s.</li>
