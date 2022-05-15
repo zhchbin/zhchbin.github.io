@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zhchbin.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"zhchbin.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="$(function() {   $.ajax({     url: &apos;http://game.weibo.com/home/indexv3/pajaxUserInfo&apos;,     jsonp: &quot;callback&quot;,     dataType: &quot;jsonp&quot;,     success: function(response) {       if (response.errorCode">
@@ -28,7 +28,7 @@
 <meta property="og:site_name" content="zhchbin">
 <meta property="og:description" content="$(function() {   $.ajax({     url: &apos;http://game.weibo.com/home/indexv3/pajaxUserInfo&apos;,     jsonp: &quot;callback&quot;,     dataType: &quot;jsonp&quot;,     success: function(response) {       if (response.errorCode">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2016-10-02T05:43:40.000Z">
+<meta property="og:updated_time" content="2022-05-15T03:20:46.194Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="你的网站是怎么被黑的">
 <meta name="twitter:description" content="$(function() {   $.ajax({     url: &apos;http://game.weibo.com/home/indexv3/pajaxUserInfo&apos;,     jsonp: &quot;callback&quot;,     dataType: &quot;jsonp&quot;,     success: function(response) {       if (response.errorCode">
@@ -118,6 +118,16 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
   </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
@@ -154,7 +164,7 @@
     <link itemprop="mainEntityOfPage" href="http://zhchbin.github.io/2015/12/05/how-do-your-websites-get-hacked/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.jpeg">
       <meta itemprop="name" content="Chaobin Zhang">
       <meta itemprop="description" content="">
     </span>
@@ -181,7 +191,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2016-10-02 13:43:40" itemprop="dateModified" datetime="2016-10-02T13:43:40+08:00">2016-10-02</time>
+                <time title="Modified: 2022-05-15 11:20:46" itemprop="dateModified" datetime="2022-05-15T11:20:46+08:00">2022-05-15</time>
               </span>
 
           
@@ -338,12 +348,13 @@ $(function() {
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#未知攻焉知防"><span class="nav-number">2.</span> <span class="nav-text">未知攻焉知防</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#收集信息阶段"><span class="nav-number">2.1.</span> <span class="nav-text">收集信息阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#漏洞挖掘阶段"><span class="nav-number">2.2.</span> <span class="nav-text">漏洞挖掘阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#漏洞利用"><span class="nav-number">2.3.</span> <span class="nav-text">漏洞利用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#吐槽"><span class="nav-number">3.</span> <span class="nav-text">吐槽</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chaobin Zhang"
+      src="/images/avatar.jpeg">
   <p class="site-author-name" itemprop="name">Chaobin Zhang</p>
   <div class="site-description" itemprop="description"></div>
 </div>
@@ -352,7 +363,7 @@ $(function() {
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -362,11 +373,20 @@ $(function() {
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
+          
         <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhchbin" title="GitHub → https://github.com/zhchbin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://hackerone.com/zhchbin" title="Hackerone → https://hackerone.com/zhchbin" rel="noopener" target="_blank"><i class="fa fa-fw"></i>Hackerone</a>
+      </span>
+  </div>
 
 
 

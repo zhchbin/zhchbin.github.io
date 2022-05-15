@@ -17,25 +17,25 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zhchbin.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"zhchbin.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="前言在知乎的题目和答案中，插入的链接都会变成https://link.zhihu.com/target=xxx的形式进行URL跳转，如下图。然而这个看似简单的功能的实现上，曾引发过一系列的问题，过程挺精彩，所以我就来做个总结，以重新体验一下这个过程。声明：以下小节中提到的问题均来自WooYun已经公开的漏洞，复现的代码也是纯属我个人YY。 0x00 没有任何过滤案例：知乎 URL 跳转造成的 XS">
+  <meta name="description" content="前言在知乎的题目和答案中，插入的链接都会变成https://link.zhihu.com/target=xxx的形式进行URL跳转，如下图。然而这个看似简单的功能的实现上，曾引发过一系列的问题，过程挺精彩，所以我就来做个总结，以重新体验一下这个过程。声明：以下小节中提到的问题均来自WooYun已经公开的漏洞，复现的代码也是纯属我个人YY。  0x00 没有任何过滤案例：知乎 URL 跳转造成的 X">
 <meta name="keywords" content="安全,XSS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一个URL跳转引发的一系列“惨案”">
 <meta property="og:url" content="http://zhchbin.github.io/2016/04/09/Problems-Caused-by-URL-Redirection/index.html">
 <meta property="og:site_name" content="zhchbin">
-<meta property="og:description" content="前言在知乎的题目和答案中，插入的链接都会变成https://link.zhihu.com/target=xxx的形式进行URL跳转，如下图。然而这个看似简单的功能的实现上，曾引发过一系列的问题，过程挺精彩，所以我就来做个总结，以重新体验一下这个过程。声明：以下小节中提到的问题均来自WooYun已经公开的漏洞，复现的代码也是纯属我个人YY。 0x00 没有任何过滤案例：知乎 URL 跳转造成的 XS">
+<meta property="og:description" content="前言在知乎的题目和答案中，插入的链接都会变成https://link.zhihu.com/target=xxx的形式进行URL跳转，如下图。然而这个看似简单的功能的实现上，曾引发过一系列的问题，过程挺精彩，所以我就来做个总结，以重新体验一下这个过程。声明：以下小节中提到的问题均来自WooYun已经公开的漏洞，复现的代码也是纯属我个人YY。  0x00 没有任何过滤案例：知乎 URL 跳转造成的 X">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://zhchbin.github.io/images/20160409140054.png">
 <meta property="og:image" content="http://zhchbin.github.io/images/20160409141842.png">
 <meta property="og:image" content="http://zhchbin.github.io/images/20160409143927.png">
 <meta property="og:image" content="http://zhchbin.github.io/images/20160409151521.png">
-<meta property="og:updated_time" content="2016-10-02T05:43:40.000Z">
+<meta property="og:updated_time" content="2022-05-15T03:20:46.198Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一个URL跳转引发的一系列“惨案”">
-<meta name="twitter:description" content="前言在知乎的题目和答案中，插入的链接都会变成https://link.zhihu.com/target=xxx的形式进行URL跳转，如下图。然而这个看似简单的功能的实现上，曾引发过一系列的问题，过程挺精彩，所以我就来做个总结，以重新体验一下这个过程。声明：以下小节中提到的问题均来自WooYun已经公开的漏洞，复现的代码也是纯属我个人YY。 0x00 没有任何过滤案例：知乎 URL 跳转造成的 XS">
+<meta name="twitter:description" content="前言在知乎的题目和答案中，插入的链接都会变成https://link.zhihu.com/target=xxx的形式进行URL跳转，如下图。然而这个看似简单的功能的实现上，曾引发过一系列的问题，过程挺精彩，所以我就来做个总结，以重新体验一下这个过程。声明：以下小节中提到的问题均来自WooYun已经公开的漏洞，复现的代码也是纯属我个人YY。  0x00 没有任何过滤案例：知乎 URL 跳转造成的 X">
 <meta name="twitter:image" content="http://zhchbin.github.io/images/20160409140054.png">
 
 <link rel="canonical" href="http://zhchbin.github.io/2016/04/09/Problems-Caused-by-URL-Redirection/">
@@ -123,6 +123,16 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
   </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
@@ -159,7 +169,7 @@
     <link itemprop="mainEntityOfPage" href="http://zhchbin.github.io/2016/04/09/Problems-Caused-by-URL-Redirection/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.jpeg">
       <meta itemprop="name" content="Chaobin Zhang">
       <meta itemprop="description" content="">
     </span>
@@ -186,7 +196,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2016-10-02 13:43:40" itemprop="dateModified" datetime="2016-10-02T13:43:40+08:00">2016-10-02</time>
+                <time title="Modified: 2022-05-15 11:20:46" itemprop="dateModified" datetime="2022-05-15T11:20:46+08:00">2022-05-15</time>
               </span>
 
           
@@ -200,18 +210,24 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在知乎的题目和答案中，插入的链接都会变成<code>https://link.zhihu.com/target=xxx</code>的形式进行URL跳转，如下图。然而这个看似简单的功能的实现上，曾引发过一系列的问题，过程挺精彩，所以我就来做个总结，以重新体验一下这个过程。声明：以下小节中提到的问题均来自WooYun已经公开的漏洞，复现的代码也是纯属我个人YY。<br><img src="/images/20160409140054.png" alt="ZhihuURLRedirect"></p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在知乎的题目和答案中，插入的链接都会变成<code>https://link.zhihu.com/target=xxx</code>的形式进行URL跳转，如下图。然而这个看似简单的功能的实现上，曾引发过一系列的问题，过程挺精彩，所以我就来做个总结，以重新体验一下这个过程。声明：以下小节中提到的问题均来自WooYun已经公开的漏洞，复现的代码也是纯属我个人YY。
+<img src="/images/20160409140054.png" alt="ZhihuURLRedirect"></p>
 <h2 id="0x00-没有任何过滤"><a href="#0x00-没有任何过滤" class="headerlink" title="0x00 没有任何过滤"></a>0x00 没有任何过滤</h2><p>案例：<a href="http://www.wooyun.org/bugs/wooyun-2016-0171240" target="_blank" rel="noopener">知乎 URL 跳转造成的 XSS</a></p>
-<p>猜测知乎可能的实现方式：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request</span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/', methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    target = request.args.get(<span class="string">'target'</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'''&lt;script&gt;window.location.href = "%s"&lt;/script&gt;'''</span> % (target)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    app.run(debug=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure></p>
-<p>在上面这个实现中，我们可以发现对于<code>&quot;</code>并没有进行转义，因此我们可以传入<code>&quot;</code>来闭合前面的双引号，然后再插入我们的JS代码。运行上面的程序<code>python server.py</code>，然后使用curl请求：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ curl <span class="string">'127.0.0.1:5000/?target=";alert(1);window.location.href="http://www.zhihu.com'</span></span><br><span class="line">&lt;script&gt;window.location.href = <span class="string">""</span>;alert(1);window.location.href=<span class="string">"http://www.zhihu.com"</span>&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<p>猜测知乎可能的实现方式：
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request</span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/', methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    target = request.args.get(<span class="string">'target'</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'''&lt;script&gt;window.location.href = "%s"&lt;/script&gt;'''</span> % (target)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    app.run(debug=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure></p>
+<p>在上面这个实现中，我们可以发现对于<code>&quot;</code>并没有进行转义，因此我们可以传入<code>&quot;</code>来闭合前面的双引号，然后再插入我们的JS代码。运行上面的程序<code>python server.py</code>，然后使用curl请求：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ curl <span class="string">'127.0.0.1:5000/?target=";alert(1);window.location.href="http://www.zhihu.com'</span></span><br><span class="line">&lt;script&gt;window.location.href = <span class="string">""</span>;alert(1);window.location.href=<span class="string">"http://www.zhihu.com"</span>&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
 <p><img src="/images/20160409141842.png" alt="XSS_1"></p>
 <h2 id="0x01-对参数做了urlencode编码"><a href="#0x01-对参数做了urlencode编码" class="headerlink" title="0x01 对参数做了urlencode编码"></a>0x01 对参数做了urlencode编码</h2><p>在上面的漏洞报告之后，（猜测）知乎的工程师按照了洞主给出的修复方案进行代码的修改，修改后的代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request</span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/', methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    target = request.args.get(<span class="string">'target'</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'''&lt;script&gt;</span></span><br><span class="line"><span class="string">var URI="%s";</span></span><br><span class="line"><span class="string">window.location.href = decodeURIComponent(URI);</span></span><br><span class="line"><span class="string">&lt;/script&gt;'''</span> % (urllib.quote(target))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    app.run(debug=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
-<p>现在，我们如果在target参数中传入<code>&quot;</code>，则先会被转义成<code>%22</code>插入在页面中，从而无法闭合之前的双引号。看似一个挺好的的解决方案吧，然而，却还不够。案例：<a href="http://www.wooyun.org/bugs/wooyun-2016-0179329" target="_blank" rel="noopener">知乎某处XSS+刷粉超详细漏洞技术分析</a>。我们可以看到后台将输入的target参数传入给URI参数，解码以后赋值于location.href。问题解决了？没有，可以利用JavaScript:伪协议执行js代码，如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:5000/?target=javascript:alert(1);</span><br></pre></td></tr></table></figure></p>
+<p>现在，我们如果在target参数中传入<code>&quot;</code>，则先会被转义成<code>%22</code>插入在页面中，从而无法闭合之前的双引号。看似一个挺好的的解决方案吧，然而，却还不够。案例：<a href="http://www.wooyun.org/bugs/wooyun-2016-0179329" target="_blank" rel="noopener">知乎某处XSS+刷粉超详细漏洞技术分析</a>。我们可以看到后台将输入的target参数传入给URI参数，解码以后赋值于location.href。问题解决了？没有，可以利用JavaScript:伪协议执行js代码，如
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:5000/?target=javascript:alert(1);</span><br></pre></td></tr></table></figure></p>
 <p><img src="/images/20160409143927.png" alt="XSS_2"></p>
 <p>强烈推荐仔细阅读这个案例哦，洞主的分析利用过程保证你看了会觉得很有收获。</p>
-<h2 id="0x02-使用WTForm进行URL校验"><a href="#0x02-使用WTForm进行URL校验" class="headerlink" title="0x02 使用WTForm进行URL校验"></a>0x02 使用WTForm进行URL校验</h2><p>（猜测开发内心OS）既然如此，Python不是有个叫做<code>WTForm</code>的库可以帮我们校验用户的输入是否合法吗？我们可以利用里面的<a href="http://wtforms.readthedocs.org/en/latest/validators.html?highlight=URL#wtforms.validators.URL" target="_blank" rel="noopener">wtforms.validators.URL</a>进行URL的检查，这样子用户的输入该合法了吧。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request</span><br><span class="line"><span class="keyword">from</span> wtforms <span class="keyword">import</span> StringField</span><br><span class="line"><span class="keyword">from</span> wtforms.form <span class="keyword">import</span> Form</span><br><span class="line"><span class="keyword">from</span> wtforms.validators <span class="keyword">import</span> DataRequired, URL</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UrlForm</span><span class="params">(Form)</span>:</span></span><br><span class="line">    target = StringField(validators=[DataRequired(), URL()])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/', methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    form = UrlForm(request.args)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> form.validate():</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Bad Boy!"</span></span><br><span class="line"></span><br><span class="line">    target = form.target.data.encode(<span class="string">'utf8'</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'''&lt;script&gt;</span></span><br><span class="line"><span class="string">var URI="%s";</span></span><br><span class="line"><span class="string">window.location.href = decodeURIComponent(URI);</span></span><br><span class="line"><span class="string">&lt;/script&gt;'''</span> % (urllib.quote(target))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    app.run(debug=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure></p>
-<p>这里也有可能是开发自己写正则进行匹配，问题本质上都是一样的，正则写的不好。上面的写法虽然已经能过滤到前面提到的情况，然而，WTForm的正则过滤并没有写好，导致继续被XSS。如下的URL：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:5000/?target=javascript://www.baidu.com/%E2%80%A8alert(1)</span><br></pre></td></tr></table></figure></p>
+<h2 id="0x02-使用WTForm进行URL校验"><a href="#0x02-使用WTForm进行URL校验" class="headerlink" title="0x02 使用WTForm进行URL校验"></a>0x02 使用WTForm进行URL校验</h2><p>（猜测开发内心OS）既然如此，Python不是有个叫做<code>WTForm</code>的库可以帮我们校验用户的输入是否合法吗？我们可以利用里面的<a href="http://wtforms.readthedocs.org/en/latest/validators.html?highlight=URL#wtforms.validators.URL" target="_blank" rel="noopener">wtforms.validators.URL</a>进行URL的检查，这样子用户的输入该合法了吧。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request</span><br><span class="line"><span class="keyword">from</span> wtforms <span class="keyword">import</span> StringField</span><br><span class="line"><span class="keyword">from</span> wtforms.form <span class="keyword">import</span> Form</span><br><span class="line"><span class="keyword">from</span> wtforms.validators <span class="keyword">import</span> DataRequired, URL</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UrlForm</span><span class="params">(Form)</span>:</span></span><br><span class="line">    target = StringField(validators=[DataRequired(), URL()])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/', methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    form = UrlForm(request.args)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> form.validate():</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Bad Boy!"</span></span><br><span class="line"></span><br><span class="line">    target = form.target.data.encode(<span class="string">'utf8'</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'''&lt;script&gt;</span></span><br><span class="line"><span class="string">var URI="%s";</span></span><br><span class="line"><span class="string">window.location.href = decodeURIComponent(URI);</span></span><br><span class="line"><span class="string">&lt;/script&gt;'''</span> % (urllib.quote(target))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    app.run(debug=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure></p>
+<p>这里也有可能是开发自己写正则进行匹配，问题本质上都是一样的，正则写的不好。上面的写法虽然已经能过滤到前面提到的情况，然而，WTForm的正则过滤并没有写好，导致继续被XSS。如下的URL：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:5000/?target=javascript://www.baidu.com/%E2%80%A8alert(1)</span><br></pre></td></tr></table></figure></p>
 <p><img src="/images/20160409151521.png" alt="XSS_3"></p>
 <p>具体分析见案例<a href="http://www.wooyun.org/bugs/wooyun-2016-0182145" target="_blank" rel="noopener">知乎某处XSS导致刷粉</a>及<a href="http://drops.wooyun.org/papers/13058" target="_blank" rel="noopener">从WTForm的URLXSS谈开源组件的安全性</a></p>
 <h2 id="0x03-除了XSS之外的一个彩蛋"><a href="#0x03-除了XSS之外的一个彩蛋" class="headerlink" title="0x03 除了XSS之外的一个彩蛋"></a>0x03 除了XSS之外的一个彩蛋</h2><p>这里本身其实是一个任意URL调整，可以在某些实现不严格的OAuth2.0的过程中利用偷取用户的授权code，然后使用用户的身份进行登录哦。在我之前的博客已经分析过这个问题，这里就不再写了。案例：<a href="http://www.wooyun.org/bugs/wooyun-2016-0174018" target="_blank" rel="noopener">微博上你点我链接我就上你绑定过的知乎账号</a></p>
@@ -239,8 +255,8 @@
       <i class="fa fa-chevron-left"></i> “脆弱”的微博OAuth 2.0
     </a></div>
       <div class="post-nav-item">
-    <a href="/2016/06/25/loneliness/" rel="next" title="感受孤独">
-      感受孤独 <i class="fa fa-chevron-right"></i>
+    <a href="/2016/07/23/2345-Browser-RCE/" rel="next" title="[浏览器安全系列一] 2345浏览器本地文件读取及远程命令执行">
+      [浏览器安全系列一] 2345浏览器本地文件读取及远程命令执行 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -300,12 +316,13 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-没有任何过滤"><span class="nav-number">2.</span> <span class="nav-text">0x00 没有任何过滤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-对参数做了urlencode编码"><span class="nav-number">3.</span> <span class="nav-text">0x01 对参数做了urlencode编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-使用WTForm进行URL校验"><span class="nav-number">4.</span> <span class="nav-text">0x02 使用WTForm进行URL校验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-除了XSS之外的一个彩蛋"><span class="nav-number">5.</span> <span class="nav-text">0x03 除了XSS之外的一个彩蛋</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chaobin Zhang"
+      src="/images/avatar.jpeg">
   <p class="site-author-name" itemprop="name">Chaobin Zhang</p>
   <div class="site-description" itemprop="description"></div>
 </div>
@@ -314,7 +331,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -324,11 +341,20 @@
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
+          
         <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhchbin" title="GitHub → https://github.com/zhchbin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://hackerone.com/zhchbin" title="Hackerone → https://hackerone.com/zhchbin" rel="noopener" target="_blank"><i class="fa fa-fw"></i>Hackerone</a>
+      </span>
+  </div>
 
 
 

