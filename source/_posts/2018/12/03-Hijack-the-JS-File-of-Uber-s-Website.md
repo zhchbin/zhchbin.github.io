@@ -3,8 +3,6 @@ date: 2018-12-03 13:11:08
 tags: ["安全", "BBP"]
 ---
 
-Again, sorry for my poor English first of all, and I will try my best to describe this bug bounty report throughly.
-
 ### TLDR
 1. Almost all of Uber's websites are loading JS file: https://tags.tiqcdn.com/utag/uber/main/prod/utag.js 
 2. I found that the content of utag.js is updating from `/data/utui/data/accounts/uber/templates/main/utag.js` when deploying in my.tealiumiq.com. 
